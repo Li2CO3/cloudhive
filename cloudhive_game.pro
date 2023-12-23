@@ -1,8 +1,8 @@
-
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+#RC_ICONS = gameicon.ico
 
 CONFIG += c++17
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -32,9 +32,10 @@ SOURCES += \
     monsters/ironwall.cpp \
     monsters/mimicchest.cpp \
     monsters/monster.cpp \
+    monsters/puppeteer.cpp \
     monsters/snowman.cpp \
+    monsters/stall.cpp \
     monsters/twinhead.cpp \
-    record.cpp \
     ui.cpp
 
 HEADERS += \
@@ -44,9 +45,10 @@ HEADERS += \
     monsters/ironwall.h \
     monsters/mimicchest.h \
     monsters/monster.h \
+    monsters/puppeteer.h \
     monsters/snowman.h \
+    monsters/stall.h \
     monsters/twinhead.h \
-    record.h \
     ui.h
 
 FORMS +=
@@ -60,3 +62,5 @@ msvc {
     QMAKE_CFLAGS += /utf-8
     QMAKE_CXXFLAGS += /utf-8
 }
+
+RESOURCES +=

@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 //#include "ui_mainwindow.h"
-#include <QTimer>
 
 int rel(int x) { return int((x * TheWindow->width()) / 3200) * 2; }
 

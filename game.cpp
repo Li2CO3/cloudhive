@@ -4,6 +4,7 @@
 
 void Game::Grid::Make_image(QPixmap& img)
 {
+    using namespace GT;
 	img = QPixmap(64 * 7, 64 * 7);
 	QPainter painter(&img);
 
@@ -21,7 +22,7 @@ void Game::Grid::Make_image(QPixmap& img)
 
 	for (int place = 1; place <= 19; place++)
 	{
-        if (pieces[place] != 0)
+		if (*(*this)[place] != 0)
 			painter.drawPixmap(GRID_X[place] * 64, GRID_Y[place] * 32 - 32, QPixmap("res/piece/card_" + (*this)[place]->to_string() + ".png"));
 		else
 			painter.drawPixmap(GRID_X[place] * 64, GRID_Y[place] * 32 - 32, QPixmap("res/piece/num_" + QString::number(place) + ".png"));
@@ -31,7 +32,6 @@ void Game::Grid::Make_image(QPixmap& img)
 		int dx, dy;
 		if (dir == 3) { dx = 1, dy = 1; }
 		else if (dir == -3) { dx = -1, dy = -1; }
-
 		else if (dir == 1) { dx = 0; dy = 2; }
 		else if (dir == -1) { dx = 0; dy = -2; }
 		else if (dir == 2) { dx = 1; dy = -1; }
@@ -90,8 +90,9 @@ void Game::Grid::Make_image(QPixmap& img)
 	//  2,15  4,15
 }
 
-int Game::Grid::point(SCORING_RULE rule)
+int Game::Grid::point(GT::SCORING_RULE rule)
 {
+    using namespace GT;
 	/*
 		auto effectof = [=](int place, int dir){
 			if(place>19)return 0;
@@ -144,6 +145,7 @@ int Game::Grid::point(SCORING_RULE rule)
 	int basic_point = 0; int const coef[5] = { 3,4,5,4,3 };
 	for (int i = 0; i < 5; i++) basic_point += (r267[i] + r159[i] + r348[i]) * coef[i];
 	int points = basic_point;
+
 	switch (rule)
 	{
 	case Scoring_Normal:
@@ -152,9 +154,14 @@ int Game::Grid::point(SCORING_RULE rule)
 		for (int i = 0; i < 5; i++) if (r159[i] == 1)points += 12; return points;
 	case One_Lines_Plus_15:
 		for (int i = 0; i < 5; i++) if (r159[i] == 1)points += 15; return points;
+    case COUNT_LINES:
+        points=0;
+        for (int i = 0; i < 5; i++) points += ((r267[i]>0) + (r159[i]>0) + (r348[i]>0));
+        return points;
     default:
-        return basic_point;
-	}
+        throw 0;
+    }
+
 }
 
 void Game::Player::load_name()
@@ -168,7 +175,7 @@ void Game::Player::load_name()
 		content = inStream.readAll();
 
 		G->player->name = content.split("\n")[0];
-        G->player->icon = content.split("\n")[1];
+		G->player->icon = content.split("\n")[1];
 		file.close();
 	}
 }
@@ -190,7 +197,7 @@ void Game::Player::set_icon(QString newicon)
 {
 	icon = newicon;
 
-	QString filename = QCoreApplication::applicationDirPath() + "/res/game/user.txt";
+    QString filename = "/res/game/user.txt";
 	QString str = name + "\n" + icon;
 	QFile file(filename);
 	file.open(QIODevice::WriteOnly | QIODevice::Text);
@@ -198,108 +205,78 @@ void Game::Player::set_icon(QString newicon)
 	out << str;
 	file.close();
 }
-
-void Game::Pool::setpool(int type)
+int Game::Pool::nPool(GT::PoolType type, Game::Piece p)//当前仅限正常的块。开放巢的奇怪块打算用另一个函数加
 {
-	int line348[10] = { 3,4,8 };
-	int line159[10] = { 1,5,9 };
-	int line267[10] = { 2,6,7 };
-	int n348 = 3, n159 = 3, n267 = 3;
-	int nANY = 2, nset = 2;
-    npiece = 0;
-	switch (type)
-	{
-	case 0://default
-	default:
-		break;
-	case -1://no 1
-		line159[0] = 5; line159[1] = 9; n159 = 2; nset = 3;
-		break;
-	case -2://no 2
-		line267[0] = 5; line267[1] = 9; n267 = 2; nset = 3;
-		break;
-	case -3://no 3
-		line348[0] = 4; line348[1] = 8; n348 = 2; nset = 3;
-		break;
-	case -4://no 4
-		line348[0] = 3; line348[1] = 8; n348 = 2; nset = 3;
-		break;
-	case -5://no 5
-		line159[0] = 1; line159[1] = 9; n159 = 2; nset = 3;
-		break;
-	case -6://no 6
-		line267[0] = 2; line267[1] = 7; n267 = 2; nset = 3;
-		break;
-	case -7://no 7
-		line267[0] = 2; line267[1] = 6; n267 = 2; nset = 3;
-		break;
-	case -8://no 8
-		line348[0] = 3; line348[1] = 4; n348 = 2; nset = 3;
-		break;
-	case -9://no 9
-		line159[0] = 1; line159[1] = 5; n159 = 2; nset = 3;
-		break;
-	case 1000://调色盘
-		nANY = 5;
-		break;
-	case 66:
-		line267[0] = 2; line267[1] = 2; line267[2] = 6; line267[3] = 6; line267[4] = 6; line267[5] = 7; line267[6] = 7;
-		n267 = 7; nset = 1;
-		break;
-    case 10101:
-        int num = 3;
-        while (num--) {
-            this->back(317);
-            this->back(397);
-            this->back(412);
-            this->back(416);
-            this->back(452);
-            this->back(496);
-            this->back(812);
-            this->back(856);
-            this->back(892);
-            this->back(896);
+    using namespace GT;
+    if(p.isNormalPiece())
+    {
+        switch(type)
+        {
+        case POOL_Normal:
+            return 2;
+        case POOL_TWIN_HEAD:
+            if(p==LAIZI) return 2;
+            else if(p.x348()==4)return 0;
+            else return 3;
+        case POOL_MIMIC_CHEST:
+            if(p==LAIZI) return 2;
+            if(p.x267()==6) return 3;
+            else return 2;
+        case POOL_CAT_BURGLAR:
+            if(p==LAIZI) return 5;
+            else return 2;
+        case POOL_IRON_WALL:
+            if(p==LAIZI) return 2;
+            else if(p.sum()%3 && p.sum()%2 && p.sum()%5) return 5;//目前就先靠235判定质数了. 412 317 452 416 812 892 496 856 397 896
+            else return 0;
+        case POOL_PUPPETEER:
+            if(p==LAIZI) return 2;
+            else if(p.x159()==1 || p.x267()==2 || p.x348()==3) return 3;
+            else return 2;
+        default:throw 0;
         }
-        break;
-
-	}
-    for (int a = 0; a < n348; a++) {
-        for (int b = 0; b < n159; b++) {
-            for (int c = 0; c < n267; c++) {
-                for (int setid = 0; setid < nset; setid++)
-                {
-                    this->back(line348[a] * 100 + line159[b] * 10 + line267[c]);
-                }
-            }
-        }
-	}
-	for (int anys = 0; anys < nANY; anys++)
-	{
-        this->back(1000);
-	}
+    }
+    else
+        throw 0;
 }
-
+void Game::Pool::setpool(GT::PoolType type)
+{
+    int line348[3] = { 3,4,8 };
+    int line159[3] = { 1,5,9 };
+    int line267[3] = { 2,6,7 };
+    this->npiece=0;
+    for(int x348:line348)
+        for(int x159:line159)
+            for(int x267:line267)
+            {
+                Piece p=Piece(x348*100+x159*10+x267);
+                for(int nthatpiece=0;nthatpiece<nPool(type,p);nthatpiece++)
+                    this->back(p);
+            }
+    for(int laizis=0;laizis<nPool(type,Piece(GT::LAIZI));laizis++)
+        this->back(Piece(GT::LAIZI));
+}
 void MainWindow::load_page(PageType type)
 {
-	clear_all_object();
+    clear_all_object();
 
-	switch (type)
-	{
-	case STARTPAGE:
-	{new StartPage(this); }
-	break;
-	case PVEPAGE:
-	{new PvePage(this); }
-	break;
-	case PVEPREP:
-	{new PvePrep(this); }
-	break;
-	case SETTINGS:
-	{new SettingsPage(this); }
-	default:break;
-	}
-	page->load();
-	//qDebug()<<"pagetype set to="<<type<<"===";
+    switch (type)
+    {
+    case STARTPAGE:
+    {new StartPage(this); }
+    break;
+    case PVEPAGE:
+    {new PvePage(this); }
+    break;
+    case PVEPREP:
+    {new PvePrep(this); }
+    break;
+    case SETTINGS:
+    {new SettingsPage(this); }
+    default:break;
+    }
+    page->load();
+    //qDebug()<<"pagetype set to="<<type<<"===";
 }
 
 int main(int argc, char* argv[])
@@ -372,7 +349,7 @@ void Game::Locate_Piece()
 	//qDebug()<<"locate";
 	//switch mode
 	monster->setStatus();
-    emit signal_wait_for_operation();
+	emit signal_wait_for_operation();
 	return;
 }
 

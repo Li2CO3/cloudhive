@@ -1,7 +1,8 @@
 ﻿#ifndef GAME_H
 #define GAME_H
 
-//#define (emit X){//qDebug()<<#X; emit X;}
+//#define emit X){//qDebug()<<#X; emit X;}
+//#define emit X) emit X//造成了一堆warning
 #define QN(X) QString::number(X)
 
 #define MAX_XUANXIU 9//给一些容器设置大小。目前只用到2.
@@ -31,32 +32,47 @@ using namespace std;
 //#25|...|#31|...|#35|...|#45
 //...|#29|...|#33|...|#39|...
 
+
+#define GT gametools
+namespace gametools
+{
+
 double const GRID_X[46] = { 5,1,1,1, 2,2,2,2, 3,3,3,3,3, 4,4,4,4, 5,5,5,
-	0,0,0,0,0,0, 1,1,1,1, 2,2,3,3,4,4, 5,5,5,5, 6,6,6,6,6,6 };
+                           0,0,0,0,0,0, 1,1,1,1, 2,2,3,3,4,4, 5,5,5,5, 6,6,6,6,6,6 };
 int const GRID_Y[46] = { 1,5,7,9, 4,6,8,10, 3,5,7,9,11, 4,6,8,10, 5,7,9,
-	2,4,6,8,10,12, 1,3,11,13, 2,12, 1,13, 2,12, 1,3,11,13, 2,4,6,8,10,12 };
+                        2,4,6,8,10,12, 1,3,11,13, 2,12, 1,13, 2,12, 1,3,11,13, 2,4,6,8,10,12 };
 
 int const place_ids[15][7] = {
-	{ 0, 0, 0, 0, 0, 0, 0},
-	{ 0,26, 0,32, 0,36, 0},
-	{20, 0,30, 0,34, 0,40},
-	{ 0,27, 0, 8, 0,37, 0},
-	{21, 0, 4, 0,13, 0,41},
-	{ 0, 1, 0, 9, 0,17, 0},
-	{22, 0, 5, 0,14, 0,42},
-	{ 0, 2, 0,10, 0,18, 0},
-	{23, 0, 6, 0,15, 0,43},
-	{ 0, 3, 0,11, 0,19, 0},
-	{24, 0, 7, 0,16, 0,44},
-	{ 0,28, 0,12, 0,38, 0},
-	{25, 0,31, 0,35, 0,45},
-	{ 0,29, 0,33, 0,39, 0},
-	{ 0, 0, 0, 0, 0, 0, 0}
+    { 0, 0, 0, 0, 0, 0, 0},
+    { 0,26, 0,32, 0,36, 0},
+    {20, 0,30, 0,34, 0,40},
+    { 0,27, 0, 8, 0,37, 0},
+    {21, 0, 4, 0,13, 0,41},
+    { 0, 1, 0, 9, 0,17, 0},
+    {22, 0, 5, 0,14, 0,42},
+    { 0, 2, 0,10, 0,18, 0},
+    {23, 0, 6, 0,15, 0,43},
+    { 0, 3, 0,11, 0,19, 0},
+    {24, 0, 7, 0,16, 0,44},
+    { 0,28, 0,12, 0,38, 0},
+    {25, 0,31, 0,35, 0,45},
+    { 0,29, 0,33, 0,39, 0},
+    { 0, 0, 0, 0, 0, 0, 0}
 };//给开放世界巢做准备→ →
+
+enum PIECES {EMPTY_PIECE=0, LAIZI=1000};
+
+enum SCORING_RULE { Scoring_Normal = 0, One_Lines_Plus_12 = 112, One_Lines_Plus_15 = 115, COUNT_LINES=-2147483647 };
+
+enum PoolType {POOL_Normal=0,POOL_TWIN_HEAD=-4, POOL_MIMIC_CHEST=66, POOL_CAT_BURGLAR=GT::LAIZI, POOL_IRON_WALL=235711, POOL_PUPPETEER=123};
+//setpool
+
+enum GAME_RESULT { PLAYER_DEAD = 0, TURNS_ENOUGH = 1 };//UNUSED
+
+};
 
 class MainWindow;//自定义窗口类
 
-enum SCORING_RULE { Scoring_Normal = 0, One_Lines_Plus_ = 1000, One_Lines_Plus_12 = 1012, One_Lines_Plus_15 = 1015 };//计分规则
 
 class Game :public QThread//游戏进行在另一个线程
 {
@@ -96,6 +112,15 @@ public:
 		int x348() const { if (id == 1000)return 10; return id / 100; }//万能牌是10,否则返回3/1/2线值
 		int x159() const { if (id == 1000)return 10; return (id / 10) % 10; }
 		int x267() const { if (id == 1000)return 10; return id % 10; }
+        bool isNormalPiece()
+        {
+            if(id==GT::LAIZI)return true;
+            if(id/100==3|| id/100==4 || id/100==8)
+                if((id/10)%10==1 || (id/10)%10==5 || (id/10)%10==9)
+                    if(id%10==2 || id%10==6 || id%10==7)
+                        return true;
+            return false;
+        }
 		int const ValueofLine(int x) const //返回x线值
 		{
 			if (x == 3 || x == 4 || x == 8)return x348();
@@ -130,10 +155,12 @@ public:
 		Piece pieces[MAX_POOL];//卡池
 		Piece current[MAX_XUANXIU];//当前回合的块
 		int ncurrent;//当前回合块数
-		void setpool(int type);//根据种类设置卡池//TODO:把type改成enum
-        Pool(Game* g, int type = 0) {
+        int nPool(GT::PoolType type, Piece p);
+        void setpool(GT::PoolType type);//根据种类设置卡池//TODO:把type改成enum
+        Pool(Game* g) {
             G = g;
-            setpool(type);
+            npiece=0;
+            setpool(GT::POOL_Normal);
         }
         Piece drawout() {
             int k = G->random.randint(0, npiece - 1);
@@ -153,12 +180,13 @@ public:
 	{
 	public:
 		Piece pieces[20];//1~19是1~19号位。0号是凑数的
-		//int prev_point;//上回合分数，boss们曾经会看，遗留产物我直接注释掉
-		int point() { return point(Scoring_Normal); };//计分
-		int point(SCORING_RULE rule);//计分，带规则
+        //int prev_point;//上回合分数，boss们曾经会看，遗留产物我直接注释掉
+        int point() { return point(GT::Scoring_Normal); };//计分
+        int point(GT::SCORING_RULE rule);//计分，带规则
+        int nlines(){return point(GT::COUNT_LINES);}//计算线数 用开放巢的方式做的
 		Piece* operator[](int t) { return &pieces[t]; }//返回盘面几号位。这个感觉可以去掉
 		Grid() { Clear(); }
-        void Clear() { for (int i = 0; i < 20; i++)pieces[i] = 0; }//清除盘面
+		void Clear() { for (int i = 0; i < 20; i++)pieces[i] = 0; }//清除上回合分数和盘面
 
 		void Make_image(QPixmap& pixmap);//画成图。用LGTBot的图片资料
 	};
@@ -193,27 +221,32 @@ public:
             if (health <= 0) { dead = true; emit G->Alert_monster(name + "已被击杀..."); G->Game_End(); }
 		}
 	};
-	enum MONSTER_ID {
-		DEFAULT_MONSTER = 0, TWIN_HEAD = 1, SHUANGTOULONG = 1,
-		MIMIC_CHEST = 2, BAOXIANGGUAI = 2, HUISHUOHUADEBAOXIANG = 2,
-		NAMI = 3, CAT_BURGLAR = 3, XIAOZEIMAO = 3, HAIZEIWANG = 3,
+
+    enum MONSTER_ID {
+        DEFAULT_MONSTER = 0, TWIN_HEAD = 1, SHUANGTOULONG = 1,
+        MIMIC_CHEST = 2, BAOXIANGGUAI = 2, HUISHUOHUADEBAOXIANG = 2,
+        NAMI = 3, CAT_BURGLAR = 3, XIAOZEIMAO = 3, HAIZEIWANG = 3,
         SNOWMAN = 4, XUEGUAI = 4,
-        IRON_WALL = 5
-	};
+        IRON_WALL = 5,
+        STALL = 6,
+        PUPPETEER = 7,
+    };
 	class Monster
-	{
-	public:
+    {
+    public:
+
 		Game* G;
 		QString name;
+        QString shortname;
 		QString icon;
-		Game::MONSTER_ID id;
+        MONSTER_ID id;
 		int initialhealth;//在构造的时候就设置上了
 		int point;
 		int health;
 		int armor;
 		bool dead;
-		Monster(Game* g) { G = g; name = ""; id = Game::DEFAULT_MONSTER; initialhealth = 0; dead = false; }
-		virtual ~Monster() {}
+        Monster(Game* g) { G = g; G->monster=this; name = ""; shortname=""; id = DEFAULT_MONSTER; initialhealth = 0; dead = false; }
+        virtual ~Monster() {}
 		static Monster* new_monster(MONSTER_ID monst, Game* G);//把Game的Monster替换成一个新的，根据monst创建
 
 		virtual QString description();//描述
@@ -232,14 +265,14 @@ public:
                 throw 0;//现在没有跳过回合，所以直接throw
             }
 		}
-		virtual int pooltype() { return 0; }//怪对应的牌堆类型
-		virtual SCORING_RULE scoringrule() { return Scoring_Normal; }//计分规则。
+        virtual GT::PoolType pooltype() { return GT::POOL_Normal; }//怪对应的牌堆类型
+        virtual GT::SCORING_RULE scoringrule() { return GT::Scoring_Normal; }//计分规则。
 		virtual void Monster_Before_Turn();//包含发牌
 		virtual void Monster_Before_Combat();//发牌在[G->record.pieces[G->turn]]，备注在[G->record.cache[turn]]操作在[G->record[turn]]，上轮分在[G->player->prev_point]
 		virtual void Monster_Combat();//打架效果，包含掉血
 		virtual void Monster_After_Combat();//打架后效果
-        virtual void addPoint(int pt) { point += pt; (emit G->signal_monster_change_stats(point, health, armor)); }//这个signal是给窗口看的//右边这是什么意思我已经看不懂了→//todo:加一个place
-        void gainArmor(int arm) { armor += arm; (emit G->signal_monster_change_stats(point, health, armor)); }
+        virtual void addPoint(int pt) { point += pt; emit G->signal_monster_change_stats(point, health, armor); }//这个signal是给窗口看的//右边这是什么意思我已经看不懂了→//todo:加一个place
+        void gainArmor(int arm) { armor += arm; emit G->signal_monster_change_stats(point, health, armor); }
 		virtual void deal_damage(int dmg) { G->player->take_damage(dmg); }
 		virtual void take_damage(int dmg) {
 			G->player->totaldamage += dmg;
@@ -276,7 +309,7 @@ public:
 			}
 		}
 
-		virtual void Make_Summary(QDialog* dialog);
+        virtual void Make_Summary(QDialog* dialog);
 	};
 	class Record
 	{
@@ -291,7 +324,7 @@ public:
 	enum GAME_RESULT { PLAYER_DEAD = 0, TURNS_ENOUGH = 1 };
 	void Game_End()
 	{
-        status = FINISHED; emit signal_game_end(); exit();
+		status = FINISHED; emit signal_game_end(); exit();
 	}
 
 	int turn = 0;
@@ -312,10 +345,11 @@ public:
 		monster = new Monster(this);
 	}
 	~Game() {
+        qDebug()<<"REMAKED";
 		if (pool)delete pool;  if (player)delete player; if (monster)delete monster;//Debug()<<"DELETE GAME";
 	}
 
-	SCORING_RULE scoring_rule;
+    GT::SCORING_RULE scoring_rule;
 
 	//todo:log
 
@@ -338,13 +372,13 @@ public:
 
 	void Start();//todo:参数
 
-	void load_challenge(MONSTER_ID monst)
+    void load_challenge(MONSTER_ID monst)
 	{
 		//pool=new Pool(this);
 		//player=new Player(this);
 		//现在pool和player没什么特殊的。如果需要可以参照monster
 
-		monster = Monster::new_monster(monst, this);
+        Monster::new_monster(monst, this);
 		scoring_rule = monster->scoringrule();
 		pool->setpool(monster->pooltype());
 		player->health = 150;

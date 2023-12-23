@@ -10,11 +10,10 @@
 #include <QDialog>
 #include <QPainter>
 #include "game.h"
+#include "monsters/monster.h"
 #include <QFile>
 #include <QTextStream>
 #include <QFileInfo>
-#include <QMovie>
-#include <QHBoxLayout>
 
 class MainWindow;
 
@@ -69,32 +68,6 @@ name->setIcon(QIcon(QPixmap(link).SCALED((g3),(g4))));\
 name->setIconSize(QSize((g3),(g4)));\
     name->show();}
 
-#define NEW_BUTTON_IMAGE_1(name, g1, g2, g3, g4, link, parent) {\
-    name = new QPushButton(parent);\
-    name->setG(g1, g2, g3, g4);\
-    QFileInfo fileInfo(link);\
-    QString extension = fileInfo.suffix();\
-    if (extension.toLower() == "gif") {\
-        QMovie *movie = new QMovie(link);\
-        QLabel *label = new QLabel(name);\
-        label->setMovie(movie);\
-        label->setStyleSheet("QLabel { border: none; }"); \
-        label->setContentsMargins(0, 0, 0, 0); \
-        movie->setScaledSize(QSize(g3, g4));\
-        movie->start();\
-        QHBoxLayout *layout = new QHBoxLayout(name);\
-        layout->addWidget(label);\
-        layout->setContentsMargins(0, 0, 0, 0);\
-        layout->setSpacing(0); \
-        name->setLayout(layout);\
-    } else {\
-        name->setIcon(QIcon(QPixmap(link).scaled(g3, g4)));\
-        name->setIconSize(QSize(g3, g4));\
-    }\
-    name->show();\
-}
-
-
 
 #define SetLabel(name,g1,g2,g3,g4,fontsize)\
 {\
@@ -145,27 +118,78 @@ public:
 
 		QLabel* bottom_label;
 		NEW_LABEL_ALIGN(bottom_label, 180, 270, 40, 30, QN(page), 15, Center, dialog)
+        QPushButton *icons[15];
         for (int id = 0; id < 15; id++)
         {
-            if ((page - 1) * 15 + id < Icons.length())
+
             {
-                QPushButton* ic;
-                NEW_BUTTON_IMAGE(ic, 50 + (id % 5) * 60, 50 + (id / 5) * 60, 40, 40, "res/icon/" + Icons[15 * (page - 1) + id], dialog);
+                QPushButton*&ic=icons[id];
+                if ((page - 1) * 15 + id < Icons.length())
+                {NEW_BUTTON_IMAGE(ic, 50 + (id % 5) * 60, 50 + (id / 5) * 60, 40, 40, "res/icon/" + Icons[15 * (page - 1) + id], dialog);}
+                else
+                {NEW_BUTTON_IMAGE(ic, 50 + (id % 5) * 60, 50 + (id / 5) * 60, 40, 40, QSize(40,40), dialog); ic->hide();}
                 ic->connect(ic, &QPushButton::clicked, this, [=]() {G->player->set_icon(Icons[15 * (page - 1) + id]); dialog->close(); MW->load_page(STARTPAGE); });
             }
-            if (page > 1)
+        }
             {
                 QPushButton* prev;
                 NEW_BUTTON(prev, 10, 260, 30, 30, "<", 15, dialog);
-                connect(prev, &QPushButton::clicked, this, [=]() {MW->load_page(STARTPAGE); show_icons(page - 1); });
-            }
-            if (page < 1 + (Icons.length() - 1) / 15)
-            {
+
                 QPushButton* next;
                 NEW_BUTTON(next, 360, 260, 30, 30, ">", 15, dialog);
-                connect(next, &QPushButton::clicked, this, [=]() {MW->load_page(STARTPAGE); show_icons(page + 1); });
+
+
+                for(int targetid=0;targetid<15;targetid++)
+                    {
+                    QPushButton * target =icons[targetid];
+                    connect(prev,&QPushButton::clicked,this,[=](){
+
+                        int newpage=bottom_label->text().toInt()-1;
+                        if((newpage-1)*15+targetid<Icons.length())
+                            {
+                            target->setIcon(QPixmap("res/icon/" + Icons[15 * (newpage - 1) + targetid]).SCALED(target->width(),target->height()) );
+                            target->show();
+                            }
+                        else
+                            target->hide();
+                    });
+                    }
+                connect(prev,&QPushButton::clicked,this,[=](){
+
+                        int newpage=bottom_label->text().toInt()-1;
+                        bottom_label->setText(QN(newpage));
+                        if(newpage>1) prev->show(); else prev->hide();
+                        if(newpage<(Icons.length()-1)/15+1) next->show();else next->hide();
+                    });
+                    if(page>=1)prev->show();else prev->hide();
+
+                for(int targetid=0;targetid<15;targetid++)
+                {
+                    QPushButton * target =icons[targetid];
+                    connect(next,&QPushButton::clicked,this,[=](){
+
+                        int newpage=bottom_label->text().toInt()+1;
+                        if((newpage-1)*15+targetid<Icons.length())
+                        {
+                            target->setIcon(QPixmap("res/icon/" + Icons[15 * (newpage - 1) + targetid]).SCALED(target->width(),target->height()) );
+                            target->show();
+                        }
+                        else
+                            target->hide();
+                    });
+                }
+                connect(next,&QPushButton::clicked,this,[=](){
+
+                    int newpage=bottom_label->text().toInt()+1;
+                    bottom_label->setText(QN(newpage));
+                    if(newpage>1) prev->show(); else prev->hide();
+                    if(newpage<(Icons.length()-1)/15+1) next->show();else next->hide();
+                });
+                if(page<(Icons.length()-1)/15+1)next->show();else next->hide();
+
+
             }
-        }
+
 	}
 	StartPage(MainWindow* mw) { MW = mw; G = mw->G; MW->page = this; }
 	void load() override
@@ -258,6 +282,19 @@ public:
 	QPushButton* newgame_random, * newgame_selected, * back;
 
 	QLabel* monster_icon, * monster_intro;
+
+    static const int nMonster=7;
+    static constexpr Game::MONSTER_ID monster_ids[nMonster + 1] = {
+        Game::DEFAULT_MONSTER,
+        Game::TWIN_HEAD,
+        Game::MIMIC_CHEST,
+        Game::CAT_BURGLAR,
+        Game::SNOWMAN,
+        Game::IRON_WALL,
+        Game::STALL,
+        Game::PUPPETEER,
+    };
+    QPushButton* e[nMonster + 1];
 	PvePrep(MainWindow* mw) { MW = mw; G = MW->G; MW->page = this; }
 	~PvePrep() {}
 	void load() override
@@ -268,44 +305,41 @@ public:
 		NEW_LABEL_ALIGN_MW(seedhint, 270, 310, 150, 30, "随机种子:", 30, Center);
 		NEW_LABEL_ALIGN_MW(seedhint, 170, 370, 600, 60, "选择对手:若随机种子为空，则取当前时间", 30, Center);
 		//  NEW_LABEL_ALIGN_MW(seedhint2,370,400,300,20,"若随机种子为空，则取当前时间",16,Center);
-		NEW_BUTTON_MW(newgame_random, 220, 650, 160, 60, "开始新局", 30);
-		NEW_BUTTON_MW(newgame_selected, 420, 650, 160, 60, "开始选局", 30);
-		NEW_BUTTON_MW(back, 610, 650, 110, 60, "返回", 30);
+        NEW_BUTTON_MW(newgame_random,   220, 750, 160, 60, "开始新局", 30);
+        NEW_BUTTON_MW(newgame_selected, 420, 750, 160, 60, "开始选局", 30);
+        NEW_BUTTON_MW(back,             610, 750, 110, 60, "返回", 30);
 
-        int const N = 5;
-		QPushButton* e[N + 1];
-        NEW_BUTTON_MW(e[1], 220, 450, 150, 70, "双头龙", 30);
-        NEW_BUTTON_MW(e[2], 420, 450, 150, 70, "宝箱怪", 30);
-        NEW_BUTTON_MW(e[3], 220, 550, 150, 70, "小贼猫", 30);
-        NEW_BUTTON_MW(e[4], 420, 550, 150, 70, "雪人", 30);
-        NEW_BUTTON_MW(e[5], 620, 450, 150, 70, "竞技场主宰", 30);
+        NEW_BUTTON_MW(e[1], 180, 450, 180, 70, "双头龙", 30);
+        NEW_BUTTON_MW(e[2], 400, 450, 180, 70, "宝箱怪", 30);
+        NEW_BUTTON_MW(e[3], 620, 450, 180, 70, "小贼猫", 30);
+        NEW_BUTTON_MW(e[4], 180, 550, 180, 70, "雪人", 30);
+        NEW_BUTTON_MW(e[5], 400, 550, 180, 70, "铁壁主宰", 30);
+        NEW_BUTTON_MW(e[6], 620, 550, 180, 70, "saiwei", 30);
+        NEW_BUTTON_MW(e[7], 180, 650, 180, 70, "系命傀儡师", 30);
 
 		//怪物信息
 		NEW_LABEL_IMAGE_MW(monster_icon, 1115, 100, 120, 120, G->monster->icon);
 		QString str = G->monster->description();
-		NEW_LABEL_ALIGN_MW(monster_intro, 840, 250, 670, 750, str, 30, Top | Qt::AlignLeft);
+        NEW_LABEL_ALIGN_MW(monster_intro, 840, 250, 670, 750, str, 30, Top | Qt::AlignLeft);
 		monster_intro->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
-        Game::MONSTER_ID monster_ids[N + 1] = {
-            Game::DEFAULT_MONSTER,
-            Game::TWIN_HEAD,
-            Game::MIMIC_CHEST,
-            Game::CAT_BURGLAR,
-            Game::SNOWMAN,
-            Game::IRON_WALL
-        };
-		for (int i = 1; i <= N; i++)
-			QPushButton::connect(e[i], &QPushButton::clicked, MW, [=]() {
-			G->load_challenge(monster_ids[i]);
-			for (int k = 1; k <= N; k++)
+
+        for (int i = 1; i <= nMonster; i++)
+            QPushButton::connect(e[i], &QPushButton::clicked, MW, [=]() {
+                    if(MW->status==MainWindow::UISTATUS::NOT_WAITING)return;
+                    MW->status=MainWindow::UISTATUS::NOT_WAITING;
+            G->load_challenge(monster_ids[i]);
+            for (int k = 1; k <= nMonster; k++)
 			{
 				e[k]->setStyleSheet(k == i ? "background-color:rgb(155,155,255)" : "");
 			}
 			monster_icon->setPixmap(QPixmap(G->monster->icon).scaled(monster_icon->size()));
 			monster_intro->setText(G->monster->description());
+
+            MW->status=MainWindow::UISTATUS::WAITING;
 				});
 		if (G->monster->id == 0)G->load_challenge(Game::TWIN_HEAD);
-        emit e[G->monster->id]->clicked();
+		emit e[G->monster->id]->clicked();
 
 		QAbstractButton::connect(newgame_random, &QPushButton::clicked, MW, [=]() {
 			G->random.setseed(time(NULL));
@@ -320,9 +354,10 @@ public:
 			//G->load_challenge(G->);//Game::SNOWMAN/*TWIN_HEAD*/);//设置冒险在这里改
 			MW->load_page(PVEPAGE);
 			G->RUN();
-			});
+            });
 
 		QAbstractButton::connect(back, &QPushButton::clicked, MW, [=]() {MW->load_page(STARTPAGE); });
+
 	}
 };
 
@@ -361,6 +396,7 @@ public:
 		MW = mw; G = MW->G; MW->page = this;
 	}
 	void load() override {
+        using namespace GT;
 		gridimage = QPixmap();
 		G->player->grid.Make_image(gridimage);
 		NEW_LABEL_IMAGE_MW(grid_background, 150, 100, 896, 896, gridimage);
@@ -379,7 +415,7 @@ public:
 		//NEW_LABEL_ALIGN_MW(hero_stats2,350,70,300,50,G->player->name+": "+Player_Initial,12,Left);
 		NEW_LABEL_ALIGN_MW(monster_extra, 1100, 400, 450, 500, "", 30, HCenter);
 		//NEW_LABEL_ALIGN_MW(turninfo2,250,50,200,50,"第0回合",20,Left);
-		NEW_LABEL_ALIGN_MW(turninfo, 1200, 250, 300, 50, "第0/35回合", 40, HCenter);
+        NEW_LABEL_ALIGN_MW(turninfo, 1200, 250, 300, 50, "第1/35回合", 40, HCenter);
 		NEW_BUTTON_MW(to_home, 20, 20, 60, 60, "退出", 20);
 
 		MainWindow::connect(to_home, &QPushButton::clicked, this, [=]() {G->remake(); MW->load_page(STARTPAGE); });//强制退出
@@ -405,8 +441,8 @@ public:
 		connect(G, SIGNAL(Alert_monster(QString)), this, SLOT(Update_Battle_Log(QString)));//更新指令
 		connect(G, &Game::signal_update_turn_piece, this, &PvePage::Update_Turn_Piece);
 		connect(G, &Game::signal_before_turn, this, [=]() {Update_Turns(); });
-        connect(G, SIGNAL(signal_player_change_stats(int, int)), this, SLOT(Update_Player_Stats(int, int)));
-        connect(G, SIGNAL(signal_monster_change_stats(int, int, int)), this, SLOT(Update_Monster_Stats(int, int, int)));
+        connect(G, SIGNAL(signal_player_change_stats(int,int)), this, SLOT(Update_Player_Stats(int,int)));
+        connect(G, SIGNAL(signal_monster_change_stats(int,int,int)), this, SLOT(Update_Monster_Stats(int,int,int)));
 		connect(G, &Game::signal_game_end, this, [=]() {Make_Summary(); });
 
 		//    G->monster->id=Game::TWIN_HEAD;

@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 #include "game.h"
 #include <QMainWindow>
-
+#include <QTimer>
 
 class StartPage;class PvePage;class SettingsPage;
 
@@ -30,7 +30,7 @@ public:
         virtual void load(){};
         virtual void update(){}
         virtual ~Page(){}
-        virtual void deleteLater(){delete this;}
+        //virtual void deleteLater(){delete this;}
     };
 
     void clear_all_object(){
