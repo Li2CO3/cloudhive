@@ -217,7 +217,7 @@ int Game::Pool::nPool(GT::PoolType type, Game::Piece p)//当前仅限正常的�
         case POOL_IRON_WALL:
             if(p==LAIZI) return 2;
             else if(p.sum()%3 && p.sum()%2 && p.sum()%5) return 5;//目前就先靠235判定质数了. 412 317 452 416 812 892 496 856 397 896
-            else return 0;
+            else return 2;
         case POOL_PUPPETEER:
             if(p==LAIZI) return 2;
             else if(p.x159()==1 || p.x267()==2 || p.x348()==3) return 3;
