@@ -23,8 +23,11 @@ QString Stall::description() {
 
 // 回合开始前
 void Stall::Monster_Before_Turn() {
+    //int u = (initialhealth - this->health) / 100;
+    //int mi = -5 + u;
+    //int ma = 10 + u;
     int k = G->random.randint(-5, 15);
-    emit G->Alert_monster(name + "【热修】发动 \n/rd i -5 15 \n -> "
+    emit G->Alert_monster(name + "【热修】发动 \n/rd i " + QN(-5) + " "+ QN(15) + " \n -> "
                           + QN(k) + "\n"+ name + "获得" + QN(k) + "点分数");
     if(k<-point){k=-point; emit G->Alert_monster(name+"【保底】触发，分数不低于0!");}
     int real_increase=std::max(-point,k);
