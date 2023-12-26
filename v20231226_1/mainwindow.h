@@ -1,10 +1,11 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "game.h"
 #include <QMainWindow>
 #include <QTimer>
 #include <QDialog>
 
+#include "stdafx.h"
+#include "game.h"
 
 #define setG(g1,g2,g3,g4) setGeometry((g1),(g2),(g3),(g4))
 #define setP(g) setPixelSize((g))
@@ -79,10 +80,6 @@ name=new QLineEdit(MW->centralWidget());\
 
 
 
-
-
-
-
 class StartPage;class PvePage;class SettingsPage;
 
 enum PageType{STARTPAGE=0,PVEPAGE=1,PVEPREP=2,SETTINGS=3};
@@ -123,7 +120,7 @@ public:
     UISTATUS status;
     void load_page(PageType type);
 
-    void Set_Piece(Game::Piece p, int place);
+    void Set_Piece(Piece p, int place);
 signals:
     void signal_made_operation();
 };

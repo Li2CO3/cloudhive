@@ -1,9 +1,10 @@
 ﻿#ifndef IRON_WALL_H
 #define IRON_WALL_H
 
+#include "stdafx.h"
 #include "monster.h"
 
-class Iron_Wall : public Game::Monster
+class Iron_Wall : public Monster
 {
 public:
     Iron_Wall(Game* G);

@@ -26,12 +26,15 @@ INCLUDEPATH += .
 
 
 SOURCES += \
+    cardpool.cpp \
     game.cpp \
+    grid.cpp \
     mainwindow.cpp \
     monsters/catburglar.cpp \
     monsters/ironwall.cpp \
     monsters/mimicchest.cpp \
     monsters/puppeteer.cpp \
+    monsters/rainbowgiraffe.cpp \
     monsters/snowman.cpp \
     monsters/stall.cpp \
     monsters/twinhead.cpp \
@@ -43,15 +46,19 @@ SOURCES += \
     modes/pve.cpp \
     game.cpp \
     monster.cpp \
+    piece.cpp \
     ui.cpp
 
 HEADERS += \
+    cardpool.h \
     game.h \
+    grid.h \
     mainwindow.h \
     monsters/catburglar.h \
     monsters/ironwall.h \
     monsters/mimicchest.h \
     monsters/puppeteer.h \
+    monsters/rainbowgiraffe.h \
     monsters/snowman.h \
     monsters/stall.h \
     monsters/twinhead.h \
@@ -63,7 +70,11 @@ HEADERS += \
     modes/pve.h \
     game.h \
     monster.h \
-    ui.h
+    piece.h \
+    stdafx.h \
+    ui.h \
+    utils/gametools.h \
+    utils/random.hpp
 
 FORMS +=
 

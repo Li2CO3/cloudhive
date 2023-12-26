@@ -15,8 +15,6 @@
 
 class MainWindow;
 
-
-
 class StartPage;
 
 class SettingsPage;

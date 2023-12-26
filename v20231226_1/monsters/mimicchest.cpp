@@ -1,8 +1,10 @@
 ﻿#include "mimicchest.h"
+#include "game.h"
+#include "cardpool.h"
 
 Mimic_Chest::Mimic_Chest(Game* G) : Monster(G)
 {
-    id = Game::MIMIC_CHEST;
+    id = GT::MIMIC_CHEST;
     name = "会说话的宝箱"; shortname = "宝箱怪";
     initialhealth = 1111;
     icon = QString("res/icon/monster/") + "2_mimic_chest.jpg";
@@ -20,7 +22,7 @@ QString Mimic_Chest::description()
 }
 
 void Mimic_Chest::reset() {
-    Game::Monster::reset();
+    Monster::reset();
     nFutureTiles = 0;
     next_future = 0;
     turn_of_last_change = 0;
@@ -35,17 +37,17 @@ void Mimic_Chest::Monster_Before_Turn()
     {
         trigger_ability_1();
     }
-    Game::Piece p;
+    Piece p;
 
     for (; next_future < nFutureTiles; next_future++)
     {
         if (iskeep(future_tiles[next_future]))break;
     }
 
-    Game::Piece next;
+    Piece next;
     if (next_future == nFutureTiles)
     {
-        Game::Monster::Monster_Before_Turn(); next = G->pool->current[0];
+        Monster::Monster_Before_Turn(); next = G->pool->current[0];
     }
     else
     {
@@ -80,11 +82,11 @@ void Mimic_Chest::trigger_ability_1()
     QString draw_info = "", keep_info = "保留的牌有:", back_info = "洗回的牌有:";
     for (int place = -6; place <= -1; place++)
     {
-        Game::Piece p = future_tiles[nFutureTiles + place];
+        Piece p = future_tiles[nFutureTiles + place];
         draw_info += p.to_string();
         if (place != -1)draw_info += " ";
         if (iskeep(p)) { haskeep = true; keep_info = keep_info + ' ' + p.to_string(); }
-        if (!iskeep(p)) { hasnonkeep = true; back_info = back_info + ' ' + p.to_string(); G->pool->back(p); }
+        if (!iskeep(p)) { hasnonkeep = true; back_info = back_info + ' ' + p.to_string(); G->pool->pushback(p); }
     }
     emit G->Alert_monster(draw_info);
     if (haskeep)emit G->Alert_monster(keep_info);
@@ -94,7 +96,7 @@ void Mimic_Chest::trigger_ability_1()
 void Mimic_Chest::addPoint(int pt)
 {
     int per50 = point / 50;
-    Game::Monster::addPoint(pt);
+    Monster::addPoint(pt);
     if (point / 50 > per50)
         ready_for_ability_1 = true;
     return;
@@ -111,7 +113,7 @@ void Mimic_Chest::Monster_Before_Combat()
         if (G->player->point() != G->player->prev_point)turns_not_changed_ui = 0;
         emit G->Alert_monster("未动回合数:" + QN(turns_not_changed_ui));
     }
-    Game::Piece p = G->record.pieces[G->turn][0];
+    Piece p = G->record.pieces[G->turn][0];
     {
         int gainpt = p.x267();
         emit G->Alert_monster("宝箱怪【贪敛】触发，+" + QN(gainpt) + "分!");

@@ -1,7 +1,9 @@
 ﻿#include "puppeteer.h"
+#include "game.h"
+#include "cardpool.h"
 
 Puppeteer::Puppeteer(Game* G) : Monster(G) {
-    id = Game::PUPPETEER;
+    id = GT::PUPPETEER;
     name = "系命傀儡师"; shortname = "傀儡师";
     initialhealth = 1666;
     sham = 0;
@@ -11,7 +13,7 @@ Puppeteer::Puppeteer(Game* G) : Monster(G) {
 void Puppeteer::reset() {
     sham = 0;
     prev_nlines = 0;
-    Game::Monster::reset();
+    Monster::reset();
 }
 
 
@@ -44,13 +46,12 @@ void Puppeteer::Monster_Before_Turn() {
         G->player->take_damage(start_turn_damage);
     }
     if (G->turn % 10 == 0) {
-
         int armor_gain=0;
         QString notice = name + "【机关游行】发动，夺取";
 
         for(int i=0;i<G->turn/10+1;i++)
         {
-            Game::Piece t=this->G->pool->drawout();
+            Piece t=this->G->pool->drawout();
             armor_gain+=t.sum();
             notice=notice+" "+t.to_string();
         }
@@ -60,42 +61,36 @@ void Puppeteer::Monster_Before_Turn() {
 
         this->addPoint(armor_gain);
         this->gainArmor(armor_gain);
-
-        }
-    Game::Monster::Monster_Before_Turn();
+    }
+    Monster::Monster_Before_Turn();
 }
 
 void Puppeteer::Monster_Before_Combat() {
-    Game::Monster::Monster_Before_Combat();
-
+    Monster::Monster_Before_Combat();
     {
-        int diff_nlines=G->player->grid.nlines()-prev_nlines;
-        if(diff_nlines>0)
+        int diff_nlines = G->player->grid.nlines()-prev_nlines;
+        if(diff_nlines > 0)
         {
-        int pt_gain=diff_nlines*7;
-        this->addPoint(pt_gain);
-        emit G->Alert_monster(name+"【命运之丝】触发，分数+"+QN(pt_gain));
+            int pt_gain=diff_nlines * 7;
+            this->addPoint(pt_gain);
+            emit G->Alert_monster(name+"【命运之丝】触发，分数+" + QN(pt_gain));
         }
         else if(diff_nlines<0)
         {
-        int pt_lose=diff_nlines*(-7);
-        this->addPoint(-pt_lose);
-        emit G->Alert_monster(name+"【命运之丝】触发，分数-"+QN(pt_lose));
+            int pt_lose=diff_nlines * (-7);
+            this->addPoint(-pt_lose);
+            emit G->Alert_monster(name+"【命运之丝】触发，分数-" + QN(pt_lose));
         }
     }
 }
 
 
 void Puppeteer::Monster_Combat() {
-//    Game::Grid *gr = &G->player->grid;
-//    int nl = gr->nlines();
-//    this->addPoint(7*nl);
-    Game::Monster::Monster_Combat();
-//    this->addPoint(-7*nl);
+    Monster::Monster_Combat();
 }
 
 void Puppeteer::Monster_After_Combat() {
-    Game::Monster::Monster_After_Combat();
+    Monster::Monster_After_Combat();
 
     prev_nlines=G->player->grid.nlines();
 

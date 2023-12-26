@@ -1,6 +1,22 @@
 ﻿#include "catburglar.h"
 #include <QLabel>
-//#include "ui.h"
+#include "ui.h"
+#include "game.h"
+#include "cardpool.h"
+
+Cat_Burglar::Cat_Burglar(Game* G) : Monster(G) {
+    id = GT::CAT_BURGLAR;
+    name = "小贼猫";
+    shortname = "小贼猫";
+    initialhealth = 1000;
+    icon = QString("res/icon/monster/") + "3_cat_burglar.jpg";
+}
+void Cat_Burglar::reset() {
+    Monster::reset();
+    bomb1 = 0;
+    bomb2 = 0;
+}//bomb是欺骗技能的位置
+
 
 QString Cat_Burglar::description()
 {
@@ -19,7 +35,7 @@ QString Cat_Burglar::description()
 
 void Cat_Burglar::Monster_Before_Turn()
 {
-	Game::Grid gr = G->player->grid;
+    Grid gr = G->player->grid;
     int nl = gr.nlines();
 
 	if (nl >= 7 && nl <= 10)
@@ -77,7 +93,7 @@ void Cat_Burglar::Monster_Before_Combat()
 	{
 		if (place != 0)
 		{
-			Game::Piece target = G->record.pieces[G->turn][choice];
+            Piece target = G->record.pieces[G->turn][choice];
 			int damage = std::min(15, target.x159() + target.x267() + target.x348());
             emit G->Alert_monster("小贼猫【欺骗】触发，对" + G->player->name + "造成" + QN(damage) + "点伤害!");
 			deal_damage(damage);
@@ -119,13 +135,13 @@ void Cat_Burglar::Monster_Combat()
 
 void Cat_Burglar::Make_Summary(QDialog* dialog)
 {
-    Game::Monster::Make_Summary(dialog);
+    Monster::Make_Summary(dialog);
 
     for (int i = 1; i <= MAX_TURN && i <= G->turn; i++)
     {
         if (G->record.npieces[i] == 2)
         {
-            Game::Piece p = G->record.pieces[i][1 - G->record.cache[i].toInt()];
+            Piece p = G->record.pieces[i][1 - G->record.cache[i].toInt()];
             QLabel* l;
             //piece->setGeometry(80+((i-1)%10*45),370+(i-1)/10*45,32,32);
             NEW_LABEL_IMAGE(l, 80 + ((i - 1) % 10 * 45) + 20, 370 + (i - 1) / 10 * 45 + 20, 16, 16, "res/piece/"+QString("pure")+"/card_" + p.to_string() + ".png", dialog);

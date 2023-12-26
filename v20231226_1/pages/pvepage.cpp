@@ -1,4 +1,6 @@
-#include "pvepage.h"
+﻿#include "pvepage.h"
+#include "monster.h"
+#include "mainwindow.h"
 
 
 void PvePage::load()
@@ -65,7 +67,7 @@ void PvePage::Make_Summary()
 
 }
 
-void Game::Monster::Make_Summary(QDialog* dialog)
+void Monster::Make_Summary(QDialog* dialog)
 {
     MainWindow* MW = G->MW;
 

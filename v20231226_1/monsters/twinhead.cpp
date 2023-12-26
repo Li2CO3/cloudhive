@@ -1,7 +1,9 @@
 ﻿#include "twinhead.h"
+#include "game.h"
+#include "cardpool.h"
 
 Twin_Head::Twin_Head(Game* G) : Monster(G) {
-    id = Game::TWIN_HEAD;
+    id = GT::TWIN_HEAD;
     name = "双头龙"; shortname = "双头龙";
     initialhealth = 2000;
     icon = QString("res/icon/monster/") + "1_twin_head.jpg";
@@ -22,7 +24,7 @@ QString Twin_Head::description()
 
 void Twin_Head::Monster_Before_Turn()//双头龙：回合开始
 {
-    Game::Monster::Monster_Before_Turn();
+    Monster::Monster_Before_Turn();
     if (G->turn >= 3)
     {
         int gain_pt = ((G->turn % 2 == 1) ? 4 : 8);
@@ -74,7 +76,7 @@ void Twin_Head::Monster_Combat()
     }
     if (mypt == monsterpt || mypt < monsterpt)
     {
-        Game::Monster::Monster_Combat();
+        Monster::Monster_Combat();
     }
     return;
 }

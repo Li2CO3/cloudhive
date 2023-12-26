@@ -1,6 +1,7 @@
-#ifndef SETTINGSPAGE_H
+﻿#ifndef SETTINGSPAGE_H
 #define SETTINGSPAGE_H
 
+#include "stdafx.h"
 #include "../ui.h"
 class SettingsPage :public QObject, public MainWindow::Page
 {

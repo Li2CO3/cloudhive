@@ -1,9 +1,10 @@
 ﻿#ifndef PUPPETEER_H
 #define PUPPETEER_H
 
+#include "stdafx.h"
 #include "../monster.h"
 
-class Puppeteer : public Game::Monster
+class Puppeteer : public Monster
 {
 public:
     Puppeteer(Game* G);

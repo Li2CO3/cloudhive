@@ -1,6 +1,7 @@
-#ifndef STARTPAGE_H
+﻿#ifndef STARTPAGE_H
 #define STARTPAGE_H
 
+#include "stdafx.h"
 #include "../ui.h"
 class StartPage :public QObject, public MainWindow::Page
 {

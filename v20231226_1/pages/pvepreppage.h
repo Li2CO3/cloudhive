@@ -1,7 +1,9 @@
-#ifndef PVEPREPPAGE_H
+﻿#ifndef PVEPREPPAGE_H
 #define PVEPREPPAGE_H
 
+#include "stdafx.h"
 #include "../ui.h"
+#include "monster.h"
 
 class PvePrepPage :public MainWindow::Page
 {
@@ -18,22 +20,22 @@ public:
     QLabel* monster_icon, * monster_intro;
 
     static const int nMonster=7;
-    static constexpr Game::MONSTER_ID monster_ids[nMonster + 1] = {
-        Game::DEFAULT_MONSTER,
-        Game::TWIN_HEAD,
-        Game::MIMIC_CHEST,
-        Game::CAT_BURGLAR,
-        Game::SNOWMAN,
-        Game::IRON_WALL,
-        Game::STALL,
-        Game::PUPPETEER,
+    static constexpr GT::MONSTER_ID monster_ids[nMonster + 1] = {
+        GT::DEFAULT_MONSTER,
+        GT::TWIN_HEAD,
+        GT::MIMIC_CHEST,
+        GT::CAT_BURGLAR,
+        GT::SNOWMAN,
+        GT::IRON_WALL,
+        GT::STALL,
+        GT::PUPPETEER,
     };
     QPushButton* e[nMonster + 1];
     PvePrepPage(MainWindow* mw) { MW = mw; G = MW->G; MW->page = this; }
     ~PvePrepPage() {}
     void load() override
     {
-        if (G->monster->id == 0)G->load_challenge(Game::TWIN_HEAD);
+        if (G->monster->id == 0)G->load_challenge(GT::TWIN_HEAD);
 
         NEW_LINEEDIT_MW(name, 440, 200, 200, 60, G->player->name, 30);
         NEW_LINEEDIT_MW(seed, 440, 300, 200, 60, QN(G->random.getseed()), 30);

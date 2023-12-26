@@ -1,7 +1,9 @@
 ﻿#include "ironwall.h"
+#include "game.h"
+#include "cardpool.h"
 
 Iron_Wall::Iron_Wall(Game* G) :Monster(G) {
-    id = Game::IRON_WALL;
+    id = GT::IRON_WALL;
     name = "铁壁主宰"; shortname = "铁壁";
     initialhealth = 288;
     icon = QString("res/icon/monster/") + "5_ironwall.jpg";
@@ -10,7 +12,7 @@ Iron_Wall::Iron_Wall(Game* G) :Monster(G) {
 }
 
 void Iron_Wall::reset() {
-    Game::Monster::reset();
+    Monster::reset();
     realarmor = 0;
     temparmor = 0;
 }
@@ -31,26 +33,26 @@ void Iron_Wall::Monster_Before_Turn() {
         armor = G->player->point();
         emit G->Alert_monster(name+"【永恒守护】发动，护盾值变为"+QN(armor));
     }
-    Game::Monster::Monster_Before_Turn();
+    Monster::Monster_Before_Turn();
 }
 
 void Iron_Wall::Monster_Before_Combat() {
     if (G->turn < 6) {
         return ;
     }
-    Game::Piece piece = G->pool->drawout();
+    Piece piece = G->pool->drawout();
     temparmor = piece.sum();
     emit G->Alert_monster(name+"【虚空吞噬】发动，吞噬了" + piece.to_string() + "获得+" + QN((temparmor)) + "点临时护盾！");
     realarmor = armor;
     armor += temparmor;
-    Game::Monster::Monster_Before_Combat();
+    Monster::Monster_Before_Combat();
 }
 
-// 战斗？
+
 void Iron_Wall::Monster_Combat() {
     this->point = armor;
     emit G->Alert_monster(name+"【反击之盾】发动，当前战力为"+QN(point));
-    Game::Monster::Monster_Combat();
+    Monster::Monster_Combat();
     this->point = 0;
 }
 
@@ -60,5 +62,5 @@ void Iron_Wall::Monster_After_Combat() {
         armor = realarmor;
         emit G->signal_monster_change_stats(point,health,armor);
     }
-    Game::Monster::Monster_After_Combat();
+    Monster::Monster_After_Combat();
 }

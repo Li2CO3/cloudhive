@@ -1,14 +1,15 @@
 ﻿#ifndef CAT_BURGLAR_H
 #define CAT_BURGLAR_H
 
+#include "stdafx.h"
 #include "../monster.h"
 
-class Cat_Burglar :public Game::Monster
+class Cat_Burglar :public Monster
 {
 public:
-    Cat_Burglar(Game* G) :Monster(G) { id = Game::CAT_BURGLAR; name = "小贼猫"; shortname = "小贼猫"; initialhealth = 1000; icon = QString("res/icon/monster/") + "3_cat_burglar.jpg"; }
+    Cat_Burglar(Game* G) ;
     ~Cat_Burglar() override {}
-    void reset() override { Game::Monster::reset(); bomb1 = 0; bomb2 = 0; }//bomb是欺骗技能的位置
+    void reset() override;
     POOLTYPE pooltype() override { return POOLTYPE::POOL_CAT_BURGLAR; }//调色盘
     QString description() override;
 

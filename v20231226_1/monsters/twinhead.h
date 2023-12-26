@@ -1,9 +1,10 @@
 ﻿#ifndef TWIN_HEAD_H
 #define TWIN_HEAD_H
 
+#include "stdafx.h"
 #include "../monster.h"
 
-class Twin_Head :public Game::Monster//双头龙
+class Twin_Head :public Monster//双头龙
 {
 public:
     Twin_Head(Game* G);

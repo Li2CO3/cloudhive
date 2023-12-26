@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 //#include "ui_mainwindow.h"
 
 int rel(int x) { return int((x * TheWindow->width()) / 3200) * 2; }
@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget* parent)
 	status = WAITING;
 }
 
-void MainWindow::Set_Piece(Game::Piece p, int place)
+void MainWindow::Set_Piece(Piece p, int place)
 {
 	Q_UNUSED(p)
     Q_UNUSED(place)

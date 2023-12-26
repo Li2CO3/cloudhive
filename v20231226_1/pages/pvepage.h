@@ -1,7 +1,12 @@
-#ifndef PVEPAGE_H
+﻿#ifndef PVEPAGE_H
 #define PVEPAGE_H
 
+#include "stdafx.h"
 #include "../ui.h"
+#include "utils/gametools.h"
+#include "cardpool.h"
+#include "monster.h"
+
 class PvePage :public QObject, public MainWindow::Page
 {
     Q_OBJECT

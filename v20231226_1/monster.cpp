@@ -6,8 +6,10 @@
 #include "monsters/twinhead.h"
 #include "monsters/stall.h"
 #include "monsters/puppeteer.h"
+#include "game.h"
+#include "cardpool.h"
 
-QString Game::Monster::description()
+QString Monster::description()
 {
     QString str = "PvE怪物挑战中的怪物。具有较高血量和一些能力。\n";
     //str+="Monster是所有怪物的基类，保存有所有怪物的共同属性。";
@@ -19,38 +21,50 @@ QString Game::Monster::description()
     return str;
 }
 
-Game::Monster* Game::Monster::new_monster(Game::MONSTER_ID monst, Game* G)
+Monster::Monster(Game* g) {
+    G = g;
+    G->monster=this;
+    name = "";
+    shortname="";
+    id = GT::DEFAULT_MONSTER;
+    initialhealth = 0;
+    dead = false;
+}
+Monster::~Monster() {}
+
+Monster* Monster::new_monster(GT::MONSTER_ID monst, Game* G)
 {
     //现在G总是有monster的。这可能需要改。
+    using namespace GT;
     delete G->monster;G->monster=NULL;
     switch (monst)
     {
-    case Game::TWIN_HEAD:
+    case TWIN_HEAD:
         return new Twin_Head(G);
-    case Game::MIMIC_CHEST:
+    case MIMIC_CHEST:
         return new Mimic_Chest(G);
-    case Game::CAT_BURGLAR:
+    case CAT_BURGLAR:
         return new Cat_Burglar(G);
-    case Game::SNOWMAN:
+    case SNOWMAN:
         return new Snowman(G);
-    case Game::IRON_WALL:
+    case IRON_WALL:
         return new Iron_Wall(G);
-    case Game::STALL:
+    case STALL:
         return new Stall(G);
-    case Game::PUPPETEER:
+    case PUPPETEER:
         return new Puppeteer(G);
 
     default:
         //qDebug()<<"UNRECOGNIZED MONSTER ID!";
         throw 0;
-        return new Game::Monster(G);
+        return new Monster(G);
     }
 }
 
-void Game::Monster::Monster_Before_Turn()//普通：回合开始
+void Monster::Monster_Before_Turn()//普通：回合开始
 {
     G->pool->ncurrent = 1;
-    Game::Piece t = G->pool->drawout();
+    Piece t = G->pool->drawout();
     G->pool->current[0] = t;
 
     G->sync_record();
@@ -58,13 +72,13 @@ void Game::Monster::Monster_Before_Turn()//普通：回合开始
 }
 
 
-void Game::Monster::Monster_Before_Combat()
+void Monster::Monster_Before_Combat()
 {
     //发牌在[G->record.pieces[G->turn]]，操作在[G->record[turn]]，上轮分在[G->player->prev_point]
     return;
 }
 
-void Game::Monster::Monster_Combat()
+void Monster::Monster_Combat()
 {
     if (G->turn < 3)return;
     int mypt = G->player->point();
@@ -89,9 +103,72 @@ void Game::Monster::Monster_Combat()
 }
 
 
-void Game::Monster::Monster_After_Combat()
+void Monster::Monster_After_Combat()
 {
     return;
 }
 
+void Monster::setStatus() {//发完牌马上可以操作的时候，看下怪的状态决定是时进行哪类操作：为了适配雪人，雪人撕牌不能撕空的和0
+    if (G->pool->ncurrent == 1) {
+        G->status = Game::WAIT_TURN;
+    }
+    else if (G->pool->ncurrent > 1) {
+        for(int i = 0; i< 10; ++i);
+        G->status = Game::WAIT_CHOOSE_TURN;
+    }
+                else//pool->ncurrent==0?
+    {
+        //for(int i = 0; i< 10; ++i);
+        throw 0;//现在没有跳过回合，所以直接throw
+    }
+}
 
+void Monster::addPoint(int pt) {
+    point += pt; emit G->signal_monster_change_stats(point, health, armor);
+}
+
+void Monster::gainArmor(int arm) {
+    armor += arm;
+    emit G->signal_monster_change_stats(point, health, armor);
+}
+
+void Monster::take_damage(int dmg) {
+    G->player->totaldamage += dmg;
+    if (armor == 0)
+    {
+        health -= dmg;
+        emit G->Alert_monster(name + "血量减少" + QString::number(dmg));
+        emit G->signal_monster_change_stats(point, health, armor);
+    }
+    else if (armor > dmg)
+    {
+        armor -= dmg;
+        emit G->Alert_monster(name + "护盾减少" + QString::number(dmg));
+        emit G->signal_monster_change_stats(point, health, armor);
+    }
+    else if (armor == dmg)
+    {
+        armor -= dmg;
+        emit G->Alert_monster(name + "护盾减少" + QString::number(dmg) + ",刚好被击穿");
+        emit G->signal_monster_change_stats(point, health, armor);
+    }
+    else if (armor < dmg)
+    {
+        int excess = dmg - armor;
+        armor = 0; health -= excess;
+        emit G->Alert_monster(name + "护盾被击穿，且血量减少" + QString::number(excess));
+        emit G->signal_monster_change_stats(point, health, armor);
+    }
+
+    if (health <= 0)
+    {
+        if (!dead) {
+            emit G->Alert_monster("恭喜你击败" + name + "!");
+        }
+        dead = true;
+    }
+}
+
+void Monster::deal_damage(int dmg) {
+    G->player->take_damage(dmg);
+}

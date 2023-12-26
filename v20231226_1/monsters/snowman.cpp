@@ -1,5 +1,22 @@
 ﻿#include "snowman.h"
 #include <QLabel>
+#include "game.h"
+#include "cardpool.h"
+#include "mainwindow.h"
+
+Snowman::Snowman(Game* G) :Monster(G) {
+    id = GT::SNOWMAN;
+    name = "雪人"; shortname = "雪人";
+    initialhealth = 2888;
+    icon = QString("res/icon/monster/") + "4_snowman.jpg";
+    }
+
+void Snowman::reset() {
+    Monster::reset();
+    frozen = false; illusion_point = 0;
+    damage_snowman_taken = 0, damage_player_taken = 0;
+    is_in_illusion = false; cards_discarded = 0;
+}
 
 QString Snowman::description()
 {
@@ -28,10 +45,10 @@ void Snowman::Monster_Before_Turn()//混乱屎山代码
     {
         if (G->turn >= 27 || G->turn < 21)
         {
-            Game::Monster::Monster_Before_Turn();
+            Monster::Monster_Before_Turn();
         }
         else {
-            Game::Piece p = cache_pieces[G->turn - 20];
+            Piece p = cache_pieces[G->turn - 20];
             G->pool->ncurrent = 1;
             G->pool->current[0] = p;
             G->sync_record();
@@ -42,8 +59,15 @@ void Snowman::Monster_Before_Turn()//混乱屎山代码
     {
         if (cards_discarded != 0)G->turn--;
 
-        if (cards_discarded == 1) { Game::Monster::Monster_Before_Turn(); cards_discarded = 0; cache_pieces[G->turn - 20] = G->pool->current[0]; }
-        else { G->pool->ncurrent = 1; G->pool->current[0] = Game::Piece(0); emit G->signal_update_turn_piece(); }
+        if (cards_discarded == 1) {
+            Monster::Monster_Before_Turn();
+            cards_discarded = 0;
+            cache_pieces[G->turn - 20] = G->pool->current[0]; }
+        else {
+            G->pool->ncurrent = 1;
+            G->pool->current[0] = Piece(0,0,0);
+            emit G->signal_update_turn_piece();
+        }
     }
 }
 void Snowman::setStatus()
@@ -54,7 +78,7 @@ void Snowman::setStatus()
     }
     else
     {
-        Game::Monster::setStatus();
+        Monster::setStatus();
     }
 }
 
@@ -67,7 +91,7 @@ void Snowman::Monster_Before_Combat()
     if (is_in_illusion)
     {
         //if(this->cards_discarded==0)cache_o[G->turn-20]="";
-        if (G->pool->current[0] == Game::Piece(0))
+        if (G->pool->current[0] == 0)
         {
             cache_o[G->turn - 20] += "-";
         }
@@ -78,10 +102,10 @@ void Snowman::Monster_Before_Combat()
         if (G->record[G->turn].toInt() < 10)cache_o[G->turn - 20] += " ";
         cache_o[G->turn - 20] += QN(G->record[G->turn].toInt());
     }
-    if (is_in_illusion && G->pool->current[0] == Game::Piece(0))
+    if (is_in_illusion && G->pool->current[0] == 0)
     {
         cards_discarded++;
-        Game::Piece p = G->record.covered[G->turn];
+        Piece p = G->record.covered[G->turn];
         int damage = p.x159() + p.x348() + p.x267();
         emit G->Alert_monster(G->player->name + "丢弃" + p.to_string() + ",造成" + QN(damage) + "点伤害!");
         take_real_damage(damage);
@@ -103,7 +127,7 @@ void Snowman::Monster_Before_Combat()
         if (G->turn == 20) { turn_20_grid = G->player->grid; turn_20_point = point; }
     }
 
-    Game::Piece p = G->pool->current[0];
+    Piece p = G->pool->current[0];
     if (p != 0)//不是空牌
     {
         int piece_point = p.x159() + p.x267() + p.x348();
@@ -131,7 +155,7 @@ void Snowman::take_damage(int damage)
         return;
     }
     else
-        Game::Monster::take_damage(damage);
+        Monster::take_damage(damage);
     return;
 }
 void Snowman::deal_damage(int dmg)
@@ -141,18 +165,18 @@ void Snowman::deal_damage(int dmg)
 }
 void Snowman::take_real_damage(int damage)
 {
-    Game::Monster::take_damage(damage);
+    Monster::take_damage(damage);
 }
 void Snowman::addPoint(int pt)
 {
-    Game::Monster::addPoint(pt);
+    Monster::addPoint(pt);
     if (point >= 100) if (!is_in_illusion) { frozen = true; }
 }
 
 void Snowman::Monster_Combat()
 {
     if (G->turn < 3)return;
-    if (is_in_illusion)if (G->pool->current[0] == Game::Piece(0))
+    if (is_in_illusion)if (G->pool->current[0] == 0)
     {
         return;
     }
@@ -199,11 +223,11 @@ void Snowman::Monster_Combat()
 
 void Snowman::Monster_After_Combat()
 {
-    if (is_in_illusion)if (G->pool->current[0] == Game::Piece(0))
+    if (is_in_illusion)if (G->pool->current[0] == 0)
     {
         return;
     }
-    Game::Monster::Monster_After_Combat();
+    Monster::Monster_After_Combat();
     if (armor > prev_armor)
     {
         int diff = armor - prev_armor; armor = prev_armor;
@@ -222,7 +246,7 @@ void Snowman::Monster_After_Combat()
 void Snowman::Make_Summary(QDialog* dialog)
 
 {
-    Game::Monster::Make_Summary(dialog);
+    Monster::Make_Summary(dialog);
     QLabel* ql;
     if (G->turn >= 21)
     {
@@ -239,4 +263,16 @@ void Snowman::Make_Summary(QDialog* dialog)
             if (i == 3)ql->setText(ql->text() + "\n");
         }
     }
+}
+
+void Snowman::Go_out_of_illusion() {
+    is_in_illusion = false;
+    emit G->Alert_monster("雪仗结束，结算伤害！");
+    take_damage(damage_snowman_taken);
+    G->player->take_damage(damage_player_taken);
+    G->turn = 21;
+    G->player->grid = turn_20_grid;
+    G->player->prev_point = G->player->point();
+    point = turn_20_point;
+    G->MW->page->update();
 }

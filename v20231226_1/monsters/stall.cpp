@@ -1,14 +1,16 @@
 ﻿#include "stall.h"
+#include "game.h"
+#include "cardpool.h"
 
 Stall::Stall(Game* G) :Monster(G) {
-    id = Game::STALL;
+    id = GT::STALL;
     name = "摆摊仙人"; shortname="saiwei";
     initialhealth = 2000;
     icon = QString("res/icon/monster/") + "6_saiwei.jpg";
 }
 
 void Stall::reset() {
-    Game::Monster::reset();
+    Monster::reset();
 }
 
 QString Stall::description() {
@@ -31,18 +33,18 @@ void Stall::Monster_Before_Turn() {
 
     addPoint(real_increase);
 
-    Game::Monster::Monster_Before_Turn();
+    Monster::Monster_Before_Turn();
 }
 
 void Stall::Monster_Before_Combat() {
-    Game::Monster::Monster_Before_Combat();
+    Monster::Monster_Before_Combat();
 }
 
 
 void Stall::Monster_Combat() {
-    Game::Monster::Monster_Combat();
+    Monster::Monster_Combat();
 }
 
 void Stall::Monster_After_Combat() {
-    Game::Monster::Monster_After_Combat();
+    Monster::Monster_After_Combat();
 }

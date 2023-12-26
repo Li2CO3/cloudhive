@@ -1,9 +1,11 @@
 ﻿#ifndef MIMIC_CHEST_H
 #define MIMIC_CHEST_H
 
+#include "stdafx.h"
 #include "../monster.h"
+#include "../piece.h"
 
-class Mimic_Chest :public Game::Monster//宝箱怪，全名"会说话的宝箱"太长被碳酸锂自作主张改短了
+class Mimic_Chest :public Monster//宝箱怪，全名"会说话的宝箱"太长被碳酸锂自作主张改短了
 {
 public:
     Mimic_Chest(Game* G);
@@ -16,9 +18,9 @@ public:
     void Monster_Before_Combat() override;//加分；如果上分了，看看上次是几回合前，叠盾
     void addPoint(int pt) override;//如果破50，马上翻六张
 private:
-    bool iskeep(Game::Piece piece) { return piece.x159() == 1; }//翻牌是是否保留
+    bool iskeep(Piece piece) { return piece.x159() == 1; }//翻牌是是否保留
     bool ready_for_ability_1;//是否马上就发动翻六张
-    Game::Piece future_tiles[6];//翻完牌留下来的
+    Piece future_tiles[6];//翻完牌留下来的
     int nFutureTiles;//翻完留下来的
     int turn_of_last_change;//上次改分是第几回合
     void trigger_ability_1();//发动1技能
