@@ -59,7 +59,7 @@ void Game::Player::set_icon(QString newicon)
 {
     icon = newicon;
 
-    QString filename = "/res/game/user.txt";
+    QString filename = "res/game/user.txt";
     QString str = name + "\n" + icon;
     QFile file(filename);
     file.open(QIODevice::WriteOnly | QIODevice::Text);

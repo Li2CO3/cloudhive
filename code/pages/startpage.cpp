@@ -2,6 +2,8 @@
 
 void StartPage::show_icons(int page)
 {
+    int const ICONS_PER_PAGE=15;
+
     {
         QFile file("res/icon/list.txt");
         file.open(QIODevice::ReadOnly | QIODevice::Text);
@@ -18,36 +20,39 @@ void StartPage::show_icons(int page)
 
     QLabel* bottom_label;
     NEW_LABEL_ALIGN(bottom_label, 180, 270, 40, 30, QN(page), 15, Center, dialog)
-    QPushButton *icons[15];
-    for (int id = 0; id < 15; id++)
+    QPushButton *icons[ICONS_PER_PAGE];
+    for (int id = 0; id < ICONS_PER_PAGE; id++)
     {
 
         {
             QPushButton*&ic=icons[id];
-            if ((page - 1) * 15 + id < Icons.length())
-            {NEW_BUTTON_IMAGE(ic, 50 + (id % 5) * 60, 50 + (id / 5) * 60, 40, 40, "res/icon/" + Icons[15 * (page - 1) + id], dialog);}
+            if ((page - 1) * ICONS_PER_PAGE + id < Icons.length())
+                {NEW_BUTTON_IMAGE(ic, 50 + (id % 5) * 60, 50 + (id / 5) * 60, 40, 40, "res/icon/" + Icons[ICONS_PER_PAGE * (page - 1) + id], dialog);}//图标按钮
             else
-            {NEW_BUTTON_IMAGE(ic, 50 + (id % 5) * 60, 50 + (id / 5) * 60, 40, 40, QSize(40,40), dialog); ic->hide();}
-            ic->connect(ic, &QPushButton::clicked, this, [=]() {G->player->set_icon(Icons[15 * (page - 1) + id]); dialog->close(); MW->load_page(STARTPAGE); });
+                {NEW_BUTTON_IMAGE(ic, 50 + (id % 5) * 60, 50 + (id / 5) * 60, 40, 40, QSize(40,40), dialog); ic->hide();}
+            ic->connect(ic, &QPushButton::clicked, this, [=]() {
+                    G->player->set_icon(Icons[ICONS_PER_PAGE * (bottom_label->text().toInt() - 1) + id]);
+                    dialog->close(); MW->load_page(STARTPAGE);
+                });
         }
     }
     {
         QPushButton* prev;
         NEW_BUTTON(prev, 10, 260, 30, 30, "<", 15, dialog);
-
+        prev->hide();
         QPushButton* next;
         NEW_BUTTON(next, 360, 260, 30, 30, ">", 15, dialog);
+        if(Icons.length()<=ICONS_PER_PAGE)next->hide();
 
-
-        for(int targetid=0;targetid<15;targetid++)
+        for(int targetid=0;targetid<ICONS_PER_PAGE;targetid++)
         {
             QPushButton * target =icons[targetid];
             connect(prev,&QPushButton::clicked,this,[=](){
 
                 int newpage=bottom_label->text().toInt()-1;
-                if((newpage-1)*15+targetid<Icons.length())
+                if((newpage-1)*ICONS_PER_PAGE+targetid<Icons.length())
                 {
-                    target->setIcon(QPixmap("res/icon/" + Icons[15 * (newpage - 1) + targetid]).SCALED(target->width(),target->height()) );
+                    target->setIcon(QPixmap("res/icon/" + Icons[ICONS_PER_PAGE * (newpage - 1) + targetid]).SCALED(target->width(),target->height()) );
                     target->show();
                 }
                 else
@@ -59,19 +64,19 @@ void StartPage::show_icons(int page)
             int newpage=bottom_label->text().toInt()-1;
             bottom_label->setText(QN(newpage));
             if(newpage>1) prev->show(); else prev->hide();
-            if(newpage<(Icons.length()-1)/15+1) next->show();else next->hide();
+            if(newpage<(Icons.length()-1)/ICONS_PER_PAGE+1) next->show();else next->hide();
         });
         if(page>=1)prev->show();else prev->hide();
 
-        for(int targetid=0;targetid<15;targetid++)
+        for(int targetid=0;targetid<ICONS_PER_PAGE;targetid++)
         {
             QPushButton * target =icons[targetid];
             connect(next,&QPushButton::clicked,this,[=](){
 
                 int newpage=bottom_label->text().toInt()+1;
-                if((newpage-1)*15+targetid<Icons.length())
+                if((newpage-1)*ICONS_PER_PAGE+targetid<Icons.length())
                 {
-                    target->setIcon(QPixmap("res/icon/" + Icons[15 * (newpage - 1) + targetid]).SCALED(target->width(),target->height()) );
+                    target->setIcon(QPixmap("res/icon/" + Icons[ICONS_PER_PAGE * (newpage - 1) + targetid]).SCALED(target->width(),target->height()) );
                     target->show();
                 }
                 else
@@ -83,9 +88,9 @@ void StartPage::show_icons(int page)
             int newpage=bottom_label->text().toInt()+1;
             bottom_label->setText(QN(newpage));
             if(newpage>1) prev->show(); else prev->hide();
-            if(newpage<(Icons.length()-1)/15+1) next->show();else next->hide();
+            if(newpage<(Icons.length()-1)/ICONS_PER_PAGE+1) next->show();else next->hide();
         });
-        if(page<(Icons.length()-1)/15+1)next->show();else next->hide();
+        if(page<(Icons.length()-1)/ICONS_PER_PAGE+1)next->show();else next->hide();
 
 
     }
