@@ -263,7 +263,7 @@ bool Game::Check_Operation(int ply, QString cache, QString op)
 			break;
 		case WAIT_SNOWMAN_DISCARD:
 			for (int place = 1; place <= 19; place++)if (player->grid.pieces[place] != 0)//
-				return (op.toInt() != 0) && (player->grid.pieces[op.toInt()]) != Piece(0);
+                return (op.toInt() != 0) && (player->grid.pieces[op.toInt()]) != Piece(0, 0, 0);
 			return true;
 		default:
 			return false;
