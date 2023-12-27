@@ -47,8 +47,8 @@ Piece::Piece(QString info) {
         this->id = "any";
     } else {
         this->x = convert(info[0]);
-        this->y = convert(info[2]);
-        this->z = convert(info[3]);
+        this->y = convert(info[1]);
+        this->z = convert(info[2]);
         this->id = info;
     }
 }
