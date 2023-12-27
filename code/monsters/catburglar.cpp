@@ -144,7 +144,7 @@ void Cat_Burglar::Make_Summary(QDialog* dialog)
             Piece p = G->record.pieces[i][1 - G->record.cache[i].toInt()];
             QLabel* l;
             //piece->setGeometry(80+((i-1)%10*45),370+(i-1)/10*45,32,32);
-            NEW_LABEL_IMAGE(l, 80 + ((i - 1) % 10 * 45) + 20, 370 + (i - 1) / 10 * 45 + 20, 16, 16, "res/piece/"+QString("pure")+"/card_" + p.to_string() + ".png", dialog);
+            NEW_LABEL_IMAGE(l, 80 + ((i - 1) % 10 * 45) + 20, 370 + (i - 1) / 10 * 45 + 20, 16, 16, p.image(), dialog);
         }
     }
 }

@@ -120,20 +120,20 @@ void Monster::Make_Summary(QDialog* dialog)
     for (int i = 1; i <= MAX_TURN; i++)
     {
         QLabel* piece = new QLabel(dialog);
-        QString str = "";
+        Piece p;
         if (i <= G->turn)
         {
             if (G->record.npieces[i] == 1)
-                str = G->record.pieces[i][0].to_string();
+                p = G->record.pieces[i][0];
             else
-                str = G->record.pieces[i][G->record.cache[i].toInt()].to_string();
+                p = G->record.pieces[i][G->record.cache[i].toInt()];
 
-            QPixmap p = QPixmap("res/piece/"+QString("pure")+"/card_" + str + ".png");
-            piece->setPixmap(p.SCALED(32, 32));
+            QPixmap map = QPixmap(p.image());
+            piece->setPixmap(map.SCALED(32, 32));
             piece->setGeometry(80 + ((i - 1) % 10 * 45), 370 + (i - 1) / 10 * 45, 32, 32);
             piece->show();
         }
-        pieces = pieces + str + " ";
+        pieces = pieces + p.to_string() + " ";
         if (i % 10 == 0)pieces += "\n";
     }
 

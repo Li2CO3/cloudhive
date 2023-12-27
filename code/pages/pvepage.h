@@ -57,8 +57,7 @@ public:
         nturnpieces = G->pool->ncurrent;
         for (int i = 0; i < nturnpieces; i++)
         {
-            NEW_BUTTON_IMAGE_MW(turn_pieces[i], 534 - 64 * (nturnpieces - 1) + i * 128, 36, 128, 128,
-                "res/piece/"+QString("pure")+"/card_" + G->pool->current[i].to_string() + ".png");
+            NEW_BUTTON_IMAGE_MW(turn_pieces[i], 534 - 64 * (nturnpieces - 1) + i * 128, 36, 128, 128, G->pool->current[i].image());
             if (nturnpieces >= 2)connect(turn_pieces[i], &QPushButton::clicked, this, [=]() {Toggle_Choose_Piece(i); });
         }
     }
@@ -69,7 +68,7 @@ public slots:
         cache_op = QN(chosen);
         for (int i = 0; i < nturnpieces; i++)
         {
-            QPixmap map = QPixmap(QString("res/piece/"+QString("pure")+"/card_") + G->pool->current[i].to_string() + ".png");
+            QPixmap map = QPixmap(G->pool->current[i].image());
             if (i == chosen)
             {
                 QPainter painter(&map);
