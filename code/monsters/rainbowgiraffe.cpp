@@ -32,21 +32,24 @@ QString RainbowGiraffe::description() {
 // 发牌在[G->record.pieces[G->turn]]，备注在[G->record.cache[turn]]操作在[G->record[turn]]，上轮分在[G->player->prev_point]
 
 void RainbowGiraffe::Monster_Before_Turn() {
+
+
+    emit G->Alert_monster(name+"【彩虹的颜色】下回合增加2~7分");
     if (G->turn <= 3) {
         // 【三原色】
         G->pool->ncurrent = 1;
-        Piece t = G->pool->drawout();
+        Piece t = G->pool->drawout();//抽卡
         while (true) {
             if (uniqueSet.find(t.x159()) == uniqueSet.end() &&
                     uniqueSet.find(t.x267()) == uniqueSet.end() &&
-                    uniqueSet.find(t.x348()) == uniqueSet.end()) {
+                    uniqueSet.find(t.x348()) == uniqueSet.end()) {//如果没有重复数字，记录数字
                    uniqueSet.insert(t.x159());
                    uniqueSet.insert(t.x267());
                    uniqueSet.insert(t.x348());
                    break;
             }
-            G->pool->pushback(t);
-            t = G->pool->drawout();
+            G->pool->pushback(t);//如果有重复数字了，放回去
+            t = G->pool->drawout();//重新抽
         }
         emit G->Alert_monster(name + "【三原色】发动\n本回合的牌为" + t.to_string());
         G->pool->current[0] = t;
@@ -56,16 +59,21 @@ void RainbowGiraffe::Monster_Before_Turn() {
     else {
         Monster::Monster_Before_Turn();
     }
+    if(G->turn %7 ==0)
+    {
+        emit G->Alert_monster(name+"【棱镜】即将发动，根据盘面上赖子数量造成伤害!");
+    }
 
 }
 
 void RainbowGiraffe::Monster_Before_Combat() {
     Monster::Monster_Before_Combat();
-}
+    {//【彩虹的颜色】
+        int increase_point = G->random.randint(2, 7);
+        this->addPoint(increase_point);
+        emit G->Alert_monster(name + "【彩虹的颜色】发动\nroll出了" + QN(increase_point) + "点");
+    }
 
-
-void RainbowGiraffe::Monster_Combat() {
-    Monster::Monster_Combat();
     if (G->turn % 7 == 0) {
         int cnt = 0;
         for (int i = 1; i < 19; i++) {
@@ -75,21 +83,21 @@ void RainbowGiraffe::Monster_Combat() {
            }
         }
         if (cnt > 0) {
-            emit G->Alert_monster(name + "【棱镜】发动\n对你造成了" + QN(cnt * 7) + "点伤害");
+            emit G->Alert_monster(name + "【棱镜】发动，造成了" + QN(cnt * 7) + "点伤害");
             G->player->take_damage(cnt * 7);
         }
         else {
-            emit G->Alert_monster(name + "【棱镜】发动\n发现你没有癞子！");
+            emit G->Alert_monster(name + "【棱镜】发动，但并没有发现赖子！");
         }
 
     }
 }
 
-void RainbowGiraffe::Monster_After_Combat() {
-    Monster::Monster_After_Combat();
-    {//【彩虹的颜色】
-        int increase_point = G->random.randint(2, 7);
-        this->addPoint(increase_point);
-        emit G->Alert_monster(name + "【彩虹的颜色】发动\nroll出了" + QN(increase_point) + "点");
-    }
-}
+
+//void RainbowGiraffe::Monster_Combat() {
+//    Monster::Monster_Combat();
+//}
+
+//void RainbowGiraffe::Monster_After_Combat() {
+//    Monster::Monster_After_Combat();
+//}
