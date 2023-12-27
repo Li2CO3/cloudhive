@@ -48,18 +48,20 @@ enum SCORING_RULE {
     COUNT_LINES=-2147483647
 };
 
-enum PoolType {
+enum PoolType {// 以下枚举符合多种乱写规律
     POOL_Normal=0,
     POOL_TWIN_HEAD=-4,
     POOL_MIMIC_CHEST=66,
     POOL_CAT_BURGLAR=1000,
     POOL_IRON_WALL=235711,
-    POOL_PUPPETEER=123};
+    POOL_PUPPETEER=123,
+    POOL_RAINBOW_GIRAFFE=1111,// 我也不知道为什么是1111
+};
 //setpool
 
 enum GAME_RESULT {
     PLAYER_DEAD = 0,
-    TURNS_ENOUGH = 1
+    TURNS_ENOUGH = 1,
 };//UNUSED
 
 
@@ -71,6 +73,7 @@ enum MONSTER_ID {
     IRON_WALL = 5,
     STALL = 6,
     PUPPETEER = 7,
+    RAINBOW_GIRAFFE = 8,
 };
 
 };

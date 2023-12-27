@@ -29,18 +29,18 @@ Piece::Piece(int x, int y, int z) {
 }
 
 int inline convert(QChar x) {
-    if (x == 'x') {
+    if (x == 'X') {
         return 10;
     } else if (x >= '0' && x <= '9') {
         return x.unicode() - QChar('0').unicode();
     } else {
-        throw 0;//暂时不支持0-9和x以外的卡牌
+        throw 0;//暂时不支持0-9和X以外的卡牌
     }
 }
 
 
 Piece::Piece(QString info) {
-    if (info == "any") {
+    if (info == "any" || info == "XXX") {
         this->x = 10;
         this->y = 10;
         this->z = 10;

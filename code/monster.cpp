@@ -6,6 +6,7 @@
 #include "monsters/twinhead.h"
 #include "monsters/stall.h"
 #include "monsters/puppeteer.h"
+#include "monsters/rainbowgiraffe.h"
 #include "game.h"
 #include "cardpool.h"
 
@@ -53,7 +54,8 @@ Monster* Monster::new_monster(GT::MONSTER_ID monst, Game* G)
         return new Stall(G);
     case PUPPETEER:
         return new Puppeteer(G);
-
+    case RAINBOW_GIRAFFE:
+        return new RainbowGiraffe(G);
     default:
         //qDebug()<<"UNRECOGNIZED MONSTER ID!";
         throw 0;

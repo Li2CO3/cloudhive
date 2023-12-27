@@ -29,6 +29,7 @@ int CardPool::nPool(GT::PoolType type, Piece p)//当前仅限正常的块。开�
         switch (type)
         {
         case POOL_Normal:
+        case POOL_RAINBOW_GIRAFFE:
             return 2;
         case POOL_TWIN_HEAD:
             if(p==LAIZI) return 2;
@@ -71,4 +72,21 @@ void CardPool::setpool(GT::PoolType type)
             }
     for (int laizis = 0; laizis < nPool(type, Piece(LAIZI)); laizis++)
         this->pushback(Piece(LAIZI));
+
+    // 非正常块
+    if (type == GT::POOL_RAINBOW_GIRAFFE) {
+        // 图片只有 3X2、4X6、8X7、39X、45X、81X、X16、X57、X92、XXX
+        for (int i = 0; i < 1; ++i) {
+            this->pushback(Piece("3X2"));
+            this->pushback(Piece("4X6"));
+            this->pushback(Piece("8X7"));
+            this->pushback(Piece("39X"));
+            this->pushback(Piece("45X"));
+            this->pushback(Piece("81X"));
+            this->pushback(Piece("X16"));
+            this->pushback(Piece("X57"));
+            this->pushback(Piece("X92"));
+            this->pushback(Piece("XXX"));
+        }
+    }
 }
