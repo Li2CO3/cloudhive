@@ -86,7 +86,7 @@ void Grid::Make_image(QPixmap& img)
     for (int place = 1; place <= 19; place++)
     {
         if (*(*this)[place] != 0)
-            painter.drawPixmap(GRID_X[place] * 64, GRID_Y[place] * 32 - 32, QPixmap("res/piece/"+QString("pure")+"/card_" + (*this)[place]->to_string() + ".png"));
+            painter.drawPixmap(GRID_X[place] * 64, GRID_Y[place] * 32 - 32, (*this)[place]->image());
         else
             painter.drawPixmap(GRID_X[place] * 64, GRID_Y[place] * 32 - 32, QPixmap("res/piece/"+QString("pure")+"/num_" + QString::number(place) + ".png"));
     }

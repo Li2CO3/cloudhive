@@ -1,5 +1,6 @@
 ﻿#include "piece.h"
 #include <QChar>
+#include <QPainter>
 
 Piece::Piece() {
     id = "000";
@@ -16,6 +17,20 @@ QString inline convert(int x) {
     } else {
         throw 0;//暂时不支持0-10以外的卡牌
     }
+}
+
+
+QPixmap Piece::image() const
+{
+    QPixmap map(64,64);
+    QPainter painter(&map);
+    map.fill();
+    painter.drawPixmap(0,0,QPixmap("res/piece/pure/part_-" + QString(s159()) + "-.png"));
+    painter.drawPixmap(0,0,QPixmap("res/piece/pure/part_--" + QString(s267()) + ".png"));
+    painter.drawPixmap(0,0,QPixmap("res/piece/pure/part_" + QString(s348()) + "--.png"));
+    //最底下是159 中间是267 最顶层是348
+    painter.drawPixmap(0,0,QPixmap("res/piece/pure/edge_pure.png"));
+    return map;
 }
 
 Piece::Piece(int x, int y, int z) {

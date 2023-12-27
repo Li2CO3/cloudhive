@@ -1,6 +1,6 @@
 ﻿#ifndef PIECE_H
 #define PIECE_H
-
+#include <QPixmap>
 #include "stdafx.h"
 
 class Piece
@@ -10,6 +10,9 @@ public:
     int x348() const {return x;}
     int x159() const {return y;}
     int x267() const {return z;}
+    QChar s348() const {if(x348()==10)return 'X'; else return QChar('0'+x348());}
+    QChar s159() const {if(x159()==10)return 'X'; else return QChar('0'+x159());}
+    QChar s267() const {if(x267()==10)return 'X'; else return QChar('0'+x267());}
     bool isNormalPiece();
     int ValueofLine(int x) const;
     int sum();
@@ -25,6 +28,7 @@ public:
     bool operator==(const int num) {
         return this->sum() == num;
     }
+    QPixmap image() const;
     void clear() {
        id = "000";
        x = 0;
