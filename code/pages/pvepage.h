@@ -6,6 +6,7 @@
 #include "utils/gametools.h"
 #include "cardpool.h"
 #include "monster.h"
+#include "QDir"
 
 class PvePage :public QObject, public MainWindow::Page
 {

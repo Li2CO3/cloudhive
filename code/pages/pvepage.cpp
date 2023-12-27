@@ -165,7 +165,12 @@ void Monster::Make_Summary(QDialog* dialog)
     back->connect(back, &QPushButton::clicked, MW, [=]() {G->remake(); MW->load_page(STARTPAGE); });
 
     operations->setTextInteractionFlags(Qt::TextSelectableByMouse);
-    /*TODO...*/
+    /*TODO...修改创建记录文件的代码位置*/
+    {//创建记录文件所在文件夹
+    QDir dir =QDir("res/record/records");
+    if(!dir.exists())
+        if(!dir.mkpath(".")){/*Alert("记录文件创建失败!");*/}
+    }
     QString str;
     for(int i=1;;i++)
     {
