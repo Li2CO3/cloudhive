@@ -22,7 +22,7 @@ QString Puppeteer::description() {
     str += "技能0：【傀儡军团】从第三回合开始，每回合开始时战力增加2分\n\n";
     str += "技能1：【暗器·飞针】回合开始时，对挑战者造成2点伤害，若分数高于挑战者则额外造成1点伤害\n\n";
     str += "技能2：【命运之丝】战斗开始前，挑战者每连成一线，战力临时增加7\n\n";
-    str += "技能3：【机关游行】每十回合发动一次，回合开始时，立即夺取后续的3张卡牌，获得卡牌数字之和的护盾值，并在护盾击碎之前暂时获得等量的分数\n\n";
+    str += "技能3：【机关游行】第10、20、30回合发动，回合开始时，立即吞噬后续的2、3、4张卡牌，获得卡牌数字之和的护盾值，并在护盾击碎之前暂时获得等量的分数\n\n";
     str += "副本环境：千丝机关阵：含有1、2、3数字的卡牌变成3张\n";
     str += "注意: 尚未确认此副本平衡性，请谨慎参考初始血量\n";
     return str;
@@ -52,7 +52,7 @@ void Puppeteer::Monster_Before_Turn() {
         for(int i=0;i<G->turn/10+1;i++)
         {
             Piece t=this->G->pool->drawout();
-            armor_gain+=t.sum();
+            armor_gain+=std::min(t.sum(),20);
             notice=notice+" "+t.to_string();
         }
         sham = armor_gain;
