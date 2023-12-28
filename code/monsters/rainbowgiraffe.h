@@ -17,7 +17,9 @@ public:
     //void Monster_After_Combat() override;
     POOLTYPE pooltype() override { return POOLTYPE::POOL_RAINBOW_GIRAFFE; }
 private:
+    int Count_LAIZI();
     std::set<int> uniqueSet;
+    const static QString rainbowColour[];
 };
 
 #endif // RAINBOWGIRAFFE_H

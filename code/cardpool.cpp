@@ -73,20 +73,28 @@ void CardPool::setpool(GT::PoolType type)
     for (int laizis = 0; laizis < nPool(type, Piece(LAIZI)); laizis++)
         this->pushback(Piece(LAIZI));
 
-    // 非正常块
     if (type == GT::POOL_RAINBOW_GIRAFFE) {
-        // 图片只有 3X2、4X6、8X7、39X、45X、81X、X16、X57、X92、XXX
-        for (int i = 0; i < 1; ++i) {
-            this->pushback(Piece("3X2"));
-            this->pushback(Piece("4X6"));
-            this->pushback(Piece("8X7"));
-            this->pushback(Piece("39X"));
-            this->pushback(Piece("45X"));
-            this->pushback(Piece("81X"));
-            this->pushback(Piece("X16"));
-            this->pushback(Piece("X57"));
-            this->pushback(Piece("X92"));
-            this->pushback(Piece("XXX"));
+        // 彩虹鹿的卡池 单边癞子增加一张
+        for (int x348 : line348) {
+            for (int x159 : line159) {
+                Piece p = Piece(x348, x159, 10);
+                this->pushback(p);
+            }
         }
+
+        for (int x348 : line348) {
+            for (int x267 : line267) {
+                Piece p = Piece(x348, 10, x267);
+                this->pushback(p);
+            }
+        }
+
+        for (int x159 : line159) {
+            for (int x267 : line267) {
+                Piece p = Piece(10, x159, x267);
+                this->pushback(p);
+            }
+        }
+
     }
 }

@@ -46,7 +46,8 @@ enum SCORING_RULE {
     Scoring_Normal = 0,
     One_Lines_Plus_12 = 112,
     One_Lines_Plus_15 = 115,
-    COUNT_LINES=-2147483647
+    COUNT_LAIZI=-2147483646,
+    COUNT_LINES=-2147483647,
 };
 
 enum PoolType {// 以下枚举符合多种乱写规律
