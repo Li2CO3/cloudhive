@@ -130,13 +130,18 @@ void Grid::Make_image(QPixmap& img)
 
     for (int place = 20; place <= 45; place++)
     {
+
+        QPixmap wallpiece(64,64);
+        wallpiece.fill();
+        QPainter wallpainter(&wallpiece);
+        wallpainter.drawPixmap(0,0,QPixmap("res/piece/pure/wall_000.png"));
+
         int x = GRID_X[place], y = GRID_Y[place];
-        QString wall_desc = "000";
-        if (find_xydir(x, y, 3) > 0 || find_xydir(x, y, -3) > 0) { wall_desc[0] = '1'; }
-        if (find_xydir(x, y, 2) > 0 || find_xydir(x, y, -2) > 0) { wall_desc[2] = '1'; }
-        if (find_xydir(x, y, 1) > 0 || find_xydir(x, y, -1) > 0) { wall_desc[1] = '1'; }
+        if (find_xydir(x, y, 1) > 0 || find_xydir(x, y, -1) > 0) { wallpainter.drawPixmap(0,0,QPixmap("res/piece/pure/line_159.png")); }
+        if (find_xydir(x, y, 2) > 0 || find_xydir(x, y, -2) > 0) { wallpainter.drawPixmap(0,0,QPixmap("res/piece/pure/line_267.png")); }
+        if (find_xydir(x, y, 3) > 0 || find_xydir(x, y, -3) > 0) { wallpainter.drawPixmap(0,0,QPixmap("res/piece/pure/line_348.png")); }
         //find_xydir(0,2,3);find_xydir(0,2,-3);
-        painter.drawPixmap(x * 64, y * 32 - 32, QPixmap("res/piece/"+QString("pure")+"/wall_" + wall_desc + ".png"));
+        painter.drawPixmap(x * 64, y * 32 - 32, wallpiece);
     }
 
     for (int x = 0; x < 7; x += 2)
