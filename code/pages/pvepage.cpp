@@ -132,8 +132,9 @@ void Monster::Make_Summary(QDialog* dialog)
             piece->setPixmap(map.SCALED(32, 32));
             piece->setGeometry(80 + ((i - 1) % 10 * 45), 370 + (i - 1) / 10 * 45, 32, 32);
             piece->show();
+
+            pieces = pieces + p.to_string() + " ";
         }
-        pieces = pieces + p.to_string() + " ";
         if (i % 10 == 0)pieces += "\n";
     }
 

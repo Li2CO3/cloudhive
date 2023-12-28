@@ -11,7 +11,6 @@ class Random//随机数 摇骰子都在这里
 private:
     int seed;//mt19937的事情，下次一定，下次一定
     qint64 now;
-    Random* random;
 public:
     void setseed(int newseed) { seed = newseed; now = seed; }
     int getseed() { return seed; }

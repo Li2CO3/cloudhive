@@ -72,7 +72,7 @@ void Snowman::Monster_Before_Turn()//混乱屎山代码
 }
 void Snowman::setStatus()
 {
-    if (G->pool->current[0] == 0)
+    if (G->pool->current[0].isEmptyPiece())
     {
         G->status = Game::WAIT_SNOWMAN_DISCARD; return;
     }
@@ -84,14 +84,14 @@ void Snowman::setStatus()
 
 void Snowman::Monster_Before_Combat()
 {
-    if (G->turn == 20 || (is_in_illusion && (G->turn < 26 || G->pool->current[0] == 0)))
+    if (G->turn == 20 || (is_in_illusion && (G->turn < 26 || G->pool->current[0].isEmptyPiece())))
     {
         emit G->Alert_monster("!打雪仗中...!");
     }
     if (is_in_illusion)
     {
         //if(this->cards_discarded==0)cache_o[G->turn-20]="";
-        if (G->pool->current[0] == 0)
+        if (G->pool->current[0].isEmptyPiece())
         {
             cache_o[G->turn - 20] += "-";
         }
@@ -102,7 +102,7 @@ void Snowman::Monster_Before_Combat()
         if (G->record[G->turn].toInt() < 10)cache_o[G->turn - 20] += " ";
         cache_o[G->turn - 20] += QN(G->record[G->turn].toInt());
     }
-    if (is_in_illusion && G->pool->current[0] == 0)
+    if (is_in_illusion && G->pool->current[0].isEmptyPiece())
     {
         cards_discarded++;
         Piece p = G->record.covered[G->turn];
@@ -128,7 +128,7 @@ void Snowman::Monster_Before_Combat()
     }
 
     Piece p = G->pool->current[0];
-    if (p != 0)//不是空牌
+    if (!p.isEmptyPiece())//不是空牌
     {
         int piece_point = p.x159() + p.x267() + p.x348();
         emit G->Alert_monster("雪人【积雪】发动，获得+" + QN(piece_point) + "临时护盾！");
@@ -176,7 +176,7 @@ void Snowman::addPoint(int pt)
 void Snowman::Monster_Combat()
 {
     if (G->turn < 3)return;
-    if (is_in_illusion)if (G->pool->current[0] == 0)
+    if (is_in_illusion)if (G->pool->current[0].isEmptyPiece())
     {
         return;
     }
@@ -223,7 +223,7 @@ void Snowman::Monster_Combat()
 
 void Snowman::Monster_After_Combat()
 {
-    if (is_in_illusion)if (G->pool->current[0] == 0)
+    if (is_in_illusion)if (G->pool->current[0].isEmptyPiece())
     {
         return;
     }
