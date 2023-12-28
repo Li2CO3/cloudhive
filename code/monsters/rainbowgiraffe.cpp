@@ -18,23 +18,31 @@ void RainbowGiraffe::reset() {
 
 QString RainbowGiraffe::description() {
     QString str = "圣墓上的倒吊人设计："+ this->name + "\n初始血量:" + QN(initialhealth) + "\n\n";
-    str += "被动技能0：【彩虹的颜色】每回合结束前，分数增加 2 ~ 7\n\n";
-    str += "被动技能1：【三原色】开局时的三张卡的各个数字不重合\n\n";
-    str += "主动技能2: 【棱镜】每7回合发动一次，盘里每有一张赖子或带赖子的卡，就对玩家造成7点伤害";
+    str += "被动技能0：【彩虹的颜色】每回合结束前，抽取一种彩虹的颜色，然后战力增加1~7\n\n";
+    str += "被动技能1：【三原色】挑战者开局的三张卡牌的各个数字均不重合\n\n";
+    str += "主动技能2: 【棱镜】每7回合发动一次，盘里每有一张赖子或带赖子的卡牌，就对挑战者造成7点伤害";
     str += "副本环境·彩虹：卡池内新增一条边带有赖子的卡牌每种一张\n";
-    str += "由于图片的限制暂为3X2、4X6、8X7、39X、45X、81X、X16、X57、X92、XXX\n";
     str += "注意: 尚未确认此副本平衡性，请谨慎参考初始血量\n";
     return str;
 }
 
+int RainbowGiraffe::Count_LAIZI() {
+    int cnt = 0;
+    for (int i = 1; i <= 19; i++) {
+       Piece t = G->player->grid.pieces[i];
+       if (t.x159() == 10 || t.x267() == 10 || t.x348() == 10) {
+           cnt++;
+       }
+    }
+    return cnt;
+}
 
 // 回合开始前
 // 发牌在[G->record.pieces[G->turn]]，备注在[G->record.cache[turn]]操作在[G->record[turn]]，上轮分在[G->player->prev_point]
-
 void RainbowGiraffe::Monster_Before_Turn() {
-
-
-    emit G->Alert_monster(name+"【彩虹的颜色】下回合增加2~7分");
+    int cnt = Count_LAIZI();
+    emit G->Alert_monster("当前赖子数:" + QN(cnt));
+    emit G->Alert_monster(name+"【彩虹的颜色】下回合增加1~7分");
     if (G->turn <= 3) {
         // 【三原色】
         G->pool->ncurrent = 1;
@@ -66,22 +74,27 @@ void RainbowGiraffe::Monster_Before_Turn() {
 
 }
 
+const QString RainbowGiraffe::rainbowColour[] = {
+    "红色",
+    "橙色",
+    "黄色",
+    "绿色",
+    "蓝色",
+    "靛色",
+    "紫色",
+};
+
 void RainbowGiraffe::Monster_Before_Combat() {
     Monster::Monster_Before_Combat();
     {//【彩虹的颜色】
-        int increase_point = G->random.randint(2, 7);
+        int increase_point = G->random.randint(1, 7);
         this->addPoint(increase_point);
-        emit G->Alert_monster(name + "【彩虹的颜色】发动\nroll出了" + QN(increase_point) + "点");
+        emit G->Alert_monster(name + "【彩虹的颜色】发动\n选中了"
+                              + rainbowColour[increase_point - 1] + ",分数增加" + QN(increase_point) + "点");
     }
 
     if (G->turn % 7 == 0) {
-        int cnt = 0;
-        for (int i = 1; i < 19; i++) {
-           Piece t = G->player->grid.pieces[i];
-           if (t.x159() == 10 || t.x267() == 10 || t.x348() == 10) {
-               cnt++;
-           }
-        }
+        int cnt = Count_LAIZI();
         if (cnt > 0) {
             emit G->Alert_monster(name + "【棱镜】发动，造成了" + QN(cnt * 7) + "点伤害");
             G->player->take_damage(cnt * 7);
@@ -92,6 +105,7 @@ void RainbowGiraffe::Monster_Before_Combat() {
 
     }
 }
+
 
 
 //void RainbowGiraffe::Monster_Combat() {

@@ -20,8 +20,8 @@ void Iron_Wall::reset() {
 QString Iron_Wall::description() {
     QString str = "Anidlebrain特制BOSS："+ this->name + "\n初始血量:" + QN(initialhealth) + "\n\n";
     str += "主动技能0：【虚空吞噬】第六回合后，开始战斗之前，吞噬(销毁)一张卡牌，本回合临时增加卡牌点数的护盾。\n\n";
-    str += "被动技能1：【永恒守护】每个回合开始时，若护盾值为0，增加对方分数的护盾值。\n\n";
-    str += "被动技能2：【反击之盾】战斗时，分数值等于当前的护盾值。\n\n";
+    str += "被动技能1：【永恒守护】每个回合开始时，若护盾值为0，增加挑战者战力的护盾。\n\n";
+    str += "被动技能2：【反击之盾】战斗时，战力等于当前的护盾。\n\n";
     str += "副本环境·破晓战场：卡池中卡牌点数点数和是质数的卡牌数量改为5张。\n";
     str += "(317 397 412 416 452 496 812 856 892 896)\n";
     return str;
@@ -31,7 +31,7 @@ QString Iron_Wall::description() {
 void Iron_Wall::Monster_Before_Turn() {
     if (armor <= 0) {
         armor = G->player->point();
-        emit G->Alert_monster(name+"【永恒守护】发动，护盾值变为"+QN(armor));
+        emit G->Alert_monster(name+"【永恒守护】发动，护盾变为"+QN(armor));
     }
     Monster::Monster_Before_Turn();
 }

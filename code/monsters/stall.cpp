@@ -15,8 +15,8 @@ void Stall::reset() {
 
 QString Stall::description() {
     QString str = "YAMI设计："+ this->name + "\n初始血量:" + QN(initialhealth) + "\n\n";
-    str += "被动技能0：【热修】每回合开始时，分数增加 -5 ~ 15\n\n";
-    str += "被动技能1：【保底】分数最小为0\n\n";
+    str += "被动技能0：【热修】每回合开始时，战力增加 -5 ~ 15\n\n";
+    str += "被动技能1：【保底】战力最小为0\n\n";
     str += "副本环境：无\n";
     str += "注意: 尚未确认此副本平衡性，请谨慎参考初始血量\n";
     return str;
