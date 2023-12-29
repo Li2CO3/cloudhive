@@ -52,7 +52,7 @@ void Puppeteer::Monster_Before_Turn() {
         for(int i=0;i<G->turn/10+1;i++)
         {
             Piece t=this->G->pool->drawout();
-            armor_gain+=t.sum();
+            armor_gain+=std::min(t.sum(),20);
             notice=notice+" "+t.to_string();
         }
         sham = armor_gain;
