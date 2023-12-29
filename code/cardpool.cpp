@@ -54,13 +54,27 @@ int CardPool::nPool(GT::PoolType type, Piece p)//当前仅限正常的块。开�
         }
     }
     else
-        throw 0;
+        {//不是正常块
+
+        int nanyline = (p.x159()==10)+(p.x267()==10)+(p.x348()==10);
+        int nzeroline = (p.x159()==0)+(p.x267()==0)+(p.x348()==0);
+        switch(type)
+        {
+            case POOL_RAINBOW_GIRAFFE:
+            {
+                if(nanyline==1 && nzeroline==0)
+                    return 1;
+                else return 0;
+            }
+            default:return 0;
+            }
+    }
 }
 void CardPool::setpool(GT::PoolType type)
 {
-    int line348[3] = { 3,4,8 };
-    int line159[3] = { 1,5,9 };
-    int line267[3] = { 2,6,7 };
+    int line348[5] = { 0,3,4,8,10 };
+    int line159[5] = { 0,1,5,9,10 };
+    int line267[5] = { 0,2,6,7,10 };
     this->npiece = 0;
     for (int x348 : line348)
         for (int x159 : line159)
@@ -73,28 +87,5 @@ void CardPool::setpool(GT::PoolType type)
     for (int laizis = 0; laizis < nPool(type, Piece(LAIZI)); laizis++)
         this->pushback(Piece(LAIZI));
 
-    if (type == GT::POOL_RAINBOW_GIRAFFE) {
-        // 彩虹鹿的卡池 单边癞子增加一张
-        for (int x348 : line348) {
-            for (int x159 : line159) {
-                Piece p = Piece(x348, x159, 10);
-                this->pushback(p);
-            }
-        }
 
-        for (int x348 : line348) {
-            for (int x267 : line267) {
-                Piece p = Piece(x348, 10, x267);
-                this->pushback(p);
-            }
-        }
-
-        for (int x159 : line159) {
-            for (int x267 : line267) {
-                Piece p = Piece(10, x159, x267);
-                this->pushback(p);
-            }
-        }
-
-    }
 }

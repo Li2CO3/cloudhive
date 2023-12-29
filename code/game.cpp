@@ -281,7 +281,7 @@ void Game::Player::Locate_piece(Piece p, int place)
 	G->MW->Set_Piece(p, place);//player info
 	int new_pt = point();
 	bool changed_pt = (new_pt != old_pt);
-    if (changed_pt) { emit changePoint(new_pt); }
+    if (changed_pt) { emit changePoint(); }
 
 	//后续的boss的反应都在这里
 }

@@ -60,7 +60,7 @@ void Iron_Wall::Monster_After_Combat() {
     if (realarmor < armor) {
         emit G->Alert_monster(name+"临时护盾减少"+QN(armor-realarmor)+"点");
         armor = realarmor;
-        emit G->signal_monster_change_stats(point,health,armor);
+        emit G->signal_monster_change_stats(stat_string());
     }
     Monster::Monster_After_Combat();
 }

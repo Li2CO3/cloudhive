@@ -43,6 +43,7 @@ public:
 		bool dead;//如果死了就变true
 		int totaldamage;//玩家打出的伤害
 		int prev_point;//上轮分数
+        QString stat_string(){return QN(point())+'/'+QN(health);}
 		int point() { return grid.point(G->scoring_rule); }//里面注释掉的版本是适配开放巢的，但不方便设置1加分，就先注释掉了
 		void Locate_piece(Piece p, int place);//放块，更改Player里的东西，向Window发出更改显示的signal
 		Player(Game* g) { G = g; Clear(); }
@@ -53,12 +54,12 @@ public:
 		void set_name(QString name);
 		void set_icon(QString icon);
 
-        void changePoint(int pt) { emit G->signal_player_change_stats(pt, health); }//没有point变量。只是发一个信号
+        void changePoint() { emit G->signal_player_change_stats(stat_string()); }//没有point变量。只是发一个信号
 		void take_damage(int dmg)//默认的受到伤害
 		{
 			health -= dmg;
             emit G->Alert_monster(name + "血量减少" + QString::number(dmg));
-            emit G->signal_player_change_stats(point(), health);
+            emit G->signal_player_change_stats(stat_string());
             if (health <= 0) { dead = true; emit G->Alert_monster(name + "已被击杀..."); G->Game_End(); }
 		}
 	};
@@ -128,18 +129,18 @@ public:
 public slots:
 	void recv_operation(QString op);
 signals:
-	void signal_new_operation(QString);
-	void signal_before_turn();
-	void signal_turn();
-	void signal_before_combat();
-	void signal_combat();
-	void signal_after_combat();
-	void signal_update_turn_piece();
-	void signal_player_change_stats(int, int);//point,health
-	void signal_monster_change_stats(int, int, int);//point,health,armor
-	void signal_wait_for_operation();
-	void signal_game_end();
-	void Alert_monster(QString);
+    void signal_new_operation(QString);
+    void signal_before_turn();
+    void signal_turn();
+    void signal_before_combat();
+    void signal_combat();
+    void signal_after_combat();
+    void signal_update_turn_piece();
+    void signal_player_change_stats(QString);//需要输入stat_string()
+    void signal_monster_change_stats(QString);//需要输入stat_string()
+    void signal_wait_for_operation();
+    void signal_game_end();
+    void Alert_monster(QString);
 };
 
 #endif // GAME_H

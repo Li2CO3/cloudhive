@@ -144,7 +144,7 @@ void Snowman::take_damage(int damage)
         if (armor >= damage)
         {
             emit G->Alert_monster("雪人临时护盾减少" + QN(damage) + "，抵消了伤害!"); armor -= damage;
-            emit G->signal_monster_change_stats(point, health, armor);
+            emit G->signal_monster_change_stats(stat_string());
         }
         else
         {
@@ -232,7 +232,7 @@ void Snowman::Monster_After_Combat()
     {
         int diff = armor - prev_armor; armor = prev_armor;
         emit G->Alert_monster("雪人失去临时护盾" + QN(diff) + "点");
-        emit G->signal_monster_change_stats(point, health, armor);
+        emit G->signal_monster_change_stats(stat_string());
     }
 
     if (is_in_illusion)

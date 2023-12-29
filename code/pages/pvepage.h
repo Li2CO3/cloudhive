@@ -48,8 +48,8 @@ public:
     void update() override {
         G->player->grid.Make_image(gridimage);
         grid_background->setPixmap(gridimage.SCALED(grid_background->width(), grid_background->height()));
-        this->Update_Player_Stats(G->player->point(), G->player->health);
-        this->Update_Monster_Stats(G->monster->point, G->monster->health, G->monster->armor);
+        this->Update_Player_Stats(G->player->stat_string());
+        this->Update_Monster_Stats(G->monster->stat_string());
     }
     void Make_Summary();
     //void Make_Detailed_Recap();
@@ -85,16 +85,16 @@ public slots:
         turninfo->setText("第" + QN(G->turn) + "/35回合"); //turninfo2->setText("第"+QN(G->turn)+"回合");
         cache_op = "";
     }
-    void Update_Monster_Stats(int point, int health, int armor)
+    void Update_Monster_Stats (QString str)//(int point, int health, int armor)
     {
-        QString str = QString::number(point) + '/' + QString::number(health);
-        if (armor > 0)str += "<" + QString::number(armor) + ">";
+        //QString str = QString::number(point) + '/' + QString::number(health);
+        //if (armor > 0)str += "<" + QString::number(armor) + ">";
         monster_stats->setText(str);
         //monster_stats2->setText(G->monster->name+": "+str);
     }
-    void Update_Player_Stats(int point, int health)
+    void Update_Player_Stats(QString str)//int point, int health)
     {
-        QString str = QString::number(point) + '/' + QString::number(health);
+        //QString str = QString::number(point) + '/' + QString::number(health);
         hero_stats->setText(str);
         //hero_stats2->setText(G->player->name+": "+str);
     }

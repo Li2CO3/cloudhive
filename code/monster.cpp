@@ -21,6 +21,12 @@ QString Monster::description()
     //throw 0;
     return str;
 }
+QString Monster::stat_string()
+{
+    QString str= QN(point)+'/'+QN(health);
+    if(armor>0) str=str+'<'+QN(armor)+'>';
+    return str;
+}
 
 Monster::Monster(Game* g) {
     G = g;
@@ -126,12 +132,12 @@ void Monster::setStatus() {//发完牌马上可以操作的时候，看下怪的
 }
 
 void Monster::addPoint(int pt) {
-    point += pt; emit G->signal_monster_change_stats(point, health, armor);
+    point += pt; emit G->signal_monster_change_stats(stat_string());//point, health, armor);
 }
 
 void Monster::gainArmor(int arm) {
     armor += arm;
-    emit G->signal_monster_change_stats(point, health, armor);
+    emit G->signal_monster_change_stats(stat_string());
 }
 
 void Monster::take_damage(int dmg) {
@@ -140,26 +146,26 @@ void Monster::take_damage(int dmg) {
     {
         health -= dmg;
         emit G->Alert_monster(name + "血量减少" + QString::number(dmg));
-        emit G->signal_monster_change_stats(point, health, armor);
+        emit G->signal_monster_change_stats(stat_string());
     }
     else if (armor > dmg)
     {
         armor -= dmg;
         emit G->Alert_monster(name + "护盾减少" + QString::number(dmg));
-        emit G->signal_monster_change_stats(point, health, armor);
+        emit G->signal_monster_change_stats(stat_string());
     }
     else if (armor == dmg)
     {
         armor -= dmg;
         emit G->Alert_monster(name + "护盾减少" + QString::number(dmg) + ",刚好被击穿");
-        emit G->signal_monster_change_stats(point, health, armor);
+        emit G->signal_monster_change_stats(stat_string());
     }
     else if (armor < dmg)
     {
         int excess = dmg - armor;
         armor = 0; health -= excess;
         emit G->Alert_monster(name + "护盾被击穿，且血量减少" + QString::number(excess));
-        emit G->signal_monster_change_stats(point, health, armor);
+        emit G->signal_monster_change_stats(stat_string());
     }
 
     if (health <= 0)

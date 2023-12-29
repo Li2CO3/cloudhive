@@ -51,8 +51,8 @@ void PvePage::load()
         connect(G, SIGNAL(Alert_monster(QString)), this, SLOT(Update_Battle_Log(QString)));//更新指令
         connect(G, &Game::signal_update_turn_piece, this, &PvePage::Update_Turn_Piece);
         connect(G, &Game::signal_before_turn, this, [=]() {Update_Turns(); });
-        connect(G, SIGNAL(signal_player_change_stats(int,int)), this, SLOT(Update_Player_Stats(int,int)));
-        connect(G, SIGNAL(signal_monster_change_stats(int,int,int)), this, SLOT(Update_Monster_Stats(int,int,int)));
+        connect(G, &Game::signal_player_change_stats, this, &PvePage::Update_Player_Stats);
+        connect(G, &Game::signal_monster_change_stats, this, &PvePage::Update_Monster_Stats);
         connect(G, &Game::signal_game_end, this, [=]() {Make_Summary(); });
 
         //    G->monster->id=Game::TWIN_HEAD;

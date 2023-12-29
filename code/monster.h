@@ -10,6 +10,7 @@
 #define POOLTYPE gametools::PoolType
 #define RULE gametools::SCORING_RULE
 
+
 class Game;
 
 class Monster
@@ -28,6 +29,8 @@ public:
     bool dead;
     Monster(Game* g);
     virtual ~Monster();
+
+    virtual QString stat_string();
     static Monster* new_monster(GT::MONSTER_ID monst,
                                 Game* G);//把Game的Monster替换成一个新的，根据monst创建
 

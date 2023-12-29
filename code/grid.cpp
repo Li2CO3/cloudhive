@@ -2,7 +2,15 @@
 #include <QPainter>
 
 
-int Grid::point(GT::SCORING_RULE rule)
+
+int inline line_value_and(int a, int b)
+{if (a == 10)return b;
+ if (b == 10)return a;
+ if (a == b)return a;
+ return 0;
+};
+
+int Grid::point(GT::SCORING_RULE rule, int * o159,int *o267,int *o348)//当前这些o只用在年兽。
 {
     using namespace GT;
     /*
@@ -18,6 +26,7 @@ int Grid::point(GT::SCORING_RULE rule)
             int cur_val=pieces[place].ValueofLine(dir);
             //int count_cells=1;
             for(int k=-1;k<=1;k+=2)
+
                 for(int s=1;;s++)
                 {int step=k*s;
 
@@ -41,7 +50,6 @@ int Grid::point(GT::SCORING_RULE rule)
         return pt;
     */
     //int a[2][1]={{1},{2}};
-    auto f = [=](int a, int b) {if (a == 10)return b; if (b == 10)return a; if (a == b)return a; return 0; };
 
     int l267[5][5] = { {1,4,8,-1,-1},{2,5,9,13,-1},{3,6,10,14,17},{7,11,15,18,-1},{12,16,19,-1,-1} };
     int l159[5][5] = { {1,2,3,-1,-1},{4,5,6,7,-1},{8,9,10,11,12},{13,14,15,16,-1},{17,18,19,-1,-1} };
@@ -50,10 +58,16 @@ int Grid::point(GT::SCORING_RULE rule)
     for (int l = 0; l < 5; l++)
         for (int p = 0; p < 5; p++)
         {
-            int t = l267[l][p]; if (t > 0) r267[l] = f(r267[l], pieces[t].x267());
-            t = l159[l][p]; if (t > 0) r159[l] = f(r159[l], pieces[t].x159());
-            t = l348[l][p]; if (t > 0) r348[l] = f(r348[l], pieces[t].x348());
+            int t = l267[l][p]; if (t > 0) r267[l] = line_value_and(r267[l], pieces[t].x267());
+            t = l159[l][p]; if (t > 0) r159[l] = line_value_and(r159[l], pieces[t].x159());
+            t = l348[l][p]; if (t > 0) r348[l] = line_value_and(r348[l], pieces[t].x348());
         }
+
+    if(o159)for(int i=0;i<5;i++)o159[i]=r159[i];
+    if(o267)for(int i=0;i<5;i++)o267[i]=r267[i];
+    if(o348)for(int i=0;i<5;i++)o348[i]=r348[i];
+
+
     int basic_point = 0; int const coef[5] = { 3,4,5,4,3 };
     for (int i = 0; i < 5; i++) basic_point += (r267[i] + r159[i] + r348[i]) * coef[i];
     int points = basic_point;
