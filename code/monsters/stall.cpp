@@ -27,8 +27,8 @@ QString Stall::description() {
 void Stall::Monster_Before_Turn() {
     int k = G->random.randint(-5, 15);
     emit G->Alert_monster(name + "【热修】发动 \n/rd i -5 15 \n -> "
-                          + QN(k) + "\n"+ name + "获得" + QN(k) + "点分数");
-    if(k<-point){k=-point; emit G->Alert_monster(name+"【保底】触发，分数不低于0!");}
+                          + QN(k) + "\n"+ name + "获得" + QN(k) + "点战力");
+    if(k<-point){k=-point; emit G->Alert_monster(name+"【保底】触发，战力不低于0!");}
     int real_increase=std::max(-point,k);
 
     addPoint(real_increase);
