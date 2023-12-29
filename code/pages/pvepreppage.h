@@ -19,7 +19,7 @@ public:
 
     QLabel* monster_icon, * monster_intro;
 
-    static const int nMonster=8;
+    static const int nMonster=9;
     static constexpr GT::MONSTER_ID monster_ids[nMonster + 1] = {
         GT::DEFAULT_MONSTER,
         GT::TWIN_HEAD,
@@ -29,7 +29,8 @@ public:
         GT::IRON_WALL,
         GT::STALL,
         GT::PUPPETEER,
-        GT::RAINBOW_GIRAFFE
+        GT::RAINBOW_GIRAFFE,
+        GT::NIAN_MONSTER,
     };
     QPushButton* e[nMonster + 1];
     PvePrepPage(MainWindow* mw) { MW = mw; G = MW->G; MW->page = this; }
@@ -55,6 +56,7 @@ public:
         NEW_BUTTON_MW(e[6], 620, 550, 180, 70, "saiwei", 30);
         NEW_BUTTON_MW(e[7], 180, 650, 180, 70, "系命傀儡师", 30);
         NEW_BUTTON_MW(e[8], 400, 650, 180, 70, "彩色长颈鹿", 30);
+        NEW_BUTTON_MW(e[9], 400, 650, 180, 70, "年兽", 30);
 
         //怪物信息
         NEW_LABEL_IMAGE_MW(monster_icon, 1115, 100, 120, 120, G->monster->icon);

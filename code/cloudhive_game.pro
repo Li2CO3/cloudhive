@@ -33,6 +33,7 @@ SOURCES += \
     monsters/catburglar.cpp \
     monsters/ironwall.cpp \
     monsters/mimicchest.cpp \
+    monsters/nian.cpp \
     monsters/puppeteer.cpp \
     monsters/rainbowgiraffe.cpp \
     monsters/snowman.cpp \
@@ -57,6 +58,7 @@ HEADERS += \
     monsters/catburglar.h \
     monsters/ironwall.h \
     monsters/mimicchest.h \
+    monsters/nian.h \
     monsters/puppeteer.h \
     monsters/rainbowgiraffe.h \
     monsters/snowman.h \

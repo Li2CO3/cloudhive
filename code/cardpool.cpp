@@ -47,6 +47,7 @@ int CardPool::nPool(GT::PoolType type, Piece p)//当前仅限正常的块。开�
             else if (p.sum() % 3 && p.sum() % 2 && p.sum() % 5) return 5;//目前就先靠235判定质数了. 412 317 452 416 812 892 496 856 397 896
             else return 2;
         case POOL_PUPPETEER:
+        case POOL_NIAN:
             if(p==LAIZI) return 2;
             else if (p.x159() == 1 || p.x267() == 2 || p.x348() == 3) return 3;
             else return 2;
@@ -61,6 +62,7 @@ int CardPool::nPool(GT::PoolType type, Piece p)//当前仅限正常的块。开�
         switch(type)
         {
             case POOL_RAINBOW_GIRAFFE:
+            case POOL_NIAN:
             {
                 if(nanyline==1 && nzeroline==0)
                     return 1;
