@@ -11,6 +11,9 @@
 #define setP(g) setPixelSize((g))
 #define MC() MW->centralWidget()
 
+
+#define rel(x) (int((x * MW->width()) / 3200) * 2)//按照1600*1000来排坐标
+
 #define NEW_BUTTON_MW(name,g1,g2,g3,g4,text,fontsize) NEW_BUTTON(name,rel(g1),rel(g2),rel(g3),rel(g4),text,rel(fontsize),MC())
 
 #define NEW_BUTTON(name,g1,g2,g3,g4,text,fontsize,parent)\
@@ -85,8 +88,6 @@ class StartPage;class PvePage;class SettingsPage;
 enum PageType{STARTPAGE=0,PVEPAGE=1,PVEPREP=2,SETTINGS=3};
 
 class MainWindow;
-extern MainWindow *TheWindow;
-int rel(int size);
 
 
 class MainWindow : public QMainWindow

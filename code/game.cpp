@@ -84,6 +84,9 @@ int main(int argc, char* argv[])
 			content = content.split("\n")[0];
 			QApplication::setFont(QFont(content));
 		}
+        QFont f;
+        f.setPixelSize(18);
+        QApplication::setFont(f);
     }
     MainWindow mw;
     MainWindow*w = &mw;

@@ -23,7 +23,7 @@ void PvePage::load()
         NEW_LABEL_ALIGN_MW(hero_stats, 1100, 350, 300, 50, Player_Initial, 30, Left);
         //NEW_LABEL_ALIGN_MW(monster_stats2,350,50,300,50,G->monster->name+": "+Dragon_Initial,12,Left);
         //NEW_LABEL_ALIGN_MW(hero_stats2,350,70,300,50,G->player->name+": "+Player_Initial,12,Left);
-        NEW_LABEL_ALIGN_MW(monster_extra, 1100, 400, 450, 500, "", 30, HCenter);
+        NEW_LABEL_ALIGN_MW(monster_extra, 1100, 400, 450, 580, "", 30, HCenter);
         //NEW_LABEL_ALIGN_MW(turninfo2,250,50,200,50,"第0回合",20,Left);
         NEW_LABEL_ALIGN_MW(turninfo, 1200, 250, 300, 50, "第1/35回合", 40, HCenter);
         NEW_BUTTON_MW(to_home, 20, 20, 60, 60, "退出", 20);
@@ -192,9 +192,18 @@ void Monster::Make_Summary(QDialog* dialog)
     overall_record.open(QIODevice::Append | QIODevice::Text) ;
     QTextStream overall_out(&overall_record);
     overall_out<<G->player->name<<"\t"<<G->monster->shortname<<"\t"<<G->monster->initialhealth<<"\t"<<G->turn<<"\t"<<G->monster->health<<"\t";
-    overall_out<<G->player->totaldamage<<"\t"<<G->player->health<<"\t"<<G->player->point()<<"\t"<<G->monster->point<<"\t"<<G->random.getseed()<<"\t"<<i<<"\n";
+    overall_out<<G->player->totaldamage<<"\t"<<G->player->health<<"\t"<<G->player->point()<<"\t";
+    overall_out<<G->monster->point<<"\t"<<G->random.getseed()<<"\t"<<i<<"\t"<<__VERSION<<"\n";
     overall_record.close();
-    /*TODO...*/
+
+    QLabel * versioninfo = new QLabel("版本:"+__VERSION,dialog);
+    QFont font;
+    font.setPixelSize(12);
+    versioninfo->setFont(font);
+    versioninfo->setGeometry(10, 580, 150, 20);
+    versioninfo->show();
+
+    /*TODO...移动写文件的地方*/
 }
 
 

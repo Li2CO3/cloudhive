@@ -99,7 +99,7 @@ void StartPage::show_icons(int page)
 void StartPage::load()
     {
         G->player->load_name();
-
+        NEW_LABEL_ALIGN_MW(versioninfo,1400,20,180,80,"版本:"+__VERSION,20,Top |Qt::AlignRight);
         NEW_BUTTON_IMAGE_MW(myicon, 665, 200, 70, 70, "res/icon/" + G->player->icon);
         NEW_BUTTON_MW(myname, 765, 200, 170, 70, G->player->name, 30);
 

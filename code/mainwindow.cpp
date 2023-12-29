@@ -1,7 +1,6 @@
 ﻿#include "mainwindow.h"
 //#include "ui_mainwindow.h"
 
-int rel(int x) { return int((x * TheWindow->width()) / 3200) * 2; }
 
 MainWindow* TheWindow;
 
