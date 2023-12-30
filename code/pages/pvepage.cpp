@@ -92,6 +92,13 @@ void Monster::Make_Summary(QDialog* dialog)
     finalgridinfo->setFont(f);
     finalgridinfo->show();
 
+    QLabel *versioninfo = new QLabel(dialog);
+    SetLabel(versioninfo, 400, 10, 180, 20, 15);//版本
+    versioninfo->setText("版本:"+__VERSION);
+    versioninfo->setFont(f);
+    versioninfo->setAlignment(Qt::AlignRight);
+    versioninfo->show();
+
     QLabel* finalgrid = new QLabel(dialog);
     QPixmap p;
     G->player->grid.Make_image(p);
@@ -195,13 +202,6 @@ void Monster::Make_Summary(QDialog* dialog)
     overall_out<<G->player->totaldamage<<"\t"<<G->player->health<<"\t"<<G->player->point()<<"\t";
     overall_out<<G->monster->point<<"\t"<<G->random.getseed()<<"\t"<<i<<"\t"<<__VERSION<<"\n";
     overall_record.close();
-
-    QLabel * versioninfo = new QLabel("版本:"+__VERSION,dialog);
-    QFont font;
-    font.setPixelSize(12);
-    versioninfo->setFont(font);
-    versioninfo->setGeometry(10, 580, 150, 20);
-    versioninfo->show();
 
     /*TODO...移动写文件的地方*/
 }

@@ -1,9 +1,20 @@
 #include "nian.h"
 #include "game.h"
 
+#ifdef NewYear2024NianEasy
+Nian_Easy::Nian_Easy(Game* G) :Nian_Monster(G) {
+    id = GT::NIAN_EASY;
+    name = "赖子年兽"; shortname="赖子年";
+    initialhealth = 24680;
+    //chill=0;
+    //icon = QString("res/icon/monster/") + "9plus_nian_easy.jpg";
+
+}
+#endif
+
 Nian_Monster::Nian_Monster(Game* G) :Monster(G) {
     id = GT::NIAN_MONSTER;
-    name = "年兽"; shortname="年兽v01";
+    name = "年兽"; shortname="年兽";
     initialhealth = 13579;
     chill=0;
     icon = QString("res/icon/monster/") + "9_nian.jpg";

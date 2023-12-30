@@ -28,4 +28,19 @@ private:
     int chill=0;//寒气值，负数对应暖意
     int next_nline_trigger=5;
 };
+#ifdef NewYear2024NianEasy
+class Nian_Easy :public Nian_Monster
+{
+public:
+    Nian_Easy(Game *G);
+    ~Nian_Easy(){}
+    QString description() override {
+        QString str = "2024快乐副本："+ this->name + " 初始血量:" + QN(initialhealth) + "\n";
+        str +="副本环境:超级调色盘\n年兽规则基础上，增加18个赖子(共计20个纯赖子和27个单线赖子)。\n其它规则见[年兽]页。";
+        return str;
+        }
+    POOLTYPE pooltype() override { return POOLTYPE::POOL_NIAN_EASY; }
+};
+#endif//2024快乐年
+
 #endif // NIAN_H

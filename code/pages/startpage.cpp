@@ -59,37 +59,44 @@ void StartPage::show_icons(int page)
                     target->hide();
             });
         }
-        connect(prev,&QPushButton::clicked,this,[=](){
 
-            int newpage=bottom_label->text().toInt()-1;
-            bottom_label->setText(QN(newpage));
-            if(newpage>1) prev->show(); else prev->hide();
-            if(newpage<(Icons.length()-1)/ICONS_PER_PAGE+1) next->show();else next->hide();
-        });
-        if(page>=1)prev->show();else prev->hide();
-
-        for(int targetid=0;targetid<ICONS_PER_PAGE;targetid++)
         {
-            QPushButton * target =icons[targetid];
+            connect(prev,&QPushButton::clicked,this,[=](){
+
+                int newpage=bottom_label->text().toInt()-1;
+                bottom_label->setText(QN(newpage));
+                if(newpage>1) prev->show(); else prev->hide();
+                if(newpage<(Icons.length()-1)/ICONS_PER_PAGE+1) next->show();else next->hide();
+            });
+        }
+        if(page>1)prev->show();
+            else prev->hide();
+
+
+        {
+            for(int targetid=0;targetid<ICONS_PER_PAGE;targetid++)
+            {
+                QPushButton * target =icons[targetid];
+                connect(next,&QPushButton::clicked,this,[=](){
+
+                    int newpage=bottom_label->text().toInt()+1;
+                    if((newpage-1)*ICONS_PER_PAGE+targetid<Icons.length())
+                    {
+                        target->setIcon(QPixmap("res/icon/" + Icons[ICONS_PER_PAGE * (newpage - 1) + targetid]).SCALED(target->width(),target->height()) );
+                        target->show();
+                    }
+                    else
+                        target->hide();
+                });
+            }
             connect(next,&QPushButton::clicked,this,[=](){
 
                 int newpage=bottom_label->text().toInt()+1;
-                if((newpage-1)*ICONS_PER_PAGE+targetid<Icons.length())
-                {
-                    target->setIcon(QPixmap("res/icon/" + Icons[ICONS_PER_PAGE * (newpage - 1) + targetid]).SCALED(target->width(),target->height()) );
-                    target->show();
-                }
-                else
-                    target->hide();
+                bottom_label->setText(QN(newpage));
+                if(newpage>1) prev->show(); else prev->hide();
+                if(newpage<(Icons.length()-1)/ICONS_PER_PAGE+1) next->show();else next->hide();
             });
         }
-        connect(next,&QPushButton::clicked,this,[=](){
-
-            int newpage=bottom_label->text().toInt()+1;
-            bottom_label->setText(QN(newpage));
-            if(newpage>1) prev->show(); else prev->hide();
-            if(newpage<(Icons.length()-1)/ICONS_PER_PAGE+1) next->show();else next->hide();
-        });
         if(page<(Icons.length()-1)/ICONS_PER_PAGE+1)next->show();else next->hide();
 
 

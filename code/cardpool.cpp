@@ -30,7 +30,9 @@ int CardPool::nPool(GT::PoolType type, Piece p)//当前仅限正常的块。开�
         {
         case POOL_Normal:
         case POOL_RAINBOW_GIRAFFE:
-            return 2;
+        case POOL_NIAN:
+            if(p==LAIZI) return 2;
+            else return 2;
         case POOL_TWIN_HEAD:
             if(p==LAIZI) return 2;
             else if (p.x348() == 4)return 0;
@@ -47,10 +49,14 @@ int CardPool::nPool(GT::PoolType type, Piece p)//当前仅限正常的块。开�
             else if (p.sum() % 3 && p.sum() % 2 && p.sum() % 5) return 5;//目前就先靠235判定质数了. 412 317 452 416 812 892 496 856 397 896
             else return 2;
         case POOL_PUPPETEER:
-        case POOL_NIAN:
             if(p==LAIZI) return 2;
             else if (p.x159() == 1 || p.x267() == 2 || p.x348() == 3) return 3;
             else return 2;
+#ifdef NewYear2024NianEasy
+        case POOL_NIAN_EASY:
+            if(p==LAIZI) return 20;
+            else return 2;
+#endif
         default:throw 0;
         }
     }
@@ -63,6 +69,9 @@ int CardPool::nPool(GT::PoolType type, Piece p)//当前仅限正常的块。开�
         {
             case POOL_RAINBOW_GIRAFFE:
             case POOL_NIAN:
+#ifdef NewYear2024NianEasy
+            case POOL_NIAN_EASY:
+#endif
             {
                 if(nanyline==1 && nzeroline==0)
                     return 1;
@@ -86,8 +95,6 @@ void CardPool::setpool(GT::PoolType type)
                     this->pushback(p);
                 }
             }
-    for (int laizis = 0; laizis < nPool(type, Piece(LAIZI)); laizis++)
-        this->pushback(Piece(LAIZI));
 
 
 }

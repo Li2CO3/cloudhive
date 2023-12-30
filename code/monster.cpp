@@ -65,6 +65,10 @@ Monster* Monster::new_monster(GT::MONSTER_ID monst, Game* G)
         return new RainbowGiraffe(G);
     case NIAN_MONSTER:
         return new Nian_Monster(G);
+#ifdef NewYear2024NianEasy
+    case NIAN_EASY:
+        return new Nian_Easy(G);
+#endif
     default:
         //qDebug()<<"UNRECOGNIZED MONSTER ID!";
         throw 0;

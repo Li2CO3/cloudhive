@@ -19,19 +19,14 @@ public:
 
     QLabel* monster_icon, * monster_intro;
 
-    static const int nMonster=9;
-    static constexpr GT::MONSTER_ID monster_ids[nMonster + 1] = {
-        GT::DEFAULT_MONSTER,
-        GT::TWIN_HEAD,
-        GT::MIMIC_CHEST,
-        GT::CAT_BURGLAR,
-        GT::SNOWMAN,
-        GT::IRON_WALL,
-        GT::STALL,
-        GT::PUPPETEER,
-        GT::RAINBOW_GIRAFFE,
-        GT::NIAN_MONSTER,
-    };
+    static const int nMonster=9
+#ifdef NewYear2024NianEasy
+        +1
+#endif
+        ;
+
+
+
     QPushButton* e[nMonster + 1];
     PvePrepPage(MainWindow* mw) { MW = mw; G = MW->G; MW->page = this; }
     ~PvePrepPage() {}
@@ -44,19 +39,44 @@ public:
         NEW_LABEL_ALIGN_MW(namehint, 270, 210, 150, 30, "你的名字:", 30, Center);
         NEW_LABEL_ALIGN_MW(seedhint, 270, 310, 150, 30, "随机种子:", 30, Center);
         NEW_LABEL_ALIGN_MW(seedhint, 170, 370, 600, 60, "选择对手:", 30, Center);
-        NEW_BUTTON_MW(newgame_random,   220, 750, 160, 60, "开始新局", 30);
-        NEW_BUTTON_MW(newgame_selected, 420, 750, 160, 60, "开始选局", 30);
-        NEW_BUTTON_MW(back,             610, 750, 110, 60, "返回", 30);
+        NEW_BUTTON_MW(newgame_random,   220, 550+(nMonster-1)/3*100, 160, 60, "开始新局", 30);
+        NEW_BUTTON_MW(newgame_selected, 420, 550+(nMonster-1)/3*100, 160, 60, "开始选局", 30);
+        NEW_BUTTON_MW(back,             610, 550+(nMonster-1)/3*100, 110, 60, "返回", 30);
 
-        NEW_BUTTON_MW(e[1], 180, 450, 180, 70, "双头龙", 30);
-        NEW_BUTTON_MW(e[2], 400, 450, 180, 70, "宝箱怪", 30);
-        NEW_BUTTON_MW(e[3], 620, 450, 180, 70, "小贼猫", 30);
-        NEW_BUTTON_MW(e[4], 180, 550, 180, 70, "雪人", 30);
-        NEW_BUTTON_MW(e[5], 400, 550, 180, 70, "铁壁主宰", 30);
-        NEW_BUTTON_MW(e[6], 620, 550, 180, 70, "saiwei", 30);
-        NEW_BUTTON_MW(e[7], 180, 650, 180, 70, "系命傀儡师", 30);
-        NEW_BUTTON_MW(e[8], 400, 650, 180, 70, "彩色长颈鹿", 30);
-        NEW_BUTTON_MW(e[9], 400, 650, 180, 70, "年兽", 30);
+
+            GT::MONSTER_ID monster_ids[nMonster + 1] = {
+                GT::DEFAULT_MONSTER,
+                GT::TWIN_HEAD,
+                GT::MIMIC_CHEST,
+                GT::CAT_BURGLAR,
+                GT::SNOWMAN,
+                GT::IRON_WALL,
+                GT::STALL,
+                GT::PUPPETEER,
+                GT::RAINBOW_GIRAFFE,
+                GT::NIAN_MONSTER,
+#ifdef NewYear2024NianEasy
+                GT::NIAN_EASY,
+#endif
+            };
+            QString monster_key_text[nMonster + 1] = {
+                "",
+                "双头龙",
+                "宝箱怪",
+                "小贼猫",
+                "雪人",
+                "铁壁主宰",
+                "saiwei",
+                "系命傀儡师",
+                "彩虹长颈鹿",
+                "年兽",
+#ifdef NewYear2024NianEasy
+                "赖子年兽",
+#endif
+            };
+        for(int key_id=1;key_id<nMonster+1;key_id++)
+            NEW_BUTTON_MW(e[key_id], 180+(key_id-1)%3*220, 450+(key_id-1)/3*100, 180, 70, monster_key_text[key_id], 30);
+
 
         //怪物信息
         NEW_LABEL_IMAGE_MW(monster_icon, 1115, 100, 120, 120, G->monster->icon);
