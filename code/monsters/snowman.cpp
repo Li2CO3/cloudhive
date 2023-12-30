@@ -268,11 +268,12 @@ void Snowman::Make_Summary(QDialog* dialog)
 void Snowman::Go_out_of_illusion() {
     is_in_illusion = false;
     emit G->Alert_monster("雪仗结束，结算伤害！");
+    G->turn=26;//TODO 临时方案：在可能出现未发牌结束的地方设置临时turn值
     take_damage(damage_snowman_taken);
     G->player->take_damage(damage_player_taken);
-    G->turn = 21;
     G->player->grid = turn_20_grid;
     G->player->prev_point = G->player->point();
     point = turn_20_point;
+    G->turn=21;
     G->MW->page->update();
 }

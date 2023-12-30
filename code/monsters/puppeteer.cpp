@@ -42,8 +42,9 @@ void Puppeteer::Monster_Before_Turn() {
             start_turn_damage=3;
         }
         emit G->Alert_monster(name+"【暗器·飞针】触发，造成"+QN(start_turn_damage)+"点伤害!");
-
+    G->turn--;
         G->player->take_damage(start_turn_damage);
+    G->turn++;
     }
     if (G->turn % 10 == 0) {
         int armor_gain=0;
