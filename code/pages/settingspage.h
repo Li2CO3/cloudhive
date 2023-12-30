@@ -22,7 +22,7 @@ public:
     void load() override
     {
 #define SETTINGS_SCREENSIZE_BUTTON(A,B,C)\
-        NEW_BUTTON_MW(button_ ##A##_##B ,650,C,300,50,#A +QString("x")+ #B ,rel(30));\
+        NEW_BUTTON_MW(button_ ##A##_##B ,650,C,300,60,#A +QString("x")+ #B ,30);\
         connect(button_ ##A##_##B ,&QPushButton::clicked,MW,[=](){MW->showNormal();MW->resize(A,B);MW->load_page(STARTPAGE);});
 
         SETTINGS_SCREENSIZE_BUTTON(600, 375, 100);
@@ -31,10 +31,10 @@ public:
         SETTINGS_SCREENSIZE_BUTTON(1200, 750, 400);
         SETTINGS_SCREENSIZE_BUTTON(1400, 875, 500);
         SETTINGS_SCREENSIZE_BUTTON(1600, 1000, 600);
-        NEW_BUTTON_MW(button_fullscreen, 650, 700, 300, 50, "全屏", rel(30));
+        NEW_BUTTON_MW(button_fullscreen, 650, 700, 300, 60, "全屏", 30);
         connect(button_fullscreen, &QPushButton::clicked, MW, [=]() {MW->showFullScreen(); MW->load_page(STARTPAGE); });
 
-        NEW_BUTTON_MW(back, 650, 800, 300, 50, "返回", rel(30));
+        NEW_BUTTON_MW(back, 650, 800, 300, 60, "返回", 30);
         connect(back, &QPushButton::clicked, MW, [=]() {MW->load_page(STARTPAGE); });
     }
 };

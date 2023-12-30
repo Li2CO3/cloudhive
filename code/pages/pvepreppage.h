@@ -43,7 +43,7 @@ public:
         NEW_LINEEDIT_MW(seed, 440, 300, 200, 60, QN(G->random.getseed()), 30);
         NEW_LABEL_ALIGN_MW(namehint, 270, 210, 150, 30, "你的名字:", 30, Center);
         NEW_LABEL_ALIGN_MW(seedhint, 270, 310, 150, 30, "随机种子:", 30, Center);
-        NEW_LABEL_ALIGN_MW(seedhint, 170, 370, 600, 60, "选择对手:若随机种子为空，则取当前时间", 30, Center);
+        NEW_LABEL_ALIGN_MW(seedhint, 170, 370, 600, 60, "选择对手:", 30, Center);
         NEW_BUTTON_MW(newgame_random,   220, 750, 160, 60, "开始新局", 30);
         NEW_BUTTON_MW(newgame_selected, 420, 750, 160, 60, "开始选局", 30);
         NEW_BUTTON_MW(back,             610, 750, 110, 60, "返回", 30);
@@ -61,7 +61,7 @@ public:
         //怪物信息
         NEW_LABEL_IMAGE_MW(monster_icon, 1115, 100, 120, 120, G->monster->icon);
         QString str = G->monster->description();
-        NEW_LABEL_ALIGN_MW(monster_intro, 840, 250, 670, 750, str, 30, Top | Qt::AlignLeft);
+        NEW_LABEL_ALIGN_MW(monster_intro, 840, 250, 690, 750, str, 30, Top | Qt::AlignLeft);
         monster_intro->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
 

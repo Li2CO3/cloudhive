@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
 	{
-		QFontDatabase::addApplicationFont("res/game/OPPOSans-R.ttf");
+        QFontDatabase::addApplicationFont("res/game/OPPOSans-R.ttf");
 		QString K = "res/game/default_font.txt";
 		QFile file(K);
 		QString content;
@@ -81,9 +81,10 @@ int main(int argc, char* argv[])
 		{
 			QTextStream inStream(&file);
 			content = inStream.readAll();
-			content = content.split("\n")[0];
-			QApplication::setFont(QFont(content));
+            content = content.split("\n")[0];
+            QApplication::setFont(QFont(content));
 		}
+        file.close();
         QFont f;
         f.setPixelSize(18);
         QApplication::setFont(f);

@@ -98,8 +98,22 @@ void StartPage::show_icons(int page)
 }
 void StartPage::load()
     {
+
+    /*    for(int i=1;i<=30;i++)
+            {
+        QLabel *lab=new QLabel(MW);
+        lab->setText("0123456789");
+        lab->setGeometry((i-1)%3*160,(i-1)/3*40,160,40);
+        QFont f;
+        f.setPixelSize(i);
+        f.setStyleStrategy(QFont::NoAntialias);
+        lab->setFont(f);lab->show();
+        lab->lower();
+            }
+    */
         G->player->load_name();
-        NEW_LABEL_ALIGN_MW(versioninfo,1400,20,180,80,"版本:"+__VERSION,20,Top |Qt::AlignRight);
+        NEW_LABEL_ALIGN_MW(versioninfo,1280,20,300,50,"版本:"+__VERSION,30,Top |Qt::AlignRight);
+
         NEW_BUTTON_IMAGE_MW(myicon, 665, 200, 70, 70, "res/icon/" + G->player->icon);
         NEW_BUTTON_MW(myname, 765, 200, 170, 70, G->player->name, 30);
 
@@ -114,9 +128,9 @@ void StartPage::load()
             dialog->setModal(true);
             dialog->setFixedSize(160, 120); dialog->show();
             QFont f;
-            /*f.setFamily("OPPOSans R");*/f.setP(15);
+            /*f.setFamily("");*/f.setP(17);
             QLabel* lab = new QLabel("你的名字:", dialog);
-            SetLabel(lab, 5, 5, 100, 30, 16);
+            SetLabel(lab, 5, 5, 100, 30, 17);
             QLineEdit* rename = new QLineEdit(G->player->name, dialog);
             rename->setFont(f);
             rename->setGeometry(5, 35, 110, 40);
