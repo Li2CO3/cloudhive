@@ -10,7 +10,7 @@
 #define setP(g) setPixelSize((g))
 #define MC() MW->centralWidget()
 
-#define rel(x) int(x * MW->width()/1600)
+#define rel(x) int((x) * MW->width()/1600)
 #define font_rel(x) (rel(x)+(((rel(x)==11)||(rel(x)==14)||(rel(x)==16))?-1:0))//11 14 15 16的显示效果不好。600*375会变成10号。800*500的画面会是15。换字体？
 
 #define NEW_BUTTON_MW(name,g1,g2,g3,g4,text,fontsize) NEW_BUTTON(name,rel(g1),rel(g2),rel(g3),rel(g4),text,font_rel(fontsize),MC())
