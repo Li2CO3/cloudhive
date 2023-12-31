@@ -100,9 +100,12 @@ public:
 
             MW->status=MainWindow::UISTATUS::WAITING;
                 });
-
-        emit e[G->monster->id]->clicked();
-
+        {
+            int current_monster_button=nMonster;
+            for(;current_monster_button>0;current_monster_button--)
+                if(monster_ids[current_monster_button]==G->monster->id)break;
+        emit e[current_monster_button]->clicked();
+        }
         QAbstractButton::connect(newgame_random, &QPushButton::clicked, MW, [=]() {
             G->random.setseed(time(NULL));
             G->player->name = name->text();
