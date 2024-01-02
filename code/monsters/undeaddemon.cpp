@@ -4,21 +4,21 @@
 #include <queue>
 #include <vector>
 
-UndeadDemon::UndeadDemon(Game* G) :Monster(G) {
+Undead_Demon::Undead_Demon(Game* G) :Monster(G) {
     id = GT::UNDEAD_DEMON;
     name = "亡骨魔";
     shortname="亡骨魔";
     initialhealth = 600;
-    icon = QString("res/icon/monster/") + "6_saiwei.jpg";
+    icon = QString("res/icon/monster/") + "10_undeaddemon.jpg";
     rescout = 0;
 }
 
-void UndeadDemon::reset() {
+void Undead_Demon::reset() {
     Monster::reset();
     rescout = 0;
 }
 
-QString UndeadDemon::description() {
+QString Undead_Demon::description() {
     QString str = "圣墓上的倒吊人设计："+ this->name + "\n初始血量:" + QN(initialhealth) + "\n\n";
     str += "被动技能0：【不死圣泉】限三次，血量小于0时，回满血并且战力减少一半复活\n\n";
     str += "被动技能1：【抉择】每回合结束后，战力增加3+10*X点(X为不死圣泉发动次数)\n\n";
@@ -31,7 +31,7 @@ QString UndeadDemon::description() {
 
 
 // 回合开始前
-void UndeadDemon::Monster_Before_Turn() {
+void Undead_Demon::Monster_Before_Turn() {
     emit G->Alert_monster(name + "【抉择】发动. 战力增加了" + QN(3 + 10 * rescout));
     this->addPoint(3 + 10 * rescout);
 
@@ -57,7 +57,7 @@ void UndeadDemon::Monster_Before_Turn() {
     Monster::Monster_Before_Turn();
 }
 
-void UndeadDemon::Monster_After_Combat() {
+void Undead_Demon::Monster_After_Combat() {
     Monster::Monster_After_Combat();
     if(this->health < 0 && rescout < 3) {
         emit G->Alert_monster(name + "【不死圣泉】发动，血量增加700，战力减少" + QN(this->point / 2) + "点");
@@ -70,7 +70,7 @@ void UndeadDemon::Monster_After_Combat() {
     }
 }
 
-void UndeadDemon::clear_piece() {
+void Undead_Demon::clear_piece() {
     // 一种牌最多4张，暴力点随机
     std::priority_queue<pair<int, int>> queue;
     for (int i = 1; i <= 19; i++) {

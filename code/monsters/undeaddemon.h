@@ -4,11 +4,11 @@
 #include "stdafx.h"
 #include "../monster.h"
 
-class UndeadDemon : public Monster
+class Undead_Demon : public Monster
 {
 public:
-    UndeadDemon(Game* G);
-    ~UndeadDemon() override {}
+    Undead_Demon(Game* G);
+    ~Undead_Demon() override {}
     void reset() override;
     GT::PoolType pooltype() override{return GT::POOL_UBDEAD_DEMON;} // 卡牌类型
     QString description() override;
