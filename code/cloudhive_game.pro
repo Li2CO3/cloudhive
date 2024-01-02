@@ -39,6 +39,7 @@ SOURCES += \
     monsters/snowman.cpp \
     monsters/stall.cpp \
     monsters/twinhead.cpp \
+    monsters/undeaddemon.cpp \
     pages/pvepage.cpp \
     pages/pvepreppage.cpp \
     pages/settingspage.cpp \
@@ -64,6 +65,7 @@ HEADERS += \
     monsters/snowman.h \
     monsters/stall.h \
     monsters/twinhead.h \
+    monsters/undeaddemon.h \
     pages/pvepage.h \
     pages/pvepreppage.h \
     pages/settingspage.h \

@@ -2,7 +2,7 @@
 #include "game.h"
 #include "cardpool.h"
 
-RainbowGiraffe::RainbowGiraffe(Game* G) :Monster(G) {
+Rainbow_Giraffe::Rainbow_Giraffe(Game* G) :Monster(G) {
     id = GT::RAINBOW_GIRAFFE;
     name = "彩色长颈鹿"; shortname="长颈鹿";
     initialhealth = 1777;
@@ -10,13 +10,13 @@ RainbowGiraffe::RainbowGiraffe(Game* G) :Monster(G) {
     uniqueSet.insert(10);
 }
 
-void RainbowGiraffe::reset() {
+void Rainbow_Giraffe::reset() {
     Monster::reset();
     uniqueSet.clear();
     uniqueSet.insert(10);
 }
 
-QString RainbowGiraffe::description() {
+QString Rainbow_Giraffe::description() {
     QString str = "圣墓上的倒吊人设计："+ this->name + "\n初始血量:" + QN(initialhealth) + "\n\n";
     str += "被动技能0：【彩虹的颜色】每回合结束前，抽取一种彩虹的颜色，增加对应数值的战力：红橙黄绿蓝靛紫分别对应1~7\n\n";
     str += "被动技能1：【三原色】挑战者开局的三张卡牌的各个数字均不重合\n\n";
@@ -26,7 +26,7 @@ QString RainbowGiraffe::description() {
     return str;
 }
 
-int RainbowGiraffe::Count_LAIZI() {
+int Rainbow_Giraffe::Count_LAIZI() {
     int cnt = 0;
     for (int i = 1; i <= 19; i++) {
        Piece t = G->player->grid.pieces[i];
@@ -39,7 +39,7 @@ int RainbowGiraffe::Count_LAIZI() {
 
 // 回合开始前
 // 发牌在[G->record.pieces[G->turn]]，备注在[G->record.cache[turn]]操作在[G->record[turn]]，上轮分在[G->player->prev_point]
-void RainbowGiraffe::Monster_Before_Turn() {
+void Rainbow_Giraffe::Monster_Before_Turn() {
     int cnt = Count_LAIZI();
     emit G->Alert_monster("当前赖子数:" + QN(cnt));
     emit G->Alert_monster(name+"【彩虹的颜色】下回合增加1~7分");
@@ -74,7 +74,7 @@ void RainbowGiraffe::Monster_Before_Turn() {
 
 }
 
-const QString RainbowGiraffe::rainbowColour[] = {
+const QString Rainbow_Giraffe::rainbowColour[] = {
     "红色",
     "橙色",
     "黄色",
@@ -84,7 +84,7 @@ const QString RainbowGiraffe::rainbowColour[] = {
     "紫色",
 };
 
-void RainbowGiraffe::Monster_Before_Combat() {
+void Rainbow_Giraffe::Monster_Before_Combat() {
     Monster::Monster_Before_Combat();
     {//【彩虹的颜色】
         int increase_point = G->random.randint(1, 7);

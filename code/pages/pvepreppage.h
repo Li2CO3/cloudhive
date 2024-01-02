@@ -19,7 +19,7 @@ public:
 
     QLabel* monster_icon, * monster_intro;
 
-    static const int nMonster=9
+    static const int nMonster=10
 #ifdef NewYear2024NianEasy
         +1
 #endif
@@ -58,6 +58,7 @@ public:
 #ifdef NewYear2024NianEasy
                 GT::NIAN_EASY,
 #endif
+                GT::UNDEAD_DEMON,
             };
             QString monster_key_text[nMonster + 1] = {
                 "",
@@ -73,6 +74,7 @@ public:
 #ifdef NewYear2024NianEasy
                 "赖子年兽",
 #endif
+                "亡骨魔"
             };
         for(int key_id=1;key_id<nMonster+1;key_id++)
             NEW_BUTTON_MW(e[key_id], 180+(key_id-1)%3*220, 450+(key_id-1)/3*100, 180, 70, monster_key_text[key_id], 30);

@@ -59,9 +59,10 @@ enum PoolType {// 以下枚举符合多种乱写规律
     POOL_CAT_BURGLAR=1000,
     POOL_IRON_WALL=235711,
     POOL_PUPPETEER=123,
-    POOL_RAINBOW_GIRAFFE=1111,// 我也不知道为什么是1111
+    POOL_RAINBOW_GIRAFFE=1111,  // 我也不知道为什么是1111
     POOL_NIAN=1112,
     POOL_NIAN_EASY=1113,
+    POOL_UBDEAD_DEMON=-199,     // 为什么呢？
 };
 //setpool
 
@@ -80,7 +81,8 @@ enum MONSTER_ID {
     STALL = 6,
     PUPPETEER = 7,
     RAINBOW_GIRAFFE = 8,
-    NIAN_MONSTER=9, NIAN_EASY=2024201000,//2024年 20个赖子
+    NIAN_MONSTER = 9, NIAN_EASY = 2024201000,//2024年 20个赖子
+    UNDEAD_DEMON = 10,
 };
 
 };
