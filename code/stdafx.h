@@ -7,7 +7,7 @@
 
 //#define emit X){//qDebug()<<#X; emit X;}
 //#define emit X) emit X//造成了一堆warning
-#define __VERSION QString("v20240102_1")
+#define __VERSION QString("v20240102_1test")
 #define QN(X) QString::number(X)
 
 #define NewYear2024NianEasy

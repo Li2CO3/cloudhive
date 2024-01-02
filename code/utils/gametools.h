@@ -62,7 +62,7 @@ enum PoolType {// 以下枚举符合多种乱写规律
     POOL_RAINBOW_GIRAFFE=1111,  // 我也不知道为什么是1111
     POOL_NIAN=1112,
     POOL_NIAN_EASY=1113,
-    POOL_UBDEAD_DEMON=-199,     // 为什么呢？
+    POOL_UNDEAD_DEMON=-199,     // 为什么呢？
 };
 //setpool
 

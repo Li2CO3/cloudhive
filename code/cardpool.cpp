@@ -57,7 +57,7 @@ int CardPool::nPool(GT::PoolType type, Piece p)//当前仅限正常的块。开�
             if(p==LAIZI) return 20;
             else return 2;
 #endif
-        case POOL_UBDEAD_DEMON:
+        case POOL_UNDEAD_DEMON:
             if(p==LAIZI) return 2;
             else if (p.x159() == 1) return 0;
             else if (p.x159() == 9) return 4;
