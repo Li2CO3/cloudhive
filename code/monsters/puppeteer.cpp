@@ -37,13 +37,13 @@ void Puppeteer::Monster_Before_Turn() {
     }
     {
         int start_turn_damage=2;
-        if(point > G->player->point())
+        if(point > G->player()->point())
         {
             start_turn_damage=3;
         }
         emit G->Alert_monster(name+"【暗器·飞针】触发，造成"+QN(start_turn_damage)+"点伤害!");
     G->turn--;
-        G->player->take_damage(start_turn_damage);
+        G->player()->take_damage(start_turn_damage);
     G->turn++;
     }
     if (G->turn % 10 == 0) {
@@ -52,7 +52,7 @@ void Puppeteer::Monster_Before_Turn() {
 
         for(int i=0;i<G->turn/10+1;i++)
         {
-            Piece t=this->G->pool->drawout();
+            Piece t=this->G->pool()->drawout();
             armor_gain+=std::min(t.sum(),20);
             notice=notice+" "+t.to_string();
         }
@@ -69,7 +69,7 @@ void Puppeteer::Monster_Before_Turn() {
 void Puppeteer::Monster_Before_Combat() {
     Monster::Monster_Before_Combat();
     {
-        int diff_nlines = G->player->grid.nlines()-prev_nlines;
+        int diff_nlines = G->player()->grid.nlines()-prev_nlines;
         if(diff_nlines > 0)
         {
             int pt_gain=diff_nlines * 7;
@@ -93,7 +93,7 @@ void Puppeteer::Monster_Combat() {
 void Puppeteer::Monster_After_Combat() {
     Monster::Monster_After_Combat();
 
-    prev_nlines=G->player->grid.nlines();
+    prev_nlines=G->player()->grid.nlines();
 
     if (this->armor <= 0 && sham>0 ) {
         this->addPoint(-1*sham);

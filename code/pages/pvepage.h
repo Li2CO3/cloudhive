@@ -46,19 +46,19 @@ public:
 
 
     void update() override {
-        G->player->grid.Make_image(gridimage);
+        G->player()->grid.Make_image(gridimage);
         grid_background->setPixmap(gridimage.SCALED(grid_background->width(), grid_background->height()));
-        this->Update_Player_Stats(G->player->stat_string());
-        this->Update_Monster_Stats(G->monster->stat_string());
+        this->Update_Player_Stats(G->player()->stat_string());
+        this->Update_Monster_Stats(G->monster()->stat_string());
     }
     void Make_Summary();
     //void Make_Detailed_Recap();
     void Clear_Turn_Piece() { for (int i = 0; i < nturnpieces; i++) { turn_pieces[i]->deleteLater(); turn_pieces[i] = NULL; }nturnpieces = 0; }
     void Set_Turn_Piece() {
-        nturnpieces = G->pool->ncurrent;
+        nturnpieces = G->pool()->ncurrent;
         for (int i = 0; i < nturnpieces; i++)
         {
-            NEW_BUTTON_IMAGE_MW(turn_pieces[i], 534 - 64 * (nturnpieces - 1) + i * 128, 36, 128, 128, G->pool->current[i].image());
+            NEW_BUTTON_IMAGE_MW(turn_pieces[i], 534 - 64 * (nturnpieces - 1) + i * 128, 36, 128, 128, G->pool()->current[i].image());
             if (nturnpieces >= 2)connect(turn_pieces[i], &QPushButton::clicked, this, [=]() {Toggle_Choose_Piece(i); });
         }
     }
@@ -69,7 +69,7 @@ public slots:
         cache_op = QN(chosen);
         for (int i = 0; i < nturnpieces; i++)
         {
-            QPixmap map = QPixmap(G->pool->current[i].image());
+            QPixmap map = QPixmap(G->pool()->current[i].image());
             if (i == chosen)
             {
                 QPainter painter(&map);
@@ -90,13 +90,13 @@ public slots:
         //QString str = QString::number(point) + '/' + QString::number(health);
         //if (armor > 0)str += "<" + QString::number(armor) + ">";
         monster_stats->setText(str);
-        //monster_stats2->setText(G->monster->name+": "+str);
+        //monster_stats2->setText(G->monster()->name+": "+str);
     }
     void Update_Player_Stats(QString str)//int point, int health)
     {
         //QString str = QString::number(point) + '/' + QString::number(health);
         hero_stats->setText(str);
-        //hero_stats2->setText(G->player->name+": "+str);
+        //hero_stats2->setText(G->player()->name+": "+str);
     }
 };
 #endif // PVEPAGE_H

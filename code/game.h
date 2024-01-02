@@ -22,6 +22,8 @@ class CardPool;
 
 class Monster;
 
+class Player;
+
 class Game :public QObject//QThread//游戏进行在另一个线程
 {
 	Q_OBJECT
@@ -29,40 +31,10 @@ class Game :public QObject//QThread//游戏进行在另一个线程
 public:
 
     enum GAMESTAGE { NOT_STARTED = 0, WAIT_TURN = -1, FINISHED = 2, WAIT_CHOOSE_TURN = -3, BUSY = 100, WAIT_SNOWMAN_DISCARD = -4004 };
-    enum GAMEMODE { MODE_NULL=0,MODE_PVE = 1 };
+
     enum GAME_RESULT { PLAYER_DEAD = 0, TURNS_ENOUGH = 1 };
 
-	class Player//玩家
-	{
-	public:
-		Game* G;
-		QString name;//名字
-		QString icon;//头像的连接。TODO 现在格式和Monster的不一致。因为做选怪页面先把怪的给改了
-		Grid grid;
-		int health;
-		bool dead;//如果死了就变true
-		int totaldamage;//玩家打出的伤害
-		int prev_point;//上轮分数
-        QString stat_string(){return QN(point())+'/'+QN(health);}
-		int point() { return grid.point(G->scoring_rule); }//里面注释掉的版本是适配开放巢的，但不方便设置1加分，就先注释掉了
-		void Locate_piece(Piece p, int place);//放块，更改Player里的东西，向Window发出更改显示的signal
-		Player(Game* g) { G = g; Clear(); }
-		void reset() { totaldamage = 0; prev_point = 0; dead = false; health = 150; grid = Grid(); }//开局状态。如果需要改可能还得跳转到Monster::去
-		void Clear() { name = "挑战者"; icon = "lgtbot.jpg"; reset(); }//除了构造函数，没有别处调用
 
-		void load_name();//看res/game/user.txt设置名字
-		void set_name(QString name);
-		void set_icon(QString icon);
-
-        void changePoint() { emit G->signal_player_change_stats(stat_string()); }//没有point变量。只是发一个信号
-		void take_damage(int dmg)//默认的受到伤害
-		{
-			health -= dmg;
-            emit G->Alert_monster(name + "血量减少" + QString::number(dmg));
-            emit G->signal_player_change_stats(stat_string());
-            if (health <= 0) { dead = true; emit G->Alert_monster(name + "已被击杀..."); G->Game_End(); }
-		}
-	};
 
 	class Record
 	{
@@ -89,23 +61,23 @@ public:
     int turn = 0;
     Random random;
     GT::SCORING_RULE scoring_rule;
-    GAMEMODE mode;
+    GT::GAMETYPE gametype;
     GAMESTAGE status;
 	MainWindow* MW;
-    CardPool* pool;
-    Player* player;
-    Monster* monster;
+    virtual CardPool*& pool(int id=0){Q_UNUSED(id) throw 0;}///原本的pool player monster是现在的pool() player() monster()。
+    virtual Player*& player(int id=0) {Q_UNUSED(id) throw 0;}
+    virtual Monster*& monster(int id=0){Q_UNUSED(id) throw 0;}
+
 //    virtual Player* player(int id=0) =NULL;
 //    virtual Monster *monster(int id=0) =NULL;
 
 	Record record;
-    void sync_record();
+    virtual void sync_record(){};
 
-	bool Check_Operation(int ply, QString cache, QString op);
+    virtual bool Check_Operation(int ply, QString cache, QString op){ Q_UNUSED(ply) throw 0;}
 
-    void Start(GAMEMODE mode);//todo:参数
 
-    void load_challenge(GT::MONSTER_ID monst);
+    virtual void load_challenge(GT::MONSTER_ID monst){Q_UNUSED(monst) }
 	//int monster_extra_info[10];//特殊信息
 
 	//    totaldamage=0; monsterpoint=0; monsterhealth=monsterinitialhealth; monsterarmor=0;
@@ -117,17 +89,18 @@ public:
 	//void set_challenge(int id);
 	//void set_monster(int id);
 	//void showinfo();
-	//int Prompt_select_monster();
-	void Before_Turn();
-	void Locate_Piece();
-	void Before_Combat();
-	void Combat();
-	void After_Combat();
-    void RUN(GAMEMODE mode) {  Start(mode); }//并没有开线程
+    //int Prompt_select_monster();
+    virtual void Start(){}//todo:参数
+    virtual void Before_Turn(){}
+    virtual void Locate_Piece(){}
+    virtual void Before_Combat(){}
+    virtual void Combat(){}
+    virtual void After_Combat(){}
     //void run() override { }
-	void remake();
+    void remake(){remake(gametype);}
+    void remake(GT::GAMETYPE type);
 public slots:
-	void recv_operation(QString op);
+    virtual void recv_operation(QString op){}
 signals:
     void signal_new_operation(QString);
     void signal_before_turn();
@@ -143,4 +116,14 @@ signals:
     void Alert_monster(QString);
 };
 
+class GameMaker
+{
+public:
+    static Game * newGame(GT::GAMETYPE type);
+};
 #endif // GAME_H
+
+
+///Game现在可以近似认为是抽象类。
+///程序启动时创建的是Game。在点击开始游戏时会重新创建一个PveGame。
+///现在remake()处会进行Game信息的复制，但对player和monster可能并不完整。在新模式推出时(?)需验证

@@ -70,7 +70,7 @@ void Nian_Monster::Monster_Before_Turn() {
 
 void Nian_Monster::Monster_Before_Combat() {
 
-    //发牌在[G->record.pieces[G->turn]]，备注在[G->record.cache[turn]]操作在[G->record[turn]]，上轮分在[G->player->prev_point]
+    //发牌在[G->record.pieces[G->turn]]，备注在[G->record.cache[turn]]操作在[G->record[turn]]，上轮分在[G->player()->prev_point]
     Piece p=G->record.pieces[G->turn][0];//本回合放的块
     int mult=1 +  (p.x159()==10 || p.x267()==10|| p.x348()==10);
 
@@ -88,7 +88,7 @@ void Nian_Monster::Monster_Before_Combat() {
     {
         int temp159[5],temp267[5],temp348[5];
         //int pt=
-            G->player->grid.point(GT::Scoring_Normal,temp159,temp267,temp348);
+            G->player()->grid.point(GT::Scoring_Normal,temp159,temp267,temp348);
         int newlinescount=0;
         for(int lineid=0;lineid<5;lineid++)
         {if(temp159[lineid]>v159[lineid]) {newlinescount+=GT::linelength[lineid];v159[lineid]=10;}
@@ -113,7 +113,7 @@ void Nian_Monster::Monster_Before_Combat() {
     }
 
     {
-        int nl=G->player->grid.point(GT::COUNT_LINES);
+        int nl=G->player()->grid.point(GT::COUNT_LINES);
         if(nl>=this->next_nline_trigger)
             {
              int dmg;
@@ -169,7 +169,7 @@ void Nian_Monster::Monster_Combat() {
         }
     else
     {
-            if(G->player->point()>point)
+            if(G->player()->point()>point)
                 {
                  Monster::Monster_Combat();
                  if(chill<0)

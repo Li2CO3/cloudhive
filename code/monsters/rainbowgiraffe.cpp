@@ -29,7 +29,7 @@ QString Rainbow_Giraffe::description() {
 int Rainbow_Giraffe::Count_LAIZI() {
     int cnt = 0;
     for (int i = 1; i <= 19; i++) {
-       Piece t = G->player->grid.pieces[i];
+       Piece t = G->player()->grid.pieces[i];
        if (t.x159() == 10 || t.x267() == 10 || t.x348() == 10) {
            cnt++;
        }
@@ -38,15 +38,15 @@ int Rainbow_Giraffe::Count_LAIZI() {
 }
 
 // 回合开始前
-// 发牌在[G->record.pieces[G->turn]]，备注在[G->record.cache[turn]]操作在[G->record[turn]]，上轮分在[G->player->prev_point]
+// 发牌在[G->record.pieces[G->turn]]，备注在[G->record.cache[turn]]操作在[G->record[turn]]，上轮分在[G->player()->prev_point]
 void Rainbow_Giraffe::Monster_Before_Turn() {
     int cnt = Count_LAIZI();
     emit G->Alert_monster("当前赖子数:" + QN(cnt));
     emit G->Alert_monster(name+"【彩虹的颜色】下回合增加1~7分");
     if (G->turn <= 3) {
         // 【三原色】
-        G->pool->ncurrent = 1;
-        Piece t = G->pool->drawout();//抽卡
+        G->pool()->ncurrent = 1;
+        Piece t = G->pool()->drawout();//抽卡
         while (true) {
             if (uniqueSet.find(t.x159()) == uniqueSet.end() &&
                     uniqueSet.find(t.x267()) == uniqueSet.end() &&
@@ -56,11 +56,11 @@ void Rainbow_Giraffe::Monster_Before_Turn() {
                    uniqueSet.insert(t.x348());
                    break;
             }
-            G->pool->pushback(t);//如果有重复数字了，放回去
-            t = G->pool->drawout();//重新抽
+            G->pool()->pushback(t);//如果有重复数字了，放回去
+            t = G->pool()->drawout();//重新抽
         }
         emit G->Alert_monster(name + "【三原色】发动\n本回合的牌为" + t.to_string());
-        G->pool->current[0] = t;
+        G->pool()->current[0] = t;
         G->sync_record();
         emit G->signal_update_turn_piece();
     }
@@ -97,7 +97,7 @@ void Rainbow_Giraffe::Monster_Before_Combat() {
         int cnt = Count_LAIZI();
         if (cnt > 0) {
             emit G->Alert_monster(name + "【棱镜】发动，造成了" + QN(cnt * 7) + "点伤害");
-            G->player->take_damage(cnt * 7);
+            G->player()->take_damage(cnt * 7);
         }
         else {
             emit G->Alert_monster(name + "【棱镜】发动，但并没有发现赖子！");

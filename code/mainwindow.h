@@ -95,6 +95,12 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+
+    QString name;
+    QString icon;
+
+    void set_name(QString name);
+    void set_icon(QString icon);
     class Page
     {
     public:
@@ -119,6 +125,7 @@ public:
     void load_page(PageType type);
 
     void Set_Piece(Piece p, int place);
+    void load_name();//看res/game/user.txt设置名字
 signals:
     void signal_made_operation();
 };

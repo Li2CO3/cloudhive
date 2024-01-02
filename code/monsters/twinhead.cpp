@@ -45,7 +45,7 @@ void Twin_Head::Monster_Before_Combat()//双头龙：回合开始
 
     if (G->turn % 10 == 0)
     {
-        int pt = G->player->point();
+        int pt = G->player()->point();
         int gain_armor = ((pt % 2) ? (pt + pt / 2) : (pt / 2));
         emit G->Alert_monster(QString("双头龙【固守】触发，获得+") + QString::number(gain_armor) + "护盾!");
         gainArmor(gain_armor);
@@ -55,13 +55,13 @@ void Twin_Head::Monster_Before_Combat()//双头龙：回合开始
 
 void Twin_Head::Monster_Combat()
 {
-    int mypt = G->player->point();
-    int monsterpt = G->monster->point;
+    int mypt = G->player()->point();
+    int monsterpt = G->monster()->point;
     int difference = mypt - monsterpt;
     int damage = difference;
     if (mypt > monsterpt)
     {
-        emit G->Alert_monster(G->player->name + " vs " + name + "(-" + QN(difference) + ")");
+        emit G->Alert_monster(G->player()->name + " vs " + name + "(-" + QN(difference) + ")");
         if (mypt % 2 == 1)
         {
             damage = std::max(difference - 15, 0);

@@ -9,6 +9,7 @@
 #include <QImage>
 #include <QPainter>
 #include "game.h"
+#include "player.h"
 #include <QFile>
 #include <QTextStream>
 #include <QFileInfo>

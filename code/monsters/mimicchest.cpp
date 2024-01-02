@@ -47,11 +47,11 @@ void Mimic_Chest::Monster_Before_Turn()
     Piece next;
     if (next_future == nFutureTiles)
     {
-        Monster::Monster_Before_Turn(); next = G->pool->current[0];
+        Monster::Monster_Before_Turn(); next = G->pool()->current[0];
     }
     else
     {
-        next = future_tiles[next_future]; G->pool->current[0] = next;
+        next = future_tiles[next_future]; G->pool()->current[0] = next;
     }
 
     next_future++;
@@ -75,7 +75,7 @@ void Mimic_Chest::trigger_ability_1()
     ready_for_ability_1 = false;
     for (int i = 0; i < 6; i++)
     {
-        future_tiles[nFutureTiles] = G->pool->drawout(); nFutureTiles++;
+        future_tiles[nFutureTiles] = G->pool()->drawout(); nFutureTiles++;
     }
     emit G->Alert_monster("宝箱怪已达到" + QN(point / 50 * 50) + "分，揭示牌堆顶6张牌:");
     bool haskeep = false, hasnonkeep = false;
@@ -86,7 +86,7 @@ void Mimic_Chest::trigger_ability_1()
         draw_info += p.to_string();
         if (place != -1)draw_info += " ";
         if (iskeep(p)) { haskeep = true; keep_info = keep_info + ' ' + p.to_string(); }
-        if (!iskeep(p)) { hasnonkeep = true; back_info = back_info + ' ' + p.to_string(); G->pool->pushback(p); }
+        if (!iskeep(p)) { hasnonkeep = true; back_info = back_info + ' ' + p.to_string(); G->pool()->pushback(p); }
     }
     emit G->Alert_monster(draw_info);
     if (haskeep)emit G->Alert_monster(keep_info);
@@ -104,13 +104,13 @@ void Mimic_Chest::addPoint(int pt)
 
 void Mimic_Chest::Monster_Before_Combat()
 {
-    //发牌在[G->record.pieces[G->turn]，操作在[G->record[turn]]，上轮分在[G->player->prev_point]
+    //发牌在[G->record.pieces[G->turn]，操作在[G->record[turn]]，上轮分在[G->player()->prev_point]
 
     if (turn_of_last_change > 0)
     {
         int turns_not_changed_ui = G->turn - turn_of_last_change;
 
-        if (G->player->point() != G->player->prev_point)turns_not_changed_ui = 0;
+        if (G->player()->point() != G->player()->prev_point)turns_not_changed_ui = 0;
         emit G->Alert_monster("未动回合数:" + QN(turns_not_changed_ui));
     }
     Piece p = G->record.pieces[G->turn][0];
@@ -120,16 +120,16 @@ void Mimic_Chest::Monster_Before_Combat()
         addPoint(gainpt);
     }
 
-    if (G->player->point() != G->player->prev_point)
+    if (G->player()->point() != G->player()->prev_point)
     {
         if (turn_of_last_change < G->turn - 3)
             if (turn_of_last_change > 0)
             {
                 int turns_not_changed = G->turn - turn_of_last_change - 1;
                 int armor_coef = std::min(turns_not_changed, 10);
-                int armor_gain = G->player->point() * armor_coef / 5;
+                int armor_gain = G->player()->point() * armor_coef / 5;
                 emit G->Alert_monster("已有" + QN(turns_not_changed) + "回合未改变分数，宝箱怪的【窃取】触发，宝箱怪获得\n"\
-                    + QN(G->player->prev_point) + "*" + QN(armor_coef) + "/5=" + QN(armor_gain) + "点护盾!");
+                    + QN(G->player()->prev_point) + "*" + QN(armor_coef) + "/5=" + QN(armor_gain) + "点护盾!");
                 gainArmor(armor_gain);
             }
         turn_of_last_change = G->turn;

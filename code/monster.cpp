@@ -32,7 +32,7 @@ QString Monster::stat_string()
 
 Monster::Monster(Game* g) {
     G = g;
-    G->monster=this;
+    G->monster()=this;
     name = "";
     shortname="";
     id = GT::DEFAULT_MONSTER;
@@ -45,7 +45,7 @@ Monster* Monster::new_monster(GT::MONSTER_ID monst, Game* G)
 {
     //现在G总是有monster的。这可能需要改。
     using namespace GT;
-    delete G->monster;G->monster=NULL;
+    delete G->monster();G->monster()=NULL;
     switch (monst)
     {
     case TWIN_HEAD:
@@ -81,9 +81,9 @@ Monster* Monster::new_monster(GT::MONSTER_ID monst, Game* G)
 
 void Monster::Monster_Before_Turn()//普通：回合开始
 {
-    G->pool->ncurrent = 1;
-    Piece t = G->pool->drawout();
-    G->pool->current[0] = t;
+    G->pool()->ncurrent = 1;
+    Piece t = G->pool()->drawout();
+    G->pool()->current[0] = t;
 
     G->sync_record();
     emit G->signal_update_turn_piece();
@@ -92,30 +92,30 @@ void Monster::Monster_Before_Turn()//普通：回合开始
 
 void Monster::Monster_Before_Combat()
 {
-    //发牌在[G->record.pieces[G->turn]]，操作在[G->record[turn]]，上轮分在[G->player->prev_point]
+    //发牌在[G->record.pieces[G->turn]]，操作在[G->record[turn]]，上轮分在[G->player()->prev_point]
     return;
 }
 
 void Monster::Monster_Combat()
 {
     if (G->turn < 3)return;
-    int mypt = G->player->point();
-    int monsterpt = G->monster->point;
+    int mypt = G->player()->point();
+    int monsterpt = G->monster()->point;
     int difference = mypt - monsterpt;
     int damage = difference;
     if (mypt > monsterpt)
     {
-        emit G->Alert_monster(G->player->name + " vs " + name + "(-" + QN(difference) + ")");
+        emit G->Alert_monster(G->player()->name + " vs " + name + "(-" + QN(difference) + ")");
         take_damage(damage);
     }
     if (mypt == monsterpt)
     {
-        emit G->Alert_monster(G->player->name + " vs " + name + "(-0)");
+        emit G->Alert_monster(G->player()->name + " vs " + name + "(-0)");
     }
     if (mypt < monsterpt)
     {
         damage = -difference;//变成正的
-        emit G->Alert_monster(G->player->name + "(-" + QN(damage) + ")" + " vs " + name);
+        emit G->Alert_monster(G->player()->name + "(-" + QN(damage) + ")" + " vs " + name);
         deal_damage(damage);
     }
 }
@@ -127,14 +127,14 @@ void Monster::Monster_After_Combat()
 }
 
 void Monster::setStatus() {//发完牌马上可以操作的时候，看下怪的状态决定是时进行哪类操作：为了适配雪人，雪人撕牌不能撕空的和0
-    if (G->pool->ncurrent == 1) {
+    if (G->pool()->ncurrent == 1) {
         G->status = Game::WAIT_TURN;
     }
-    else if (G->pool->ncurrent > 1) {
+    else if (G->pool()->ncurrent > 1) {
         for(int i = 0; i< 10; ++i);
         G->status = Game::WAIT_CHOOSE_TURN;
     }
-                else//pool->ncurrent==0?
+                else//pool()->ncurrent==0?
     {
         //for(int i = 0; i< 10; ++i);
         throw 0;//现在没有跳过回合，所以直接throw
@@ -151,7 +151,7 @@ void Monster::gainArmor(int arm) {
 }
 
 void Monster::take_damage(int dmg) {
-    G->player->totaldamage += dmg;
+    G->player()->totaldamage += dmg;
     if (armor == 0)
     {
         health -= dmg;
@@ -188,5 +188,5 @@ void Monster::take_damage(int dmg) {
 }
 
 void Monster::deal_damage(int dmg) {
-    G->player->take_damage(dmg);
+    G->player()->take_damage(dmg);
 }

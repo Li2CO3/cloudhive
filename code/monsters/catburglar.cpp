@@ -35,20 +35,20 @@ QString Cat_Burglar::description()
 
 void Cat_Burglar::Monster_Before_Turn()
 {
-    Grid gr = G->player->grid;
+    Grid gr = G->player()->grid;
     int nl = gr.nlines();
 
 	if (nl >= 7 && nl <= 10)
 	{
-		G->pool->current[0] = G->pool->drawout();
-		G->pool->current[1] = G->pool->drawout();
-		G->pool->ncurrent = 2;
+		G->pool()->current[0] = G->pool()->drawout();
+		G->pool()->current[1] = G->pool()->drawout();
+		G->pool()->ncurrent = 2;
         emit G->Alert_monster("狂风天候:本轮改为二选一!");
 	}
 	else
 	{
-		G->pool->current[0] = G->pool->drawout();
-		G->pool->ncurrent = 1;
+		G->pool()->current[0] = G->pool()->drawout();
+		G->pool()->ncurrent = 1;
 	}
 
     emit G->Alert_monster("小贼猫【聪慧】下回合增加3~9分");
@@ -70,9 +70,9 @@ void Cat_Burglar::Monster_Before_Turn()
 
 void Cat_Burglar::Monster_Before_Combat()
 {
-    emit G->Alert_monster("当前连线数:" + QN(G->player->grid.nlines()));
+    emit G->Alert_monster("当前连线数:" + QN(G->player()->grid.nlines()));
 
-	int ptgain = ((G->player->prev_point != G->player->point()) ? 9 : 3);
+	int ptgain = ((G->player()->prev_point != G->player()->point()) ? 9 : 3);
     emit G->Alert_monster("小贼猫【聪慧】触发，获得" + QN(ptgain) + "分!");
 	addPoint(ptgain);
 
@@ -81,9 +81,9 @@ void Cat_Burglar::Monster_Before_Combat()
 		addPoint(100);
 	}
 
-    if (G->player->grid.nlines() >= 3 && G->player->grid.nlines() <= 6)
+    if (G->player()->grid.nlines() >= 3 && G->player()->grid.nlines() <= 6)
 	{
-        emit G->Alert_monster("小贼猫【雷电天候】触发，对" + G->player->name + "造成4点伤害!");
+        emit G->Alert_monster("小贼猫【雷电天候】触发，对" + G->player()->name + "造成4点伤害!");
 		deal_damage(4);
 	}
 
@@ -95,7 +95,7 @@ void Cat_Burglar::Monster_Before_Combat()
 		{
             Piece target = G->record.pieces[G->turn][choice];
 			int damage = std::min(15, target.x159() + target.x267() + target.x348());
-            emit G->Alert_monster("小贼猫【欺骗】触发，对" + G->player->name + "造成" + QN(damage) + "点伤害!");
+            emit G->Alert_monster("小贼猫【欺骗】触发，对" + G->player()->name + "造成" + QN(damage) + "点伤害!");
 			deal_damage(damage);
 		}
 		else
@@ -107,14 +107,14 @@ void Cat_Burglar::Monster_Before_Combat()
 void Cat_Burglar::Monster_Combat()
 {
 	if (G->turn < 3)return;
-	int mypt = G->player->point();
-	int monsterpt = G->monster->point;
+    int mypt = G->player()->point();
+    int monsterpt = G->monster()->point;
 	int difference = mypt - monsterpt;
 	int damage = difference;
 	if (mypt > monsterpt)
 	{
-        emit G->Alert_monster(G->player->name + " vs " + name + "(-" + QN(difference) + ")");
-        if (G->player->grid.nlines() > 10)
+        emit G->Alert_monster(G->player()->name + " vs " + name + "(-" + QN(difference) + ")");
+        if (G->player()->grid.nlines() > 10)
 		{
             emit G->Alert_monster("小贼猫【浓雾天候】触发，伤害降低10%!");
 			damage -= int(damage * 0.1);
@@ -123,12 +123,12 @@ void Cat_Burglar::Monster_Combat()
 	}
 	if (mypt == monsterpt)
 	{
-        emit G->Alert_monster(G->player->name + " vs " + name + "(-0)");
+        emit G->Alert_monster(G->player()->name + " vs " + name + "(-0)");
 	}
 	if (mypt < monsterpt)
 	{
 		damage = -difference;//变成正的
-        emit G->Alert_monster(G->player->name + "(-" + QN(damage) + ")" + " vs " + name);
+        emit G->Alert_monster(G->player()->name + "(-" + QN(damage) + ")" + " vs " + name);
 		deal_damage(damage);
 	}
 }

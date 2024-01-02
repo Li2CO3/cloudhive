@@ -49,6 +49,7 @@ SOURCES += \
     game.cpp \
     monster.cpp \
     piece.cpp \
+    player.cpp \
     ui.cpp
 
 HEADERS += \
@@ -75,6 +76,7 @@ HEADERS += \
     game.h \
     monster.h \
     piece.h \
+    player.h \
     stdafx.h \
     ui.h \
     utils/gametools.h \

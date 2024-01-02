@@ -85,5 +85,10 @@ enum MONSTER_ID {
     UNDEAD_DEMON = 10,
 };
 
+enum GAMETYPE {
+    TYPE_NULL=0,
+    PVEGAME =1,
+};
+
 };
 #endif // GAMETOOLS_H

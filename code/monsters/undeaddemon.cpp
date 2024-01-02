@@ -50,17 +50,17 @@ void Undead_Demon::Monster_Before_Turn() {
     if(G->turn % 8 == 0) {
         std::vector<int> ninevec;
         for (int i = 1; i <= 19; i++) {
-            Piece t = G->player->grid.pieces[i];
+            Piece t = G->player()->grid.pieces[i];
             if (t.x159() == 9) {
                 ninevec.push_back(i);
             }
         }
         if (ninevec.size() > 0) {
             int index = undead_random.randint(1, ninevec.size()) - 1;
-            Piece t = G->player->grid.pieces[ninevec[index]];
-            G->player->Locate_piece(Piece(t.x348(), 1, t.x267()), ninevec[index]);
+            Piece t = G->player()->grid.pieces[ninevec[index]];
+            G->player()->Locate_piece(Piece(t.x348(), 1, t.x267()), ninevec[index]);
             emit G->Alert_monster(name + "【巫婆】发动. 将位置" + QN(ninevec[index]) + "的卡牌"
-                                  + t.to_string() + "变成" + G->player->grid.pieces[ninevec[index]].to_string());
+                                  + t.to_string() + "变成" + G->player()->grid.pieces[ninevec[index]].to_string());
         } else {
            emit G->Alert_monster(name + "【巫婆】发动失败");
         }
@@ -94,7 +94,7 @@ int Undead_Demon::get_pos_of_largest()
     int sum=-1;
     int target=-1;
     int ntie=0;
-    Grid &gr=G->player->grid;
+    Grid &gr=G->player()->grid;
 
     for(int place=1;place<=19;place++)
     {
@@ -118,9 +118,9 @@ void Undead_Demon::clear_piece() {
     // 一种牌最多4张，暴力点随机
     int firsttarget, secondtarget;
     firsttarget=get_pos_of_largest();
-    G->player->Locate_piece(Piece(0, 0, 0), firsttarget);
+    G->player()->Locate_piece(Piece(0, 0, 0), firsttarget);
     secondtarget=get_pos_of_largest();
-    G->player->Locate_piece(Piece(0, 0, 0), secondtarget);
+    G->player()->Locate_piece(Piece(0, 0, 0), secondtarget);
     emit G->Alert_monster(name + "【亡骨之毒】发动. 消除了位置" + QN(firsttarget) + "和位置" + QN(secondtarget) + "的卡牌");
 
 }

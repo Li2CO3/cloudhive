@@ -6,7 +6,8 @@
 
 #include "stdafx.h"
 #include "utils/gametools.h"
-
+#include "game.h"
+#include "player.h"
 #define POOLTYPE gametools::PoolType
 #define RULE gametools::SCORING_RULE
 
@@ -40,7 +41,7 @@ public:
     virtual GT::PoolType pooltype() { return GT::POOL_Normal; }//怪对应的牌堆类型
     virtual GT::SCORING_RULE scoringrule() { return GT::Scoring_Normal; }//计分规则。
     virtual void Monster_Before_Turn();//包含发牌
-    virtual void Monster_Before_Combat();//发牌在[G->record.pieces[G->turn]]，备注在[G->record.cache[turn]]操作在[G->record[turn]]，上轮分在[G->player->prev_point]
+    virtual void Monster_Before_Combat();//发牌在[G->record.pieces[G->turn]]，备注在[G->record.cache[turn]]操作在[G->record[turn]]，上轮分在[G->player()->prev_point]
     virtual void Monster_Combat();//打架效果，包含掉血
     virtual void Monster_After_Combat();//打架后效果
     virtual void addPoint(int pt);
