@@ -10,14 +10,17 @@ Undead_Demon::Undead_Demon(Game* G) :Monster(G) {
     shortname="亡骨魔";
     initialhealth = 600;
     icon = QString("res/icon/monster/") + "10_undeaddemon.jpg";
-    rescout = 0;
+    rescount = 0;
 }
 
 void Undead_Demon::reset() {
     Monster::reset();
-    rescout = 0;
+    rescount = 0;
 }
-
+QString Undead_Demon::stat_string()
+{
+    return Monster::stat_string()+'['+'#'+QN(this->rescount+1)+']';
+}
 QString Undead_Demon::description() {
     QString str = "圣墓上的倒吊人设计："+ this->name + "\n初始血量:" + QN(initialhealth) + "\n\n";
     str += "被动技能0：【不死圣泉】限三次，血量小于0时，回满血并且战力减少一半复活\n\n";
@@ -32,8 +35,8 @@ QString Undead_Demon::description() {
 
 // 回合开始前
 void Undead_Demon::Monster_Before_Turn() {
-    emit G->Alert_monster(name + "【抉择】发动. 战力增加了" + QN(3 + 10 * rescout));
-    this->addPoint(3 + 10 * rescout);
+    emit G->Alert_monster(name + "【抉择】发动. 战力增加了" + QN(3 + 10 * rescount));
+    this->addPoint(3 + 10 * rescount);
 
     if(G->turn % 8 == 0) {
         std::vector<int> ninevec;
@@ -59,11 +62,11 @@ void Undead_Demon::Monster_Before_Turn() {
 
 void Undead_Demon::Monster_After_Combat() {
     Monster::Monster_After_Combat();
-    if(this->health < 0 && rescout < 3) {
+    if(this->health <= 0 && rescount < 3) {
         emit G->Alert_monster(name + "【不死圣泉】发动，血量增加700，战力减少" + QN(this->point / 2) + "点");
-        this->health = this->initialhealth;
+        this->health += this->initialhealth;
         this->addPoint(this->point / -2);
-        ++rescout;
+        ++rescount;
 
         // 同时触发的亡骨之毒
         clear_piece();

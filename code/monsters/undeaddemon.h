@@ -10,6 +10,7 @@ public:
     Undead_Demon(Game* G);
     ~Undead_Demon() override {}
     void reset() override;
+    QString stat_string() override;
     GT::PoolType pooltype() override{return GT::POOL_UBDEAD_DEMON;} // 卡牌类型
     QString description() override;
     void Monster_Before_Turn() override;
@@ -17,7 +18,7 @@ public:
 private:
     void clear_piece();
 
-    int rescout;
+    int rescount;
 };
 
 #endif // UNDEADDEMON_H

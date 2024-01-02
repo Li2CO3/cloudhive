@@ -75,9 +75,7 @@ void Monster::Make_Summary(QDialog* dialog)
     QString resulttext = "";
     resulttext = resulttext + "玩家: " + G->player->name + '\n';
     resulttext = resulttext + "挑战怪物: " + G->monster->name + "(血量" + QN(G->monster->initialhealth) + ")\n";
-    resulttext = resulttext + G->monster->name + "剩余血量: " + QN(G->monster->health);
-    if (G->monster->armor > 0)
-        resulttext = resulttext + "<" + QN(G->monster->armor) + ">";
+    resulttext = resulttext + G->monster->name + "剩余血量: " + G->monster->stat_string().split('/')[1];
     resulttext = resulttext + '\n' + "累计造成伤害: " + QN(G->player->totaldamage) + '\n';
     resulttext = resulttext + "玩家终局血量: " + QN(G->player->health) + '\n';
     resulttext = resulttext + "终局得分: " + QN(G->player->point()) + '\n';
@@ -198,9 +196,16 @@ void Monster::Make_Summary(QDialog* dialog)
 
     overall_record.open(QIODevice::Append | QIODevice::Text) ;
     QTextStream overall_out(&overall_record);
-    overall_out<<G->player->name<<"\t"<<G->monster->shortname<<"\t"<<G->monster->initialhealth<<"\t"<<G->turn<<"\t"<<G->monster->health<<"\t";
-    overall_out<<G->player->totaldamage<<"\t"<<G->player->health<<"\t"<<G->player->point()<<"\t";
-    overall_out<<G->monster->point<<"\t"<<G->random.getseed()<<"\t"<<i<<"\t"<<__VERSION<<"\n";
+    overall_out<<G->player->name<<"\t"<<G->monster->shortname<<"\t"<<G->monster->initialhealth<<"\t"<<G->turn<<"\t";
+    {QString str=G->monster->stat_string().split('/')[1];while(str.length()<8) {str = str + ' ';} overall_out<<str;}
+    overall_out<<"\t";
+    overall_out<<G->player->totaldamage<<"\t";
+    overall_out<<G->player->health<<"\t";
+    overall_out<<G->player->point()<<"\t";
+    overall_out<<G->monster->point<<"\t";
+        for(int i=QN(G->random.getseed()).length();i<10;i++)overall_out<<' ';
+        overall_out<<QN(G->random.getseed());
+    overall_out<<"\t"<<i<<"\t"<<__VERSION<<"\n";
     overall_record.close();
 
     /*TODO...移动写文件的地方*/
