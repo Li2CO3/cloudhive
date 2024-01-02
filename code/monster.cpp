@@ -8,6 +8,7 @@
 #include "monsters/puppeteer.h"
 #include "monsters/rainbowgiraffe.h"
 #include "monsters/nian.h"
+#include "monsters/undeaddemon.h"
 #include "game.h"
 #include "cardpool.h"
 
@@ -69,6 +70,8 @@ Monster* Monster::new_monster(GT::MONSTER_ID monst, Game* G)
     case NIAN_EASY:
         return new Nian_Easy(G);
 #endif
+    case UNDEAD_DEMON:
+        return new UndeadDemon(G);
     default:
         //qDebug()<<"UNRECOGNIZED MONSTER ID!";
         throw 0;
