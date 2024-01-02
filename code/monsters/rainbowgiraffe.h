@@ -4,11 +4,11 @@
 #include <set>
 #include "../monster.h"
 
-class RainbowGiraffe : public Monster
+class Rainbow_Giraffe : public Monster
 {
 public:
-    RainbowGiraffe(Game* G);
-    ~RainbowGiraffe() override {}
+    Rainbow_Giraffe(Game* G);
+    ~Rainbow_Giraffe() override {}
     void reset() override;
     QString description() override;
     void Monster_Before_Turn() override;
