@@ -12,7 +12,7 @@ Undead_Demon::Undead_Demon(Game* G) :Monster(G) {
     icon = QString("res/icon/monster/") + "10_undeaddemon.jpg";
     rescount = 0;
     dead=true;//这是亡灵，dead=true很正常对吧
-
+    undead_random = new SimpleRandom();
 }
 
 void Undead_Demon::reset() {
@@ -38,7 +38,7 @@ QString Undead_Demon::description() {
 // 回合开始前
 void Undead_Demon::Monster_Before_Turn() {
 
-    if(G->turn==1){undead_random.setseed(G->random.getseed());}
+    if(G->turn==1){undead_random->setseed(G->random->getseed());}
 
     emit G->Alert_monster(name + "【抉择】即将发动. 增加" + QN(3 + 10 * rescount) + "战力!");
     //this->addPoint(3 + 10 * rescount);
@@ -56,7 +56,7 @@ void Undead_Demon::Monster_Before_Turn() {
             }
         }
         if (ninevec.size() > 0) {
-            int index = undead_random.randint(1, ninevec.size()) - 1;
+            int index = undead_random->randint(1, ninevec.size()) - 1;
             Piece t = G->player()->grid.pieces[ninevec[index]];
             G->player()->Locate_piece(Piece(t.x348(), 1, t.x267()), ninevec[index]);
             emit G->Alert_monster(name + "【巫婆】发动. 将位置" + QN(ninevec[index]) + "的卡牌"
@@ -102,7 +102,7 @@ int Undead_Demon::get_pos_of_largest()
             {
            if(gr[place]->sum()==sum)
                 {
-                if(undead_random.randint(1,ntie+1)==ntie+1)
+                if(undead_random->randint(1,ntie+1)==ntie+1)
                     target=place;
                 ntie+=1;
                }

@@ -32,7 +32,7 @@ QString Monster::stat_string()
 
 Monster::Monster(Game* g) {
     G = g;
-    G->monster()=this;
+    G->setMonster(this);
     name = "";
     shortname="";
     id = GT::DEFAULT_MONSTER;
@@ -45,7 +45,9 @@ Monster* Monster::new_monster(GT::MONSTER_ID monst, Game* G)
 {
     //现在G总是有monster的。这可能需要改。
     using namespace GT;
-    delete G->monster();G->monster()=NULL;
+    if(G->monster())
+        delete G->monster();
+    G->setMonster(NULL);
     switch (monst)
     {
     case TWIN_HEAD:
@@ -82,7 +84,7 @@ Monster* Monster::new_monster(GT::MONSTER_ID monst, Game* G)
 void Monster::Monster_Before_Turn()//普通：回合开始
 {
     G->pool()->ncurrent = 1;
-    Piece t = G->pool()->drawout();
+    Piece t = G->pool()->random_draw();
     G->pool()->current[0] = t;
 
     G->sync_record();

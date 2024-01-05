@@ -40,6 +40,7 @@ SOURCES += \
     monsters/stall.cpp \
     monsters/twinhead.cpp \
     monsters/undeaddemon.cpp \
+    pages/numcombpage.cpp \
     pages/pvepage.cpp \
     pages/pvepreppage.cpp \
     pages/settingspage.cpp \
@@ -50,7 +51,7 @@ SOURCES += \
     monster.cpp \
     piece.cpp \
     player.cpp \
-    ui.cpp
+    ui.cpp \
 
 HEADERS += \
     cardpool.h \
@@ -67,6 +68,9 @@ HEADERS += \
     monsters/stall.h \
     monsters/twinhead.h \
     monsters/undeaddemon.h \
+    pages/assemblecraftpage.h \
+    pages/numcombpage.h \
+    pages/numcombpreppage.h \
     pages/pvepage.h \
     pages/pvepreppage.h \
     pages/settingspage.h \
@@ -80,7 +84,8 @@ HEADERS += \
     stdafx.h \
     ui.h \
     utils/gametools.h \
-    utils/random.hpp
+    utils/random.hpp \
+    utils/comb_assembler.hpp
 
 FORMS +=
 

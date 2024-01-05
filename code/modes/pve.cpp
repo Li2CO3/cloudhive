@@ -7,9 +7,11 @@
 PveGame::PveGame():Game()
 {
     gametype=GT::PVEGAME;
-    PveGame::pool() = new CardPool(&this->random);
-    PveGame::player() = new Player(this);
-    PveGame::monster() = new Monster(this);
+    pol = new CardPool(this);
+    ply = new Player(this);
+    monst = new Monster(this);
+    random=new SimpleRandom();
+    make_basic_connections();
 
 }
 PveGame::~PveGame()
@@ -38,9 +40,9 @@ void PveGame::load_challenge(GT::MONSTER_ID monst)
     return;
 }
 
-void PveGame::Start()
+void PveGame::Start(QString seed)
 {
-
+    setrandom(seed);
     status = BUSY;
     monster()->reset();
     player()->reset();
@@ -52,7 +54,7 @@ void PveGame::Start()
 void PveGame::Before_Turn()
 {
     player()->prev_point = player()->point();
-    if (turn == MAX_TURN) { Game_End(); return; }
+    if (turn == PVE_MAX_TURN) { Game_End(); return; }
     turn++;
 
     monster()->Monster_Before_Turn();

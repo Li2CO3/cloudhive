@@ -17,6 +17,8 @@ public:
     QPushButton* myname;
     QStringList Icons;
     QLabel *versioninfo;
+
+    QPushButton *numcomb;
     void show_icons(int page);
     StartPage(MainWindow* mw) { MW = mw; G = mw->G; MW->page = this; }
     void load() override;

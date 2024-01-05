@@ -82,7 +82,7 @@ name=new QLineEdit(MW->centralWidget());\
 
 class StartPage;class PvePage;class SettingsPage;
 
-enum PageType{STARTPAGE=0,PVEPAGE=1,PVEPREP=2,SETTINGS=3};
+enum PageType{STARTPAGE=0,PVEPAGE=1,PVEPREPPAGE=2,SETTINGSPAGE=3,NUMCOMBPAGE=4, NUMCOMBPREPPAGE=5, ASSEMBLECRAFTPAGE=6,};
 
 class MainWindow;
 
@@ -98,6 +98,8 @@ public:
 
     QString name;
     QString icon;
+    GT::MONSTER_ID current_monster_id=GT::TWIN_HEAD;
+
 
     void set_name(QString name);
     void set_icon(QString icon);

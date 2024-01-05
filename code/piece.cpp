@@ -44,7 +44,7 @@ Piece::Piece(int x, int y, int z) {
 }
 
 int inline convert(QChar x) {
-    if (x == 'X') {
+    if (x == 'X' || x== 'x') {
         return 10;
     } else if (x >= '0' && x <= '9') {
         return x.unicode() - QChar('0').unicode();
@@ -61,10 +61,18 @@ Piece::Piece(QString info) {
         this->z = 10;
         this->id = "any";
     } else {
+        if(info.length()>=3 &&
+           QString("0348Xx").contains(info[0]) &&
+           QString("0159Xx").contains(info[1]) &&
+           QString("0267Xx").contains(info[2]))
+        {
         this->x = convert(info[0]);
         this->y = convert(info[1]);
         this->z = convert(info[2]);
         this->id = info;
+        }
+        else {*this = QString("000");}
+
     }
 }
 

@@ -17,7 +17,7 @@ public:
     Grid() { Clear(); }
     void Clear() { for (int i = 0; i < 20; i++)pieces[i].clear(); }//清除上回合分数和盘面
 
-    void Make_image(QPixmap& pixmap);//画成图。用LGTBot的图片资料
+    void Make_image(QPixmap& pixmap, GT::GRIDTYPE type);//画成图。用LGTBot的图片资料
 };
 
 #endif // GRID_H

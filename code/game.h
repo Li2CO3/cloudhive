@@ -1,7 +1,9 @@
 ﻿#ifndef GAME_H
 #define GAME_H
 
-#define MAX_TURN 35//不确定改了会不会出情况，但是工程内搜索35应该不会漏太多
+#define NUMCOMB_MAX_PLAYER 10
+#define NUMCOMB_MAX_TURN 20
+#define PVE_MAX_TURN 35
 
 #include <QApplication>
 #include <time.h>
@@ -16,6 +18,7 @@
 
 using namespace std;
 
+#define LAIZI "any"
 class MainWindow;//自定义窗口类
 
 class CardPool;
@@ -30,7 +33,7 @@ class Game :public QObject//QThread//游戏进行在另一个线程
 
 public:
 
-    enum GAMESTAGE { NOT_STARTED = 0, WAIT_TURN = -1, FINISHED = 2, WAIT_CHOOSE_TURN = -3, BUSY = 100, WAIT_SNOWMAN_DISCARD = -4004 };
+    enum GAMESTAGE { NOT_STARTED = 0, WAIT_TURN = -1, FINISHED = 2, WAIT_CHOOSE_TURN = -3, BUSY = 100, WAIT_SNOWMAN_DISCARD = -4004, };
 
     enum GAME_RESULT { PLAYER_DEAD = 0, TURNS_ENOUGH = 1 };
 
@@ -59,20 +62,22 @@ public:
 	void Clear() {}
 
     int turn = 0;
-    Random random;
+    Random *random;
     GT::SCORING_RULE scoring_rule;
     GT::GAMETYPE gametype;
     GAMESTAGE status;
 	MainWindow* MW;
-    virtual CardPool*& pool(int id=0){Q_UNUSED(id) throw 0;}///原本的pool player monster是现在的pool() player() monster()。
-    virtual Player*& player(int id=0) {Q_UNUSED(id) throw 0;}
-    virtual Monster*& monster(int id=0){Q_UNUSED(id) throw 0;}
-
+    virtual CardPool* pool(int id=0){Q_UNUSED(id) return NULL;}///原本的pool player monster是现在的pool() player() monster()。
+    virtual Player* player(int id=0) {Q_UNUSED(id) return NULL;}
+    virtual Monster* monster(int id=0){Q_UNUSED(id) return NULL;}
+    virtual void setPoolLink(CardPool *pol,unsigned int id=0){Q_UNUSED(pol) Q_UNUSED(id)}
+    virtual void setPlayerLink(Player *ply, unsigned int id=0){Q_UNUSED(ply) Q_UNUSED(id)}
+    virtual void setMonster(Monster *monst, unsigned int id=0){Q_UNUSED(monst) Q_UNUSED(id)}
 //    virtual Player* player(int id=0) =NULL;
 //    virtual Monster *monster(int id=0) =NULL;
 
 	Record record;
-    virtual void sync_record(){};
+    virtual void sync_record(){}
 
     virtual bool Check_Operation(int ply, QString cache, QString op){ Q_UNUSED(ply) throw 0;}
 
@@ -90,12 +95,14 @@ public:
 	//void set_monster(int id);
 	//void showinfo();
     //int Prompt_select_monster();
-    virtual void Start(){}//todo:参数
+    virtual void make_basic_connections(){}
+    virtual void Start(QString seed){}//todo:参数
     virtual void Before_Turn(){}
     virtual void Locate_Piece(){}
     virtual void Before_Combat(){}
     virtual void Combat(){}
     virtual void After_Combat(){}
+    virtual void setrandom(QString seed);
     //void run() override { }
     void remake(){remake(gametype);}
     void remake(GT::GAMETYPE type);
@@ -109,7 +116,7 @@ signals:
     void signal_combat();
     void signal_after_combat();
     void signal_update_turn_piece();
-    void signal_player_change_stats(QString);//需要输入stat_string()
+    void signal_player_change_stats(QString,int=0);//需要输入stat_string()TODO: stat_string这个词可能要换
     void signal_monster_change_stats(QString);//需要输入stat_string()
     void signal_wait_for_operation();
     void signal_game_end();

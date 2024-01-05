@@ -40,7 +40,7 @@ void Iron_Wall::Monster_Before_Combat() {
     if (G->turn < 6) {
         return ;
     }
-    Piece piece = G->pool()->drawout();
+    Piece piece = G->pool()->random_draw();
     temparmor = piece.sum();
     emit G->Alert_monster(name+"【虚空吞噬】发动，吞噬了" + piece.to_string() + "获得+" + QN((temparmor)) + "点临时护盾！");
     realarmor = armor;

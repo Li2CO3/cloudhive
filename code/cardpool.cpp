@@ -1,19 +1,27 @@
 ﻿#include "cardpool.h"
 
-#define LAIZI "any"
 
-CardPool::CardPool(Random* rd) {
-    this->random = rd;
+CardPool::CardPool(Game *G) {
+    this->G=G;
     npiece = 0;
     setpool(GT::POOL_Normal);
 }
-Piece CardPool::drawout() {
-    int k = random->randint(0, npiece - 1);
+Piece CardPool::random_draw() {
+    int k = G->random->randint(0, npiece - 1);
     Piece p = pieces[k];
     pieces[k] = pieces[npiece - 1];
     npiece--;
     return p;
 }
+Piece CardPool::draw_top() {
+    int k=0;
+    Piece p=pieces[k];
+    for(;k<npiece-1;k++)
+        pieces[k]=pieces[k+1];
+    npiece--;
+    return p;
+}
+
 
 void CardPool::pushback(Piece p) {
     pieces[npiece] = p;

@@ -5,16 +5,12 @@
 #include "monster.h"
 #include "cardpool.h"
 #include "modes/pve.h"
-
+#include "modes/numcomb.h"
+#include "utils/random.hpp"
 Game::Game() {
     connect(this, SIGNAL(signal_new_operation(QString)), this, SLOT(recv_operation(QString)));
 
     Clear();
-    connect(this, &Game::signal_before_turn, this, [=]() {Before_Turn(); });
-    connect(this, &Game::signal_turn, this, [=]() {Locate_Piece(); });
-    connect(this, &Game::signal_before_combat, this, [=]() {Before_Combat(); });
-    connect(this, &Game::signal_combat, this, [=]() {Combat(); });
-    connect(this, &Game::signal_after_combat, this, [=]() {After_Combat(); });
     status = NOT_STARTED;
     gametype=GT::TYPE_NULL;
     //pool = new CardPool(&this->random);
@@ -50,7 +46,7 @@ int main(int argc, char* argv[])
     }
     MainWindow mw;
     MainWindow*w = &mw;
-    Game* g = new Game();
+    Game* g = new PveGame();
 	w->G = g;
 	g->MW = w;
 	w->resize(1200, 750);
@@ -59,13 +55,14 @@ int main(int argc, char* argv[])
 	return a.exec();
 	//w->G->RUN();
 }
-
 Game * GameMaker::newGame(GT::GAMETYPE type)
 {
     switch(type)
     {
     case GT::PVEGAME:
         return new PveGame();
+    case GT::NUMCOMBGAME:
+        return new NumcombGame();
     default:
         return new Game();
         //throw 0;
@@ -79,16 +76,30 @@ void Game::remake(GT::GAMETYPE type)
     MW->G->MW = MW;
     MW->G->player()->name=MW->name;
     MW->G->player()->icon=MW->icon;
+//    MW->G->scoring_rule=scoring_rule;
     ///todo:此处信息的复制并不完整
     //保留：
-    MW->G->random.setseed(random.getseed());
     //MW->G->player()->name = player()->name;
     //MW->G->player()->icon = player()->icon;
-    if(gametype!=GT::TYPE_NULL)
-    {
-        MW->G->monster() = Monster::new_monster(monster()->id, MW->G);
-    }
+    assert(type!=GT::TYPE_NULL);
+
+        MW->G->setrandom(random->getseed());
+
+
     this->disconnect();
     //	this->terminate();
     deleteLater();
+}
+void Game::setrandom(QString seed)
+{
+    bool isnumber;
+    int t=seed.toInt(&isnumber);
+    Q_UNUSED(t);
+    GT::RANDOMTYPE type;
+    if(isnumber)
+    {type=GT::SIMPLERANDOM;}
+    else
+    {type=GT::MT19937RANDOM;}
+
+    RandomMaker::make_random(random,type,seed);
 }

@@ -41,12 +41,13 @@ public:
         //qDebug()<<"new pvepage";
         //op_cache="";
         MW = mw; G = MW->G; MW->page = this;
+        MW->current_monster_id=MW->G->monster()->id;
     }
     void load() override;
 
 
     void update() override {
-        G->player()->grid.Make_image(gridimage);
+        G->player()->grid.Make_image(gridimage,GT::CLOUD_GRID);
         grid_background->setPixmap(gridimage.SCALED(grid_background->width(), grid_background->height()));
         this->Update_Player_Stats(G->player()->stat_string());
         this->Update_Monster_Stats(G->monster()->stat_string());
@@ -92,8 +93,9 @@ public slots:
         monster_stats->setText(str);
         //monster_stats2->setText(G->monster()->name+": "+str);
     }
-    void Update_Player_Stats(QString str)//int point, int health)
+    void Update_Player_Stats(QString str, int ply=0)//int point, int health)
     {
+        Q_UNUSED(ply)
         //QString str = QString::number(point) + '/' + QString::number(health);
         hero_stats->setText(str);
         //hero_stats2->setText(G->player()->name+": "+str);

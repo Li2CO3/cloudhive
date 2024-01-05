@@ -75,7 +75,7 @@ void Mimic_Chest::trigger_ability_1()
     ready_for_ability_1 = false;
     for (int i = 0; i < 6; i++)
     {
-        future_tiles[nFutureTiles] = G->pool()->drawout(); nFutureTiles++;
+        future_tiles[nFutureTiles] = G->pool()->random_draw(); nFutureTiles++;
     }
     emit G->Alert_monster("宝箱怪已达到" + QN(point / 50 * 50) + "分，揭示牌堆顶6张牌:");
     bool haskeep = false, hasnonkeep = false;

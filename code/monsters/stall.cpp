@@ -25,7 +25,7 @@ QString Stall::description() {
 
 // 回合开始前
 void Stall::Monster_Before_Turn() {
-    int k = G->random.randint(-5, 15);
+    int k = G->random->randint(-5, 15);
     emit G->Alert_monster(name + "【热修】发动 \n/rd i -5 15 \n -> "
                           + QN(k) + "\n"+ name + "获得" + QN(k) + "点战力");
     if(k<-point){k=-point; emit G->Alert_monster(name+"【保底】触发，战力不低于0!");}

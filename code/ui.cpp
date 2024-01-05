@@ -1,8 +1,11 @@
 ﻿#include "ui.h"
+#include "pages/assemblecraftpage.h"
 #include "pages/pvepage.h"
 #include "pages/pvepreppage.h"
 #include "pages/settingspage.h"
 #include "pages/startpage.h"
+#include "pages/numcombpage.h"
+#include "pages/numcombpreppage.h"
 
 void MainWindow::load_page(PageType type)
 {
@@ -13,15 +16,32 @@ void MainWindow::load_page(PageType type)
     case STARTPAGE:
     {new StartPage(this); }
     break;
+
     case PVEPAGE:
     {new PvePage(this); }
     break;
-    case PVEPREP:
+
+    case PVEPREPPAGE:
     {new PvePrepPage(this); }
     break;
-    case SETTINGS:
+
+    case SETTINGSPAGE:
     {new SettingsPage(this); }
-    default:break;
+
+    break;
+
+    case NUMCOMBPAGE:
+    {new NumcombPage(this); }
+    break;
+
+    case NUMCOMBPREPPAGE:
+    {new NumcombPrepPage(this);}
+    break;
+
+    case ASSEMBLECRAFTPAGE:
+    {new AssembleCraftPage(this);}
+    break;
+    default:throw 0;
     }
     page->load();
     //qDebug()<<"pagetype set to="<<type<<"===";

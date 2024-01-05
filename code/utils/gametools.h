@@ -14,6 +14,8 @@
 //#25|...|#31|...|#35|...|#45
 //...|#29|...|#33|...|#39|...
 
+
+
 #define GT gametools
 namespace gametools
 {
@@ -50,6 +52,7 @@ enum SCORING_RULE {
     One_Lines_Plus_15 = 115,
     COUNT_LAIZI=-2147483646,
     COUNT_LINES=-2147483647,
+    SCORING_NUMCOMB = 897897897,//胡写
 };
 
 enum PoolType {// 以下枚举符合多种乱写规律
@@ -88,7 +91,19 @@ enum MONSTER_ID {
 enum GAMETYPE {
     TYPE_NULL=0,
     PVEGAME =1,
+    NUMCOMBGAME=2,
 };
 
+enum RANDOMTYPE {
+    SIMPLERANDOM=0,
+    MT19937RANDOM=1,
 };
+
+enum GRIDTYPE {
+    NUM_GRID=0,
+    CLOUD_GRID=1,
+    OPEN_WORLD_GRID=2,
+    STANDARD_OPEN=3,
+};
+}
 #endif // GAMETOOLS_H

@@ -46,7 +46,7 @@ void Rainbow_Giraffe::Monster_Before_Turn() {
     if (G->turn <= 3) {
         // 【三原色】
         G->pool()->ncurrent = 1;
-        Piece t = G->pool()->drawout();//抽卡
+        Piece t = G->pool()->random_draw();//抽卡
         while (true) {
             if (uniqueSet.find(t.x159()) == uniqueSet.end() &&
                     uniqueSet.find(t.x267()) == uniqueSet.end() &&
@@ -57,7 +57,7 @@ void Rainbow_Giraffe::Monster_Before_Turn() {
                    break;
             }
             G->pool()->pushback(t);//如果有重复数字了，放回去
-            t = G->pool()->drawout();//重新抽
+            t = G->pool()->random_draw();//重新抽
         }
         emit G->Alert_monster(name + "【三原色】发动\n本回合的牌为" + t.to_string());
         G->pool()->current[0] = t;
@@ -87,7 +87,7 @@ const QString Rainbow_Giraffe::rainbowColour[] = {
 void Rainbow_Giraffe::Monster_Before_Combat() {
     Monster::Monster_Before_Combat();
     {//【彩虹的颜色】
-        int increase_point = G->random.randint(1, 7);
+        int increase_point = G->random->randint(1, 7);
         this->addPoint(increase_point);
         emit G->Alert_monster(name + "【彩虹的颜色】发动\n选中了"
                               + rainbowColour[increase_point - 1] + ",分数增加" + QN(increase_point) + "点");

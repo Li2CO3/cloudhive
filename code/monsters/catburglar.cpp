@@ -40,14 +40,14 @@ void Cat_Burglar::Monster_Before_Turn()
 
 	if (nl >= 7 && nl <= 10)
 	{
-		G->pool()->current[0] = G->pool()->drawout();
-		G->pool()->current[1] = G->pool()->drawout();
+		G->pool()->current[0] = G->pool()->random_draw();
+		G->pool()->current[1] = G->pool()->random_draw();
 		G->pool()->ncurrent = 2;
         emit G->Alert_monster("狂风天候:本轮改为二选一!");
 	}
 	else
 	{
-		G->pool()->current[0] = G->pool()->drawout();
+		G->pool()->current[0] = G->pool()->random_draw();
 		G->pool()->ncurrent = 1;
 	}
 
@@ -56,7 +56,7 @@ void Cat_Burglar::Monster_Before_Turn()
         emit G->Alert_monster("小贼猫【丰满】即将发动：回合结束后增加100分！");
 	if (G->turn == 1)
 	{
-		bomb1 = G->random.randint(11, 20); bomb2 = G->random.randint(21, 30);
+        bomb1 = G->random->randint(11, 20); bomb2 = G->random->randint(21, 30);
 	}
 
 	if (G->turn >= 11) if (bomb1 >= G->turn)
@@ -137,7 +137,7 @@ void Cat_Burglar::Make_Summary(QDialog* dialog)
 {
     Monster::Make_Summary(dialog);
 
-    for (int i = 1; i <= MAX_TURN && i <= G->turn; i++)
+    for (int i = 1; i <= PVE_MAX_TURN && i <= G->turn; i++)
     {
         if (G->record.npieces[i] == 2)
         {

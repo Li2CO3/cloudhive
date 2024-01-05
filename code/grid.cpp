@@ -12,6 +12,7 @@ int inline line_value_and(int a, int b)
 
 int Grid::point(GT::SCORING_RULE rule, int * o159,int *o267,int *o348)//当前这些o只用在年兽。
 {
+
     using namespace GT;
     /*
         auto effectof = [=](int place, int dir){
@@ -84,90 +85,129 @@ int Grid::point(GT::SCORING_RULE rule, int * o159,int *o267,int *o348)//当前�
         points=0;
         for (int i = 0; i < 5; i++) points += ((r267[i]>0) + (r159[i]>0) + (r348[i]>0));
         return points;
+    case GT::SCORING_NUMCOMB:
+        if(!pieces[0].isEmptyPiece()) points += pieces[0].sum();
+        return points;
     default:
         throw 0;
     }
 
 }
 
-void Grid::Make_image(QPixmap& img)
+void Grid::Make_image(QPixmap& img, GT::GRIDTYPE type)
 {
     using namespace GT;
     img = QPixmap(64 * 7, 64 * 7);
     QPainter painter(&img);
 
-
-    for (int place = 1; place <= 19; place++)
+    switch(type)
     {
-        if (!(*this)[place]->isEmptyPiece())
-            painter.drawPixmap(GRID_X[place] * 64, GRID_Y[place] * 32 - 32, (*this)[place]->image());
+    case GT::GRIDTYPE::NUM_GRID:
+    {QPixmap temp;
+        Make_image(temp,CLOUD_GRID);
+        painter.drawPixmap(0,0,temp);
+        if(pieces[0].isEmptyPiece())
+            painter.drawPixmap(GRID_X[0] * 64, GRID_Y[0] * 32 - 32, QPixmap("res/piece/"+QString("pure")+"/num_" + QN(0) + ".png"));
         else
-            painter.drawPixmap(GRID_X[place] * 64, GRID_Y[place] * 32 - 32, QPixmap("res/piece/"+QString("pure")+"/num_" + QString::number(place) + ".png"));
+            painter.drawPixmap(GRID_X[0] * 64, GRID_Y[0] * 32 - 32, pieces[0].image());
+
     }
-    auto find_xydir = [=](int x, int y, int dir) {
-        int dir_val = -1;
-        int dx, dy;
-        if (dir == 3) { dx = 1, dy = 1; }
-        else if (dir == -3) { dx = -1, dy = -1; }
-        else if (dir == 1) { dx = 0; dy = 2; }
-        else if (dir == -1) { dx = 0; dy = -2; }
-        else if (dir == 2) { dx = 1; dy = -1; }
-        else if (dir == -2) { dx = -1; dy = 1; }
-        else throw 0;
-        for (int k = 1;; k++)
+        return;
+    case GT::GRIDTYPE::STANDARD_OPEN:
+    {QPixmap temp;
+        Make_image(temp,NUM_GRID);
+        painter.drawPixmap(0,0,temp);
+        for(int i=0;i<20;i++)
+        if(pieces[i].isEmptyPiece())
+                painter.drawPixmap(GRID_X[i] * 64, GRID_Y[i] * 32 - 32, Piece("000").image());
+    }
+        return;
+    case GT::GRIDTYPE::CLOUD_GRID:
+    {
+        for (int place = 1; place <= 19; place++)
         {
-            int targetx = x + k * dx; int targety = y + k * dy;
-            if (targetx > 6)break;
-            if (targetx < 0)break;
-            if (targety < 1)break;
-            if (targety > 13)break;
-            int targetid = place_ids[targety][targetx];
-            if (targetid >= 20)
-            {
-                if (dir_val != -1) { break; }
-                else { continue; }
-            }
-            int newval;
-            if (dir == 3 || dir == -3)newval = (*this)[targetid]->x348();
-            if (dir == 2 || dir == -2)newval = (*this)[targetid]->x267();
-            if (dir == 1 || dir == -1)newval = (*this)[targetid]->x159();
-            if (dir_val == -1 || dir_val == 10)
-            {
-                dir_val = newval; continue;
-            }
-            if (newval == 10)continue;
-            if (dir_val != newval)return 0;
-            continue;
+            if (!(*this)[place]->isEmptyPiece())
+                painter.drawPixmap(GRID_X[place] * 64, GRID_Y[place] * 32 - 32, (*this)[place]->image());
+            else
+                painter.drawPixmap(GRID_X[place] * 64, GRID_Y[place] * 32 - 32, QPixmap("res/piece/"+QString("pure")+"/num_" + QString::number(place) + ".png"));
         }
-        return dir_val;
-    };
+        auto find_xydir = [=](int x, int y, int dir) {
+            int dir_val = -1;
+            int dx, dy;
+            if (dir == 3) { dx = 1, dy = 1; }
+            else if (dir == -3) { dx = -1, dy = -1; }
+            else if (dir == 1) { dx = 0; dy = 2; }
+            else if (dir == -1) { dx = 0; dy = -2; }
+            else if (dir == 2) { dx = 1; dy = -1; }
+            else if (dir == -2) { dx = -1; dy = 1; }
+            else throw 0;
+            for (int k = 1;; k++)
+            {
+                int targetx = x + k * dx; int targety = y + k * dy;
+                if (targetx > 6)break;
+                if (targetx < 0)break;
+                if (targety < 1)break;
+                if (targety > 13)break;
+                int targetid = place_ids[targety][targetx];
+                if (targetid >= 20)
+                {
+                    if (dir_val != -1) { break; }
+                    else { continue; }
+                }
+                int newval;
+                if (dir == 3 || dir == -3)newval = (*this)[targetid]->x348();
+                if (dir == 2 || dir == -2)newval = (*this)[targetid]->x267();
+                if (dir == 1 || dir == -1)newval = (*this)[targetid]->x159();
+                if (dir_val == -1 || dir_val == 10)
+                {
+                    dir_val = newval; continue;
+                }
+                if (newval == 10)continue;
+                if (dir_val != newval)return 0;
+                continue;
+            }
+            return dir_val;
+        };
 
-    for (int place = 20; place <= 45; place++)
+        for (int place = 20; place <= 45; place++)
+        {
+
+            QPixmap wallpiece(64,64);
+            wallpiece.fill();
+            QPainter wallpainter(&wallpiece);
+            wallpainter.drawPixmap(0,0,QPixmap("res/piece/pure/wall_000.png"));
+
+            int x = GRID_X[place], y = GRID_Y[place];
+            if (find_xydir(x, y, 1) > 0 || find_xydir(x, y, -1) > 0) { wallpainter.drawPixmap(0,0,QPixmap("res/piece/pure/line_159.png")); }
+            if (find_xydir(x, y, 2) > 0 || find_xydir(x, y, -2) > 0) { wallpainter.drawPixmap(0,0,QPixmap("res/piece/pure/line_267.png")); }
+            if (find_xydir(x, y, 3) > 0 || find_xydir(x, y, -3) > 0) { wallpainter.drawPixmap(0,0,QPixmap("res/piece/pure/line_348.png")); }
+            //find_xydir(0,2,3);find_xydir(0,2,-3);
+            painter.drawPixmap(x * 64, y * 32 - 32, wallpiece);
+        }
+
+        for (int x = 0; x < 7; x += 2)
+        {
+            painter.drawPixmap(x * 64, 0, QPixmap("res/piece/"+QString("pure")+"/wall_half.png"));
+            painter.drawPixmap(x * 64, 32 * 13, QPixmap("res/piece/"+QString("pure")+"/wall_half.png"));
+        }
+        //0~6 0~14 center=3,7
+
+        //1,2 2,1 3,2 4,1 5,2
+        //    2,3     4,3
+        //....
+        //1,14 2,13 3,14 4,13 5,14
+        //  2,15  4,15
+
+    }
+        return;
+    case GT::GRIDTYPE::OPEN_WORLD_GRID:
     {
-
-        QPixmap wallpiece(64,64);
-        wallpiece.fill();
-        QPainter wallpainter(&wallpiece);
-        wallpainter.drawPixmap(0,0,QPixmap("res/piece/pure/wall_000.png"));
-
-        int x = GRID_X[place], y = GRID_Y[place];
-        if (find_xydir(x, y, 1) > 0 || find_xydir(x, y, -1) > 0) { wallpainter.drawPixmap(0,0,QPixmap("res/piece/pure/line_159.png")); }
-        if (find_xydir(x, y, 2) > 0 || find_xydir(x, y, -2) > 0) { wallpainter.drawPixmap(0,0,QPixmap("res/piece/pure/line_267.png")); }
-        if (find_xydir(x, y, 3) > 0 || find_xydir(x, y, -3) > 0) { wallpainter.drawPixmap(0,0,QPixmap("res/piece/pure/line_348.png")); }
-        //find_xydir(0,2,3);find_xydir(0,2,-3);
-        painter.drawPixmap(x * 64, y * 32 - 32, wallpiece);
+        //todo
+    }
+        return;
+    default:throw 0;
     }
 
-    for (int x = 0; x < 7; x += 2)
-    {
-        painter.drawPixmap(x * 64, 0, QPixmap("res/piece/"+QString("pure")+"/wall_half.png"));
-        painter.drawPixmap(x * 64, 32 * 13, QPixmap("res/piece/"+QString("pure")+"/wall_half.png"));
-    }
-    //0~6 0~14 center=3,7
 
-    //1,2 2,1 3,2 4,1 5,2
-    //    2,3     4,3
-    //....
-    //1,14 2,13 3,14 4,13 5,14
-    //  2,15  4,15
+
 }

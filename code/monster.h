@@ -50,5 +50,6 @@ public:
     virtual void take_damage(int dmg);
     virtual void Make_Summary(QDialog* dialog);
 
+
 };
 #endif // MONSTERS_H

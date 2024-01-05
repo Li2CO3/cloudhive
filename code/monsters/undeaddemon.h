@@ -20,7 +20,7 @@ public:
 private:
     void clear_piece();
     int get_pos_of_largest();
-    Random undead_random;
+    Random *undead_random;
     int rescount;
 };
 
