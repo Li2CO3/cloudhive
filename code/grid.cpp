@@ -4,13 +4,14 @@
 
 
 int inline line_value_and(int a, int b)
-{if (a == 10)return b;
- if (b == 10)return a;
- if (a == b)return a;
- return 0;
+{
+    if (a == 10)return b;
+    if (b == 10)return a;
+    if (a == b)return a;
+    return 0;
 };
 
-int Grid::point(GT::SCORING_RULE rule, int * o159,int *o267,int *o348)//当前这些o只用在年兽。
+int Grid::point(GT::SCORING_RULE rule, int * o159, int *o267, int *o348)//当前这些o只用在年兽。
 {
 
     using namespace GT;

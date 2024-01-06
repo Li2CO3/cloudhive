@@ -126,7 +126,7 @@ void PveGame::recv_operation(QString expr)
     Piece p;
     if (status == WAIT_TURN)p = pool()->current[0];
     else if (status == WAIT_CHOOSE_TURN)p = pool()->current[cache.toInt()];
-    else if (status == WAIT_SNOWMAN_DISCARD) p = Piece(0, 0, 0);
+    else if (status == WAIT_SNOWMAN_DISCARD) p = Piece();
     int place = op.toInt();
 
     record.covered[turn] = ply->grid.pieces[place];
