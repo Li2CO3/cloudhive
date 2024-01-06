@@ -54,7 +54,7 @@ void PveGame::Start(QString seed)
 void PveGame::Before_Turn()
 {
     player()->prev_point = player()->point();
-    if (turn == PVE_MAX_TURN) { Game_End(); return; }
+    if (turn == this->monster()->max_turn()) { Game_End(); return; }
     turn++;
 
     monster()->Monster_Before_Turn();

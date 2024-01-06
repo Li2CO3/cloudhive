@@ -109,7 +109,7 @@ void Monster::Make_Summary(QDialog* dialog)
 
     operations->setFont(f);
     resulttext += "\n本局操作:\n";
-    for (int i = 1; i <= PVE_MAX_TURN; i++)
+    for (int i = 1; i <= G->monster()->max_turn(); i++)
     {
         if (i <= G->turn)
         {
@@ -122,7 +122,7 @@ void Monster::Make_Summary(QDialog* dialog)
     resulttext += "\n本局发牌:\n";
 
     QString pieces = "";
-    for (int i = 1; i <= PVE_MAX_TURN; i++)
+    for (int i = 1; i <= G->monster()->max_turn(); i++)
     {
         QLabel* piece = new QLabel(dialog);
         Piece p;

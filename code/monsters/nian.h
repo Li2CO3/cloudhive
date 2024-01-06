@@ -19,7 +19,7 @@ public:
     void Monster_Combat() override;
     //void Monster_After_Combat() override;
     POOLTYPE pooltype() override { return POOLTYPE::POOL_NIAN; }
-
+    virtual int max_turn() override {return 30;}
     void addChill(int chil);
     void Chill_Combat();
 protected:

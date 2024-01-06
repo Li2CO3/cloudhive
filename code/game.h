@@ -3,7 +3,7 @@
 
 #define NUMCOMB_MAX_PLAYER 10
 #define NUMCOMB_MAX_TURN 20
-#define PVE_MAX_TURN 35
+
 
 #include <QApplication>
 #include <time.h>
