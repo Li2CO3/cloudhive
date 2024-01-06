@@ -20,7 +20,7 @@ void Cat_Burglar::reset() {
 
 QString Cat_Burglar::description()
 {
-    QString str = "第三期蜂巢副本boss：小贼猫 初始血量:" + QN(initialhealth) + "\n";
+    QString str = "第三期蜂巢副本boss：" + this->name + " 初始血量:" + QN(initialhealth) + "\n";
     str += "被动技能1：【丰满】第20回合时，获得100点战力。\n";
     str += "被动技能2：【聪慧】每回合战斗开始前，获得3点战力，若本回合挑战者分数有变化，则改为获得9点战力。\n";
     str += "主动技能1：【欺骗】第11-20和21-30回合中各有一个炸弹，挑战者在该回合未弃牌则受到其放置卡牌的总点数点伤害，最高不超过15点。\n";
@@ -137,7 +137,7 @@ void Cat_Burglar::Make_Summary(QDialog* dialog)
 {
     Monster::Make_Summary(dialog);
 
-    for (int i = 1; i <= PVE_MAX_TURN && i <= G->turn; i++)
+    for (int i = 1; i <= this->max_turn() && i <= G->turn; i++)
     {
         if (G->record.npieces[i] == 2)
         {

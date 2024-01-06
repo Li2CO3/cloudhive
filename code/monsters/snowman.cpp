@@ -65,7 +65,7 @@ void Snowman::Monster_Before_Turn()//混乱屎山代码
             cache_pieces[G->turn - 20] = G->pool()->current[0]; }
         else {
             G->pool()->ncurrent = 1;
-            G->pool()->current[0] = Piece(0,0,0);
+            G->pool()->current[0] = Piece();
             emit G->signal_update_turn_piece();
         }
     }

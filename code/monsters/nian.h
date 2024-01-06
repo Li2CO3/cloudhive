@@ -1,4 +1,4 @@
-#ifndef NIAN_H
+﻿#ifndef NIAN_H
 #define NIAN_H
 
 #include "../monster.h"
@@ -19,27 +19,29 @@ public:
     void Monster_Combat() override;
     //void Monster_After_Combat() override;
     POOLTYPE pooltype() override { return POOLTYPE::POOL_NIAN; }
-
+    virtual int max_turn() override {return 30;}
     void addChill(int chil);
     void Chill_Combat();
-private:
+protected:
+    virtual int get_mult(Piece p) {return 1;};
+    virtual int get_earth_red_power() {return 2;};
     bool has_located[20]={false};//甩炮
     int v159[5]={0},v267[5]={0},v348[5]={0};
     int chill=0;//寒气值，负数对应暖意
     int next_nline_trigger=5;
 };
+
 #ifdef NewYear2024NianEasy
 class Nian_Easy :public Nian_Monster
 {
 public:
     Nian_Easy(Game *G);
     ~Nian_Easy(){}
-    QString description() override {
-        QString str = "2024快乐副本："+ this->name + " 初始血量:" + QN(initialhealth) + "\n";
-        str +="副本环境:超级调色盘\n年兽规则基础上，增加18个赖子(共计20个纯赖子和27个单线赖子)。\n其它规则见[年兽]页。";
-        return str;
-        }
+    QString description() override ;
     POOLTYPE pooltype() override { return POOLTYPE::POOL_NIAN_EASY; }
+protected:
+    int get_mult(Piece p) override {return 1 + (p.x159() == 10 || p.x267() == 10 || p.x348() == 10);};
+    int get_earth_red_power() override{return 6;};
 };
 #endif//2024快乐年
 
