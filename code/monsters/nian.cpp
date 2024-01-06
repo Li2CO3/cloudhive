@@ -12,12 +12,12 @@ Nian_Easy::Nian_Easy(Game* G) :Nian_Monster(G) {
 }
 
 QString Nian_Easy::description() {
-	QString str = "2024快乐副本：" + this->name + " 初始血量:" + QN(initialhealth) + "最大回合数：" + this->max_turn() + "\n";
+	QString str = "2024快乐副本：" + this->name + " 初始血量:" + QN(initialhealth) + "\n";
 	str += "年兽规则基础上新增一些规则, 其它规则见[年兽]页\n\n";
 	str += "副本环境·龙年快乐:\n";
-	str += "增加18个赖子(共计20个纯赖子和27个单线赖子)。\n";
-	str += "大地红威力增加为原先的3倍\n";
-	str += "用含赖子棋子触发鞭炮时效果翻倍。\n";
+	str += "①增加18个赖子(共计20个纯赖子和27个单线赖子)。\n";
+	str += "②大地红威力增加为原先的3倍。\n";
+	str += "③用含赖子棋子触发鞭炮时效果翻倍。\n";
 	return str;
 }
 
