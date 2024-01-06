@@ -6,6 +6,7 @@ CardPool::CardPool(Game *G) {
     npiece = 0;
     setpool(GT::POOL_Normal);
 }
+
 Piece CardPool::random_draw() {
     int k = G->random->randint(0, npiece - 1);
     Piece p = pieces[k];
@@ -13,6 +14,7 @@ Piece CardPool::random_draw() {
     npiece--;
     return p;
 }
+
 Piece CardPool::draw_top() {
     int k=0;
     Piece p=pieces[k];
