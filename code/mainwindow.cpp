@@ -2,6 +2,7 @@
 //#include "ui_mainwindow.h"
 #include <QFile>
 #include <QIODevice>
+#include <QTextStream>
 
 MainWindow* TheWindow;
 
