@@ -7,6 +7,8 @@
 #include "modes/pve.h"
 #include "modes/numcomb.h"
 #include "utils/random.hpp"
+#include <QMessageBox>
+#include <QDir>
 
 Game::Game() {
     connect(this, SIGNAL(signal_new_operation(QString)), this, SLOT(recv_operation(QString)));
@@ -27,11 +29,50 @@ Game::~Game() {
 int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
+    MainWindow mw;
+    MainWindow*w = &mw;
+    Game* g = new PveGame();
+    w->G = g;
+    g->MW = w;
+    w->resize(1200, 750);
+    w->show();
+
 	{
+
+
+        QDir dir =QDir("res");
+        if(!dir.exists())
+        {int t=QMessageBox::warning(w,"资源包错误","未找到资源包(版本:"+__RES_VERSION+")","继续","退出","",0,0);//改文字太麻烦了！先deprecated着吧
+            if(t==1)return 0;
+        }
+
+
+        QString ver = "res/game/version.txt";
+        QFile fver(ver);
+
+        QString content;
+        if (fver.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            QTextStream inStream(&fver);
+            content = inStream.readAll();
+
+            if(content==__RES_VERSION)
+            ;
+            else
+            {int t=QMessageBox::warning(w,"资源包错误","错误的版本(需要版本:"+__RES_VERSION+","+"当前版本:"+content+")","继续","退出","",0,0);//改文字太麻烦了！先deprecated着吧
+            if(t==1)return 0;
+            }
+
+        }
+        else
+        {int t=QMessageBox::warning(w,"资源包错误","未知的版本(需要版本:"+__RES_VERSION+")","继续","退出","",0,0);//改文字太麻烦了！先deprecated着吧
+            if(t==1)return 0;
+        }
+
+
         QFontDatabase::addApplicationFont("res/game/OPPOSans-R.ttf");
 		QString K = "res/game/default_font.txt";
-		QFile file(K);
-		QString content;
+        QFile file(K);
 
 		if (file.open(QIODevice::ReadOnly | QIODevice::Text))
 		{
@@ -45,13 +86,7 @@ int main(int argc, char* argv[])
         f.setPixelSize(18);
         QApplication::setFont(f);
     }
-    MainWindow mw;
-    MainWindow*w = &mw;
-    Game* g = new PveGame();
-	w->G = g;
-	g->MW = w;
-	w->resize(1200, 750);
-	w->show();
+
 	w->load_page(STARTPAGE);
 	return a.exec();
 	//w->G->RUN();
