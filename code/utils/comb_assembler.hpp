@@ -372,6 +372,7 @@ public:
                     // 初始化结果字符串
                     QString result;
                     // 遍历每个字符
+                    int placeofdots =-1, xofdots=-1;
                     int firstreturn = 0;
                     int const width1=550;
                     for (;firstreturn < str.length(); ++firstreturn) {
@@ -379,25 +380,23 @@ public:
                         const QChar &c = str[firstreturn];
                         // 计算当前字符的宽度
                         currentPlace +=metrics.horizontalAdvance(c);
+
+                        if(placeofdots==-1 && currentPlace >=400) { currentPlace-=metrics.horizontalAdvance(c);placeofdots=firstreturn; xofdots = currentPlace;}
+
                         if(currentPlace >=width1)break;//第一行结束
-                            continue;
                         }
+                    if(firstreturn ==str.length()) {break;}//不变
                     //在[firstreturn]前换行。
                         int secondbegin = str.length();//[从secondbegin]开始显示
-                        bool tworowok=true;
-                        int savespacefordots = -1;//UNSET;
-                        int savedotswidth = width1 - metrics.horizontalAdvance("...  ");
-                        currentPlace=0;
+                        int remainingwidth = width1 - xofdots -metrics.horizontalAdvance("...  ");
+
                         for(;secondbegin>firstreturn; --secondbegin)
                         {
                             const QChar &c = str[secondbegin-1];
-                            currentPlace +=metrics.horizontalAdvance(c);
-                            if(savespacefordots==-1)
-                                if(currentPlace>=savedotswidth)
-                               {savespacefordots = secondbegin+1; tworowok = false; break;}
+                            remainingwidth -=metrics.horizontalAdvance(c);
+                            if(remainingwidth <0) break;
                         }
-                        if(tworowok) theseed = str.insert(firstreturn,"\n    ");
-                        else theseed =str.left(firstreturn)+'\n'+" ... "+str.right(str.length()-savespacefordots);
+                        theseed =str.left(placeofdots)+" ... "+str.right(str.length()-secondbegin);
 
                     // 返回处理后的文本
                       }//switch
@@ -409,7 +408,7 @@ public:
         for(int i=0;i<20;i++){textstr+=QN(result.places[i])+' '; }
         textstr+='\n';
         for(int i=0;i<20;i++){textstr+=result.pieces[i].to_string()+' '; if(i==9) textstr+='\n';}
-        NEW_LABEL(text,50,6,550,130,textstr,12,dialog);
+        NEW_LABEL(text,50,12,550,100,textstr,12,dialog);
 
         text->setFont(f);
         text->setTextInteractionFlags(Qt::TextSelectableByMouse);
@@ -418,7 +417,7 @@ public:
         Grid g;
         for(int i=0;i<20;i++) g.pieces[result.places[i]]=result.pieces[i];
         QPixmap map;g.Make_image(map,GT::STANDARD_OPEN);
-        NEW_LABEL_IMAGE(grid,101,140,448,448,map,dialog);
+        NEW_LABEL_IMAGE(grid,101,120,448,448,map,dialog);
         dialog->show();
         dialog->connect(dialog,&QDialog::rejected,dialog,&QDialog::deleteLater);
 
@@ -428,14 +427,14 @@ public:
         QString command_small=useseed?"comb":"card";
 
         QPushButton *CopySmall;
-        NEW_BUTTON(CopySmall,245,600,160,40, "复制"+command_small ,20,dialog);
+        NEW_BUTTON(CopySmall,245,590,160,40, "复制"+command_small ,20,dialog);
 
         QPushButton *CopyBig;
 
-        NEW_BUTTON(CopyBig,55,600,160,40, "复制"+command_big ,20,dialog);
+        NEW_BUTTON(CopyBig,55,590,160,40, "复制"+command_big ,20,dialog);
 
         QPushButton *Close;
-        NEW_BUTTON(Close,435,600,160,40,"返回",20,dialog);
+        NEW_BUTTON(Close,435,590,160,40,"返回",20,dialog);
 
 
         CopySmall->connect(CopySmall,&QPushButton::clicked,dialog,[=](){

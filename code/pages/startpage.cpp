@@ -154,10 +154,10 @@ void StartPage::load()
             });
         connect(myicon, &QPushButton::clicked, this, [=]() {show_icons(1); });
 
-        NEW_BUTTON_MW(settings, 650, 500, 300, 70, "窗口设置", 30);
+        NEW_BUTTON_MW(settings, 650, 600, 300, 70, "窗口设置", 30);
         connect(settings, &QPushButton::clicked, MW, [=]() {MW->load_page(SETTINGSPAGE);/*quit_game()*/; });
 
-        NEW_BUTTON_MW(numcomb, 650, 600, 300,70,"数字蜂巢", 30);
+        NEW_BUTTON_MW(numcomb, 650, 500, 300,70,"数字蜂巢", 30);
         QAbstractButton::connect(numcomb, &QPushButton::clicked, MW, [=]() {
             QString seedstr="bored";
             MW->G->remake(GT::GAMETYPE::NUMCOMBGAME);
