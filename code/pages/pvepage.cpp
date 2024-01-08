@@ -25,7 +25,7 @@ void PvePage::load()
         //NEW_LABEL_ALIGN_MW(hero_stats2,350,70,300,50,G->player()->name+": "+Player_Initial,12,Left);
         NEW_LABEL_ALIGN_MW(monster_extra, 1100, 400, 450, 580, "", 30, HCenter);
         //NEW_LABEL_ALIGN_MW(turninfo2,250,50,200,50,"第0回合",20,Left);
-        NEW_LABEL_ALIGN_MW(turninfo, 1200, 250, 300, 50, "第1/35回合", 40, HCenter);
+        NEW_LABEL_ALIGN_MW(turninfo, 1200, 250, 300, 50, "第1/"+QN(G->monster()->max_turn())+"回合", 40, HCenter);
         NEW_BUTTON_MW(to_home, 20, 20, 60, 60, "退出", 20);
 
         MainWindow::connect(to_home, &QPushButton::clicked, this, [=]() {G->remake(); MW->load_page(STARTPAGE); });//强制退出

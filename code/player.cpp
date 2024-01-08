@@ -32,3 +32,4 @@ void Player::Locate_piece(Piece p, int place)
 
     //后续的boss的反应都在这里
 }
+QString Player::stat_string(){return G->player_stat_string(id);}

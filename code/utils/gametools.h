@@ -20,7 +20,7 @@
 namespace gametools
 {
 
-double const GRID_X[46] = { 5,1,1,1, 2,2,2,2, 3,3,3,3,3, 4,4,4,4, 5,5,5,
+int const GRID_X[46] = { 5,1,1,1, 2,2,2,2, 3,3,3,3,3, 4,4,4,4, 5,5,5,
                            0,0,0,0,0,0, 1,1,1,1, 2,2,3,3,4,4, 5,5,5,5, 6,6,6,6,6,6 };
 int const GRID_Y[46] = { 1,5,7,9, 4,6,8,10, 3,5,7,9,11, 4,6,8,10, 5,7,9,
                         2,4,6,8,10,12, 1,3,11,13, 2,12, 1,13, 2,12, 1,3,11,13, 2,4,6,8,10,12 };
@@ -45,6 +45,7 @@ int const place_ids[15][7] = {
     { 0,29, 0,33, 0,39, 0},//13
     { 0, 0, 0, 0, 0, 0, 0},//14
 };//给开放世界巢做准备→ →
+#define VALUE_OF_PLACE_ZERO 36
 
 enum SCORING_RULE {
     Scoring_Normal = 0,
@@ -105,5 +106,8 @@ enum GRIDTYPE {
     OPEN_WORLD_GRID=2,
     STANDARD_OPEN=3,
 };
+
+
+
 }
 #endif // GAMETOOLS_H

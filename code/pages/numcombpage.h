@@ -45,7 +45,7 @@ public:
         {
             G->player(i)->grid.Make_image(gridimage[i],GT::NUM_GRID);
             grid_background[i]->setPixmap(gridimage[i].SCALED(grid_background[i]->width(), grid_background[i]->height()));
-            this->Update_Player_Stats("当前得分:"+QN(G->player()->point()),i);
+            this->Update_Player_Stats(G->player()->stat_string(),i);
         }
     }
     void Make_Summary();

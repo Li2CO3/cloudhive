@@ -25,7 +25,10 @@ public:
     //    connect(this,&Game::signal_before{Before_Turn();});
     }
 
+    QString player_stat_string (int playerid) override{assert(playerid==0); return "当前得分:"+QN(player(playerid)->point());}
+
     void Start(QString seed) override;
+    void setrandom(QString seed) override;
     void InitializePool();
     static void Setup_Numcomb_Pool(CardPool *pool, Random* random);
     void Before_Turn() override;

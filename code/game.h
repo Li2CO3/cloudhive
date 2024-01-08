@@ -73,6 +73,8 @@ public:
     virtual void setPoolLink(CardPool *pol,unsigned int id=0){Q_UNUSED(pol) Q_UNUSED(id)}
     virtual void setPlayerLink(Player *ply, unsigned int id=0){Q_UNUSED(ply) Q_UNUSED(id)}
     virtual void setMonster(Monster *monst, unsigned int id=0){Q_UNUSED(monst) Q_UNUSED(id)}
+
+    virtual QString player_stat_string(int playerid){Q_UNUSED(playerid) return "";}
 //    virtual Player* player(int id=0) =NULL;
 //    virtual Monster *monster(int id=0) =NULL;
 

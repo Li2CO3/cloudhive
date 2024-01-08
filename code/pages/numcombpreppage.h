@@ -55,7 +55,7 @@ public:
 
                       QAbstractButton::connect(HUIMIE, &QPushButton::clicked, MW,[=](){
                           QDialog *dialog =new QDialog(MW);
-                          Comb_Assembler::Make_Assemble_Page("seed "+seed->text().simplified(),dialog);
+                          Comb_Assembler::Make_Assemble_Page(true,seed->text().simplified(),dialog);
                           QObject::connect(dialog,&QDialog::rejected, dialog,&QDialog::close);
                       });
                       QAbstractButton::connect(BOOM, &QPushButton::clicked, MW,[=](){

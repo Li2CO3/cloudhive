@@ -25,6 +25,12 @@ void NumcombGame::Start(QString seed)
     this->status=BUSY;
     Before_Turn();
 }
+void NumcombGame::setrandom(QString seed)
+{
+
+    RandomMaker::make_random(random,GT::MT19937RANDOM,seed);
+}
+
 void NumcombGame::InitializePool()//包括排序，跳过非赖子。注意：当前未考虑1赖子的情况。此时最后一次抽取swap会不一样。此时总默认跳过非赖子20.
 {
     Setup_Numcomb_Pool(pool(), random);

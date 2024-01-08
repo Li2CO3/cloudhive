@@ -80,10 +80,10 @@ public:
         QAbstractButton::connect(BOOM,&QPushButton::clicked,MW,[=](){
 
             for(int i=0;i<20;i++) if(!chosen[i])return;
-            QString str="card ";
+            QString str="";
             for(int i=0;i<20;i++) str=str+piecestr[i]+' ';
             QDialog *dialog = new QDialog(MW);
-            Comb_Assembler::Make_Assemble_Page(str,dialog);
+            Comb_Assembler::Make_Assemble_Page(false,str,dialog);
         });
         QAbstractButton::connect(back,&QPushButton::clicked,MW,[=](){MW->load_page(NUMCOMBPREPPAGE);});
 

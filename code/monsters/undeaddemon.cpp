@@ -76,7 +76,7 @@ void Undead_Demon::Monster_After_Combat() {
     Monster::Monster_After_Combat();
     if (this->health <= 0 && rescount < 3) {
         emit G->Alert_monster(name + "【不死圣泉】发动，血量增加" + QN(initialhealth) + "，战力减少为" + QN(this->point / 2) + "点");
-        emit G->Alert_monster("此后" + name + "每回合将增长" + QN(3 + 10 * rescount) + "!");
+        emit G->Alert_monster("此后" + name + "每回合将增长" + QN(3 + 10 * rescount + 10) + "!");
         this->health += this->initialhealth;
         this->addPoint(-(point - (point / 2)));
         ++rescount;

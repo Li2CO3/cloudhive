@@ -12,48 +12,47 @@
 #include "qlabel.h"
 #include "random.hpp"
 #include <QDialog>
+#include <QPushButton>
+#include <QClipboard>
 struct Assembling_result
 {
     Piece pieces[20];
     int places[20];
     int point;
+    bool useseed;
+
 };
 struct PieceSet
 {
-    bool isvalid;
+    bool isvalid=true;
+    bool useseed;
     Piece pieces[20];
     PieceSet(){isvalid=false;}
-    PieceSet(const Piece * const p){isvalid=true;for(int i=0;i<20;i++) pieces[i]=p[i];}
+    PieceSet(const Piece * const p){for(int i=0;i<20;i++) pieces[i]=p[i]; useseed=false;}
     PieceSet(CardPool *pool_shuffled)
         {for(int i=0;i<20;i++)pieces[i]=pool_shuffled->pieces[i];}
-    PieceSet(QString string_of_seed_or_cards)//第一个空格前是seed或card可用。默认为seed。
+    PieceSet(bool u,QString string_of_seed_or_cards)//第一个空格前是seed或card可用。默认为seed。
         {
         QStringList lst = string_of_seed_or_cards.split(' ');
 
-            if(lst.length()==0){isvalid=false;return;}
-            if(lst[0]=="seed")
+            if(u)
                 {
-                    if(lst.length()==1){isvalid=false;return;}
-
+                useseed=true;
+                if(string_of_seed_or_cards=="")
+                    {*this = PieceSet();return;}
                 CardPool pool(GT::POOL_Normal);
-                mt19937Random random(lst[1]);
+                mt19937Random random(lst[0]);
 
                 NumcombGame::Setup_Numcomb_Pool(&pool,&random);
                 *this=PieceSet(&pool);
                 }
-            else if(lst[0]=="card")
-            {
-                if(lst.length()<21){isvalid=false;return;}
-
-                if(lst.length()>=21) for(int i=0;i<20;i++) pieces[i]=lst[i+1];else isvalid=false;
-            }
             else
             {
-                    CardPool pool(GT::POOL_Normal);
-                    mt19937Random random(lst[0]);
+                useseed=false;
+                if(lst.length()<20){*this=PieceSet();return;}
 
-                    NumcombGame::Setup_Numcomb_Pool(&pool,&random);
-                    *this=PieceSet(&pool);
+                for(int i=0;i<20;i++) pieces[i]=lst[i];
+
             }
         }
 
@@ -74,12 +73,12 @@ public:
 
     */
 
-    static Assembling_result assemble(QString info)
+     static Assembling_result assemble(bool useseed, QString info)
     {
 
-            return assemble(PieceSet(info));
+            return assemble(PieceSet(useseed, info), info);
         }
-    static Assembling_result assemble(PieceSet p)
+    static Assembling_result assemble(PieceSet p, QString info )
         {
       /*      Assembling_result rr;resultpl=rr;
             Comb_Assembler ca(p,rr);
@@ -117,6 +116,7 @@ public:
                                       "ooooo"};
 */
         //由于有一些内容是涉及0号块选择的，就统一放这里了。反正const的东西乘以20也不是大问题(嗯？？？已经把重复块只看一遍了。别的先不管了
+        //通过对称性可以减少计算，但目前未制作。bool is_symmetry_kept [32]={1, 1,0, 1,0, 1, 1, 1,1,0,0, 1,0,1, 1,0, 1,0,1, 1,1,0,0, 1, 1, 1,0, 1,0, 1};
         int const linescount[32]={0,3,3,4,4,5,6,7,7,7,7,8,8,8,9,9,10,10,11,11,11,12,12,12,12,13,14,15,15,16,16,19};//遍历单数
         int const startbycount[20]={0,0,0,2,4,5,6,10,13,15,17,20,24,25,26,28,30,30,30,31};//遍历单数结构时从第几个往回跑
         int const larger_sameline[13]={0,5,6,4,8,9,7,10,12,11,0,0,0};//同方向的更大的数
@@ -343,31 +343,74 @@ public:
                 }
         return x==19;
     }
-    static void Make_Assemble_Page(QString info, QDialog *dialog)
+    static void Make_Assemble_Page(bool useseed, QString info, QDialog *dialog)
     {
 
-        auto result=Comb_Assembler::assemble(info);
+        auto result=Comb_Assembler::assemble(useseed, info);
 
-        dialog->setFixedSize(600,600);
+        dialog->setFixedSize(650,650);
         QLabel *text;
         QStringList lst = info.simplified().split(' ');
         if(lst.length()==0)return;
 
         QString title="拼装毁灭者 ";
         QString theseed="\n种子:";
-        if(lst[0]=="seed" ){if(lst.length()==1)return; theseed+=lst[1];title+="种子: "+lst[1];}
-        else if(lst[0]!="card"){theseed+=lst[0]; title+="种子: "+lst[0];}
-        else {theseed="";title +="自选";}
+        QFont f("consolas");
+        f.setPixelSize(16); //label将要使用的字体
+        if(useseed){theseed+=lst[0]; title+="种子: "+lst[0];
+            QString str=theseed;
+                switch(1)
+                    {default:
+                        case 1:
+                    if ( str.isEmpty()) {
+                        break;
+                    }
+                    // 创建一个QFontMetrics对象
+                    QFontMetrics metrics(f);
+                    // 初始化当前行的填充位置
+                    int currentPlace = 0;
+                    // 初始化结果字符串
+                    QString result;
+                    // 遍历每个字符
+                    int firstreturn = 0;
+                    int const width1=550;
+                    for (;firstreturn < str.length(); ++firstreturn) {
+                        // 获取当前字符
+                        const QChar &c = str[firstreturn];
+                        // 计算当前字符的宽度
+                        currentPlace +=metrics.horizontalAdvance(c);
+                        if(currentPlace >=width1)break;//第一行结束
+                            continue;
+                        }
+                    //在[firstreturn]前换行。
+                        int secondbegin = str.length();//[从secondbegin]开始显示
+                        bool tworowok=true;
+                        int savespacefordots = -1;//UNSET;
+                        int savedotswidth = width1 - metrics.horizontalAdvance("...  ");
+                        currentPlace=0;
+                        for(;secondbegin>firstreturn; --secondbegin)
+                        {
+                            const QChar &c = str[secondbegin-1];
+                            currentPlace +=metrics.horizontalAdvance(c);
+                            if(savespacefordots==-1)
+                                if(currentPlace>=savedotswidth)
+                               {savespacefordots = secondbegin+1; tworowok = false; break;}
+                        }
+                        if(tworowok) theseed = str.insert(firstreturn,"\n    ");
+                        else theseed =str.left(firstreturn)+'\n'+" ... "+str.right(str.length()-savespacefordots);
 
+                    // 返回处理后的文本
+                      }//switch
+            }//useseed
+        else {theseed="";title +="自选";}
         dialog->setWindowTitle(title);
 
         QString textstr = QN(result.point)+' '+theseed+'\n';
         for(int i=0;i<20;i++){textstr+=QN(result.places[i])+' '; }
         textstr+='\n';
         for(int i=0;i<20;i++){textstr+=result.pieces[i].to_string()+' '; if(i==9) textstr+='\n';}
-        NEW_LABEL(text,25,12,550,100,textstr,12,dialog);
-        QFont f("consolas");
-        f.setPixelSize(16);
+        NEW_LABEL(text,50,12,550,100,textstr,12,dialog);
+
         text->setFont(f);
         text->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
@@ -375,11 +418,120 @@ public:
         Grid g;
         for(int i=0;i<20;i++) g.pieces[result.places[i]]=result.pieces[i];
         QPixmap map;g.Make_image(map,GT::STANDARD_OPEN);
-        NEW_LABEL_IMAGE(grid,76,120,448,448,map,dialog);
+        NEW_LABEL_IMAGE(grid,101,120,448,448,map,dialog);
         dialog->show();
         dialog->connect(dialog,&QDialog::rejected,dialog,&QDialog::deleteLater);
 
+
+
+        QString command_big=useseed?"board":"boardc";
+        QString command_small=useseed?"comb":"card";
+
+        QPushButton *CopySmall;
+        NEW_BUTTON(CopySmall,245,590,160,40, "复制"+command_small ,20,dialog);
+
+        QPushButton *CopyBig;
+
+        NEW_BUTTON(CopyBig,55,590,160,40, "复制"+command_big ,20,dialog);
+
+        QPushButton *Close;
+        NEW_BUTTON(Close,435,590,160,40,"返回",20,dialog);
+
+
+        CopySmall->connect(CopySmall,&QPushButton::clicked,dialog,[=](){
+            QApplication::clipboard()->setText( useseed? Make_Comb_Text(info,result) : Make_Card_Text(result));
+            CopySmall->setText(command_small+"已复制!");
+
+            CopyBig->setText("复制"+command_big);
+
+        });
+        CopyBig->connect(CopyBig,&QPushButton::clicked,dialog,[=](){
+                        QApplication::clipboard()->setText(  useseed ? Make_Board_Text(info,result) : Make_BoardC_Text(result)  );
+            CopySmall->setText("复制"+command_small);
+            CopyBig->setText(command_big+"已复制!");
+        });
+        Close->connect(Close, &QPushButton::clicked, dialog, [=](){dialog->close();});
 }
+
+    //template <typename W>//
+   /* QString inline show_string_in_rows(QLabel *textwidget, int nlines, QString text)
+    {QLabel *label = textwidget;
+        QFont font = label->font(); // 获取当前字体
+        QFontMetrics metrics(font); // 获取字体度量
+        QString textToAppend = "Thisisalongsentencethatwillbebrokenintolineslineslinesandlinesandwhateverandfloccinaucinihilipilification.";
+        int currentWidth = 0;
+        for (int i = 0; i < textToAppend.length(); ++i) {
+                             if (i > 0 && currentWidth + metrics.horizontalAdvance(textToAppend[i]) > label->width()) {
+                    // 如果当前字符加上之前的字符宽度超过标签宽度，添加换行符
+                    label->setText(label->text() + "\n" + textToAppend[i]);
+                    currentWidth = metrics.horizontalAdvance(textToAppend[i]);
+                             } else {
+                    // 否则，直接添加字符
+                    label->setText(label->text() + textToAppend[i]);
+                    currentWidth += metrics.horizontalAdvance(textToAppend[i]);
+                             }
+        }
+        label->adjustSize();
+    }
+
+*/
+///Paste: comb card board boardc
+private:
+static QString seed_text(QString seed){return "seed: "+seed;};
+static QString place_text(Assembling_result r)
+{QString str="score: "+QN(r.point)+'\n';
+        for(int i=0;i<20;i++)
+                str=str+QN(r.places[i])+' ';
+        return str;}
+
+static QString card_text(Assembling_result r)
+{QString str="cards:\n";
+        for(int i=0;i<20;i++)
+                str=str+QString(r.pieces[i])+' '+(i%5==4?"\n":"");
+        return str;}
+
+static QString board_text(Assembling_result r)
+{
+        QString str, ind[11][5];
+        for(int y=0;y<11;y++)for(int x=0;x<5;x++)
+                {ind[y][x]="----";}
+        for(int piecetime=0;piecetime<=19;piecetime++)
+        {
+                int pos=r.places[piecetime];
+                ind[GT::GRID_Y[pos]-1][GT::GRID_X[pos]-1]=
+                    r.pieces[piecetime].to_string()+' ';
+        }
+        for(int y=0;y<11;y++)for(int x=0;x<5;x++)
+                {
+                    str+=ind[y][x];
+                    if(x!=4) str+='|';
+                    if(x==4 && y!=11-1) str+='\n';
+                }
+        return str;
+
+}
+public:
+
+static QString Make_Comb_Text(QString seed, Assembling_result result)
+{
+        return seed_text(seed)+'\n'+place_text(result);
+
+}
+static QString Make_Board_Text(QString seed, Assembling_result result)
+{
+        return seed_text(seed)+'\n'+place_text(result)+'\n'+board_text(result);
+}
+static QString Make_BoardC_Text(Assembling_result result)
+{
+        return place_text(result)+'\n'+card_text(result)+board_text(result);
+}
+static QString Make_Card_Text(Assembling_result result)
+{
+        return place_text(result)+'\n'+card_text(result);
+}
+///end comb board card boardc
+
+
 
 };
 #endif

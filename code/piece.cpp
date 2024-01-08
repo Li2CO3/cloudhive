@@ -119,5 +119,6 @@ QString Piece::to_string() const
     if (isEmptyPiece()) {
         return "";
     }
-    else return convert(x348()) + convert(x159()) + convert(x267());
+    QString str=convert(x348()) + convert(x159()) + convert(x267());
+    return ((str=="XXX") ? "any": str);
 }

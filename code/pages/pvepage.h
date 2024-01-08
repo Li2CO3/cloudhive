@@ -83,7 +83,7 @@ public slots:
     void Update_Battle_Log(QString s) { monster_extra->setText(monster_extra->text() + '\n' + s); }
     void Update_Turn_Piece() { Clear_Turn_Piece(); Set_Turn_Piece(); };
     void Update_Turns() {
-        turninfo->setText("第" + QN(G->turn) + "/35回合"); //turninfo2->setText("第"+QN(G->turn)+"回合");
+        turninfo->setText("第" + QN(G->turn) + "/"+QN(G->monster()->max_turn())+"回合"); //turninfo2->setText("第"+QN(G->turn)+"回合");
         cache_op = "";
     }
     void Update_Monster_Stats (QString str)//(int point, int health, int armor)

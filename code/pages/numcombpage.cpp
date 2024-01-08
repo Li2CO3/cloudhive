@@ -89,7 +89,7 @@ void NumcombPage::Make_Summary()
 
     operations->setFont(f);
     resulttext += "\n本局操作:\n";
-    for (int i = 1; i <= G->monster()->max_turn(); i++)
+    for (int i = 1; i <= 20; i++)
     {
         if (i <= G->turn)
         {
@@ -99,10 +99,10 @@ void NumcombPage::Make_Summary()
         if (i % 10 == 0)resulttext += '\n';
     }
 
-    resulttext += "\n本局发牌:\n";
+    resulttext += "\n\n本局发牌:\n";
 
     QString pieces = "";
-    for (int i = 1; i <= G->monster()->max_turn(); i++)
+    for (int i = 1; i <= 20; i++)
     {
         QLabel* piece = new QLabel(dialog);
         Piece p;
@@ -129,9 +129,10 @@ void NumcombPage::Make_Summary()
     operations->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
     dialog->show();
+    /*
     QPushButton* view_details = new QPushButton(dialog);
     view_details->setGeometry(180, 550, 100, 40);
-    view_details->setText("查看详情");
+    view_details->setText("查看详情");*/
     //view_details->show();
     //view_details->connect(view_details,&QPushButton::clicked, MW,[=](){Make_Detailed_Recap();});
     QPushButton* restart = new QPushButton(dialog);
@@ -158,7 +159,7 @@ void NumcombPage::Make_Summary()
     calc->connect(calc, &QPushButton::clicked, MW, [=]()
                   {
         QDialog * dialog = new QDialog(MW);
-        Comb_Assembler::Make_Assemble_Page("seed "+G->random->getseed(), dialog);
+        Comb_Assembler::Make_Assemble_Page(true,G->random->getseed(), dialog);
     });
 
     /// 拼装毁灭者！！！

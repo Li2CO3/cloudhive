@@ -2,6 +2,7 @@
 #define PVE_H
 
 #include "game.h"
+#include "player.h"//temp
 class PveGame : public Game
 {
       Q_OBJECT
@@ -11,6 +12,8 @@ public:
     CardPool * pool(int id=0) override{ Q_UNUSED(id) return pol;}
     Player * player(int id=0) override{ Q_UNUSED(id) return ply;}
     Monster * monster(int id=0) override{ Q_UNUSED(id) return monst;}
+
+    QString player_stat_string(int playerid) override{assert(playerid==0); return QN(player(playerid)->point())+'/'+QN(player(playerid)->health);}//temp
 
     void setPoolLink(CardPool *p, unsigned int id=0) override{assert(id==0); pol=p;}
     void setPlayerLink(Player *p, unsigned int id=0) override{assert(id==0);ply=p;}
