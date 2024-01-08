@@ -15,7 +15,7 @@
 //...|#29|...|#33|...|#39|...
 
 
-
+#include <QString>
 #define GT gametools
 namespace gametools
 {
@@ -108,6 +108,7 @@ enum GRIDTYPE {
 };
 
 
+QString toFileName(QString str);
 
 }
 #endif // GAMETOOLS_H

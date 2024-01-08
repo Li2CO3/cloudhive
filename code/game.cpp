@@ -7,6 +7,7 @@
 #include "modes/pve.h"
 #include "modes/numcomb.h"
 #include "utils/random.hpp"
+
 Game::Game() {
     connect(this, SIGNAL(signal_new_operation(QString)), this, SLOT(recv_operation(QString)));
 
@@ -102,4 +103,28 @@ void Game::setrandom(QString seed)
     {type=GT::MT19937RANDOM;}
 
     RandomMaker::make_random(random,type,seed);
+}
+
+QString GT::toFileName(QString str)
+{
+    QString result = "";
+    QChar check[10]={'\\','/','|','<','>','*',':','?','\"','`'};
+    QString out[10]={"`反","`斜","`竖","`小","`大","`星","`冒","`问","`引","``"} ;
+    for(int i=0;i<str.length();i++)
+    {
+        QChar c=str[i];
+        // \/|<>*:?"
+
+        int k=0;
+        for(;k<10;k++)
+            if(c==check[k])
+            {result.append(out[k]);
+                break;}
+        if(k==10)
+            result.append(c);
+    }
+    if(result.length()>50) return result.left(20)+"...[文件名过长]";
+    return result;
+
+
 }

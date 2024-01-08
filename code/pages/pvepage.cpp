@@ -180,7 +180,7 @@ void Monster::Make_Summary(QDialog* dialog)
     QString str;
     for(int i=1;;i++)
     {
-        str="res/record/records/"+(G->monster()->name)+"_"+(G->random->getseed())+"_"+QN(i)+".txt";
+    str="res/record/records/"+(G->monster()->name)+"_"+GT::toFileName(G->random->getseed())+"_"+QN(i)+".txt";
         if(!QFile::exists(str))break;
     }
     QFile record_file(str);

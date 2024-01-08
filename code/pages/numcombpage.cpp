@@ -179,7 +179,7 @@ void NumcombPage::Make_Summary()
     int trialtimes=1;
     for(;;trialtimes++)
     {
-        str="res/record/records/standard/"+(G->random->getseed())+"_"+QN(trialtimes)+".txt";
+    str="res/record/records/standard/"+(GT::toFileName(G->random->getseed()))+"_"+QN(trialtimes)+".txt";
         if(!QFile::exists(str))break;
     }
     QFile record_file(str);
