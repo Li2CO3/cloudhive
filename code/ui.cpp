@@ -1,5 +1,7 @@
 ﻿#include "ui.h"
 #include "pages/assemblecraftpage.h"
+#include "pages/planebattlepage.h"
+#include "pages/planebattlepreppage.h"
 #include "pages/pvepage.h"
 #include "pages/pvepreppage.h"
 #include "pages/settingspage.h"
@@ -40,6 +42,14 @@ void MainWindow::load_page(PageType type)
 
     case ASSEMBLECRAFTPAGE:
     {new AssembleCraftPage(this);}
+    break;
+
+    case PLANEBATTLEPREPPAGE:
+    {new PlaneBattlePrepPage(this);}
+    break;
+
+    case PLANEBATTLEPAGE:
+    {new PlaneBattlePage(this);}
     break;
     default:throw 0;
     }

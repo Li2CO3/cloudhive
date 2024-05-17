@@ -127,7 +127,23 @@ void StartPage::load()
         NEW_BUTTON_MW(newgame, 650, 300, 300, 150, "开始游戏", 30);
         connect(newgame, &QPushButton::clicked, MW, [=]() {G->remake(GT::PVEGAME);MW->load_page(PVEPREPPAGE); });//qDebug()<<"xxxx\n";/*new_game()*/;});
 
-        NEW_BUTTON_MW(quitgame, 650, 700, 300, 70, "退出游戏", 30);
+        NEW_BUTTON_MW(planebattle, 650,600,300,70,"大海战",30);
+        QAbstractButton::connect(planebattle,&QPushButton::clicked, MW,[=](){MW->load_page(PLANEBATTLEPREPPAGE);});
+
+            NEW_BUTTON_MW(settings, 650, 700, 300, 70, "窗口设置", 30);
+        connect(settings, &QPushButton::clicked, MW, [=]() {MW->load_page(SETTINGSPAGE);/*quit_game()*/; });
+
+        NEW_BUTTON_MW(numcomb, 650, 500, 300,70,"数字蜂巢", 30);
+        QAbstractButton::connect(numcomb, &QPushButton::clicked, MW, [=]() {
+            //QString seedstr="bored";
+            MW->G->remake(GT::GAMETYPE::NUMCOMBGAME);
+            //if (seed->text().trimmed() == "")seedstr=(QN(time(NULL))); else seedstr=(seed->text().simplified());
+            //G->player()->name = name->text();
+            //G->load_challenge(G->);//Game::SNOWMAN/*TWIN_HEAD*/);//设置冒险在这里改
+            MW->load_page(NUMCOMBPREPPAGE);
+            });
+
+        NEW_BUTTON_MW(quitgame, 650, 800, 300, 70, "退出游戏", 30);
         connect(quitgame, &QPushButton::clicked, MW, [=]() {qApp->quit();/*quit_game()*/; });
 
         connect(myname, &QPushButton::clicked, this, [=]() {
@@ -154,18 +170,9 @@ void StartPage::load()
             });
         connect(myicon, &QPushButton::clicked, this, [=]() {show_icons(1); });
 
-        NEW_BUTTON_MW(settings, 650, 600, 300, 70, "窗口设置", 30);
-        connect(settings, &QPushButton::clicked, MW, [=]() {MW->load_page(SETTINGSPAGE);/*quit_game()*/; });
 
-        NEW_BUTTON_MW(numcomb, 650, 500, 300,70,"数字蜂巢", 30);
-        QAbstractButton::connect(numcomb, &QPushButton::clicked, MW, [=]() {
-            QString seedstr="bored";
-            MW->G->remake(GT::GAMETYPE::NUMCOMBGAME);
-            //if (seed->text().trimmed() == "")seedstr=(QN(time(NULL))); else seedstr=(seed->text().simplified());
-            //G->player()->name = name->text();
-            //G->load_challenge(G->);//Game::SNOWMAN/*TWIN_HEAD*/);//设置冒险在这里改
-            MW->load_page(NUMCOMBPREPPAGE);
-        });
+
+
 
 
 }

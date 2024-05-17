@@ -15,6 +15,7 @@
 //...|#29|...|#33|...|#39|...
 
 
+#include "stdafx.h"
 #include <QString>
 #define GT gametools
 namespace gametools
@@ -109,6 +110,59 @@ enum GRIDTYPE {
 
 
 QString toFileName(QString str);
+void delay(int timems);
 
 }
+#define PT planetools
+namespace planetools
+{
+const int planeposition[5][9][2] = {{},   // 1上 2下 3左 4右 00是要害.
+    {{-2,1}, {-1,1}, {0,1}, {1,1}, {2,1}, {0,2}, {-1,3}, {0,3}, {1,3}},
+    {{-2,-1}, {-1,-1}, {0,-1}, {1,-1}, {2,-1}, {0,-2}, {-1,-3}, {0,-3}, {1,-3}},
+    {{1,2}, {1,1}, {1,0}, {1,-1}, {1,-2}, {2,0}, {3,1}, {3,0}, {3,-1}},
+    {{-1,2}, {-1,1}, {-1,0}, {-1,-1}, {-1,-2}, {-2,0}, {-3,1}, {-3,0}, {-3,-1}}
+};
+const int RDCenterposition[8][2]={{-2,0},{-1,0},{1,0},{2,0},{0,-2},{0,-1},{0,1},{0,2}};
+
+
+
+enum PlaneGame_Boss_id{PlaneBoss_FIRE=1, PlaneBoss_NUKE=2};
+enum PlaneGame_Overlap_rule_type{OVERLAP_NO=0, OVERLAP_YES=1};
+enum PlaneGame_Critical_rule_type{CRITICAL_SHOW=0, CRITICAL_NO_SHOW=1, CRITICAL_SHOW_FIRST=2};
+enum Cell_Plane_type{CELL_NO=0, CELL_YES=1, CELL_CRITICAL=2, CELL_RDCENTER=3};
+enum Cell_Strike_type{STRIKE_NO=0, STRIKE_YES=1, STRIKE_INSPECT=2};
+enum Cell_Mark_type{MARK_NO=0, MARK_POSITIVE=1, MARK_NEGATIVE=2, MARK_MULT=3};
+enum Plane_type{PlaneType_Normal=1, PlaneType_RDCenter =2};
+enum Plane_direction{PlaneDir_U=1, PlaneDir_D=2, PlaneDir_L=3, PlaneDir_R=4, PlaneDir_NO=0};
+
+auto const Left=PlaneDir_L;
+auto const Right=PlaneDir_R;
+auto const Up=PlaneDir_U;
+auto const Down=PlaneDir_D;
+
+auto const NoPlane = CELL_NO;
+auto const YesPlane = CELL_YES;
+auto const AhhPlane =CELL_CRITICAL;
+auto const RDCPlane = CELL_RDCENTER;
+enum Game_Status{Not_Started=-1,Put_Planes=1, Combat_Planes =2, BUSY=-1,End_Planes =0 };
+
+QString coordText(int X, int Y);
+
+class Plane_info
+{
+public:
+    PT::Plane_type type;
+    PT::Plane_direction direction;
+    int centerx;
+    int centery;
+    Plane_info(){type=PT::PlaneType_Normal; direction=PT::PlaneDir_NO; centerx=-1; centery=-1;}
+    Plane_info(PT::Plane_type t, PT::Plane_direction dir, int cx, int cy){type=t; direction=dir;centerx=cx; centery=cy;}
+};
+Cell_Plane_type plane_occupies(Plane_info i, int x, int y);
+QString hint_text(QString hint1, int hint2, int hint3=0,int hint4=0);
+
+double missile_bonus_mult(int i);
+double checkpoint_bonus_mult(int i);
+
+};
 #endif // GAMETOOLS_H

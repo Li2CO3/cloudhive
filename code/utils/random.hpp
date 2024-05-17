@@ -15,9 +15,9 @@ protected:
 public:
     Random(){}
     virtual ~Random(){}
-    virtual void setseed(QString newseed){}
+    virtual void setseed(QString newseed) =0;
     QString getseed(){return seed;}
-    virtual int randint(int min, int max){return min+max+114514;}
+    virtual int randint(int min, int max) =0;
 };
 
 

@@ -100,8 +100,8 @@ Game * GameMaker::newGame(GT::GAMETYPE type)
     case GT::NUMCOMBGAME:
         return new NumcombGame();
     default:
-        return new Game();
-        //throw 0;
+        //return new Game();
+        throw 0;
     }
 
 

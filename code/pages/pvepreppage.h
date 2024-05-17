@@ -93,15 +93,15 @@ public:
                     if(MW->status==MainWindow::UISTATUS::NOT_WAITING)return;
                     MW->status=MainWindow::UISTATUS::NOT_WAITING;
             G->load_challenge(monster_ids[i]);
-            for (int k = 1; k <= nMonster; k++)
-            {
-                e[k]->setStyleSheet(k == i ? "background-color:rgb(155,155,255)" : "");
-            }
+
+
             monster_icon->setPixmap(QPixmap(G->monster()->icon).scaled(monster_icon->size()));
             monster_intro->setText(G->monster()->description());
 
             MW->status=MainWindow::UISTATUS::WAITING;
                 });
+        KEY_SELECT(e,1,nMonster);
+
         {
             int current_monster_button=nMonster;
             for(;current_monster_button>0;current_monster_button--)

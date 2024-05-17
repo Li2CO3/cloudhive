@@ -29,10 +29,9 @@ class Player;
 
 class Game :public QObject//QThread//游戏进行在另一个线程
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-
     enum GAMESTAGE { NOT_STARTED = 0, WAIT_TURN = -1, FINISHED = 2, WAIT_CHOOSE_TURN = -3, BUSY = 100, WAIT_SNOWMAN_DISCARD = -4004, };
 
     enum GAME_RESULT { PLAYER_DEAD = 0, TURNS_ENOUGH = 1 };
@@ -81,7 +80,7 @@ public:
 	Record record;
     virtual void sync_record(){}
 
-    virtual bool Check_Operation(int ply, QString cache, QString op){ Q_UNUSED(ply) throw 0;}
+    virtual bool Check_Operation(int ply, QString cache, QString op) =0;
 
 
     virtual void load_challenge(GT::MONSTER_ID monst){Q_UNUSED(monst) }
@@ -98,7 +97,7 @@ public:
 	//void showinfo();
     //int Prompt_select_monster();
     virtual void make_basic_connections(){}
-    virtual void Start(QString seed){}//todo:参数
+    virtual void Start(QString seed) =0;//todo:参数
     virtual void Before_Turn(){}
     virtual void Locate_Piece(){}
     virtual void Before_Combat(){}
@@ -109,7 +108,7 @@ public:
     void remake(){remake(gametype);}
     void remake(GT::GAMETYPE type);
 public slots:
-    virtual void recv_operation(QString op){}
+    virtual void recv_operation(QString op) =0;
 signals:
     void signal_new_operation(QString);
     void signal_before_turn();

@@ -17,6 +17,7 @@ public:
     QPushButton* myname;
     QStringList Icons;
     QLabel *versioninfo;
+    QPushButton *planebattle;
 
     QPushButton *numcomb;
     void show_icons(int page);

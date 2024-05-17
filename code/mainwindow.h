@@ -77,15 +77,26 @@ name=new QLineEdit(MW->centralWidget());\
     f.setPixelSize(font_rel(size));\
     name->setFont(f);name->setText(text); name->show();}
 
-
+#define KEY_SELECT_MORE(seq,start,n,other) {\
+for(int i=start;i<start+n;i++)\
+QPushButton::connect(seq[i], &QPushButton::clicked, MW, [=]() {\
+for (int k = start; k < start+n; k++)\
+{\
+    seq[k]->setStyleSheet(k == i ? "background-color:rgb(155,155,255)" : "");\
+}\
+other;\
+});\
+}
+#define KEY_SELECT(seq,start,n) KEY_SELECT_MORE(seq,start,n,{})
 
 
 class StartPage;class PvePage;class SettingsPage;
 
-enum PageType{STARTPAGE=0,PVEPAGE=1,PVEPREPPAGE=2,SETTINGSPAGE=3,NUMCOMBPAGE=4, NUMCOMBPREPPAGE=5, ASSEMBLECRAFTPAGE=6,};
+enum PageType{STARTPAGE=0,PVEPAGE=1,PVEPREPPAGE=2,SETTINGSPAGE=3,NUMCOMBPAGE=4, NUMCOMBPREPPAGE=5, ASSEMBLECRAFTPAGE=6,
+                PLANEBATTLEPREPPAGE=7, PLANEBATTLEPAGE=8};
 
 class MainWindow;
-
+class PlaneBattleGame;
 
 class MainWindow : public QMainWindow
 {
@@ -120,6 +131,7 @@ public:
         page=NULL;//page已经在上面被删了
     }
     Game *G;
+    PlaneBattleGame *PlaneG=nullptr;
     Page *page;
 
     enum UISTATUS{NOT_WAITING=0,WAITING=1};

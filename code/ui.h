@@ -13,7 +13,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QFileInfo>
-
+#include <QMenu>
 class MainWindow;
 
 class StartPage;

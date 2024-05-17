@@ -41,17 +41,21 @@ SOURCES += \
     monsters/twinhead.cpp \
     monsters/undeaddemon.cpp \
     pages/numcombpage.cpp \
+    pages/planebattlepage.cpp \
+    pages/planebattlepreppage.cpp \
     pages/pvepage.cpp \
     pages/pvepreppage.cpp \
     pages/settingspage.cpp \
     pages/startpage.cpp \
     modes/numcomb.cpp \
     modes/pve.cpp \
-    game.cpp \
     monster.cpp \
     piece.cpp \
+    planebattlegame.cpp \
+    planeboss.cpp \
     player.cpp \
     ui.cpp \
+    utils/gametools.cpp
 
 HEADERS += \
     cardpool.h \
@@ -71,15 +75,18 @@ HEADERS += \
     pages/assemblecraftpage.h \
     pages/numcombpage.h \
     pages/numcombpreppage.h \
+    pages/planebattlepage.h \
+    pages/planebattlepreppage.h \
     pages/pvepage.h \
     pages/pvepreppage.h \
     pages/settingspage.h \
     pages/startpage.h \
     modes/numcomb.h \
     modes/pve.h \
-    game.h \
     monster.h \
     piece.h \
+    planebattlegame.h \
+    planeboss.h \
     player.h \
     stdafx.h \
     ui.h \
